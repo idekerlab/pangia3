@@ -4,16 +4,19 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.util.List;
 
-public class MemoryReporter {
+public class MemoryReporter
+{
 
-	public static void reportMemoryUsage() {
+	public static void reportMemoryUsage()
+	{
 		List<MemoryPoolMXBean> mp = ManagementFactory.getMemoryPoolMXBeans();
 
 		long used = 0;
 		long committed = 0;
 		long mmax = 0;
 
-		for (MemoryPoolMXBean mpb : mp) {
+		for (MemoryPoolMXBean mpb : mp)
+		{
 			used += mpb.getUsage().getUsed();
 			committed += mpb.getUsage().getCommitted();
 			mmax += mpb.getUsage().getMax();

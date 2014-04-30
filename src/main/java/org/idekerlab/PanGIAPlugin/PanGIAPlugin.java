@@ -4,38 +4,31 @@ import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.application.swing.CytoPanel;
 import org.cytoscape.application.swing.CytoPanelName;
 import org.cytoscape.application.swing.CytoPanelState;
-import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.events.NetworkDestroyedEvent;
 import org.cytoscape.model.events.NetworkDestroyedListener;
 import org.cytoscape.view.model.events.NetworkViewAddedEvent;
 import org.cytoscape.view.model.events.NetworkViewAddedListener;
 import org.idekerlab.PanGIAPlugin.ui.SearchPropertyPanel;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 
-
 /**
  * PanGIA Plugin main class.
- * 
- * <p>
- * 
- * 
- * @author kono, ruschein, ghannum
+ * <p/>
+ * <p/>
  *
+ * @author kono, ruschein, ghannum
  */
 public class PanGIAPlugin extends AbstractCyAction implements NetworkViewAddedListener, NetworkDestroyedListener
 {
 
 	private static final String PLUGIN_NAME = "PanGIA";
 	public static final String VERSION = "1.1";
-	public static final Map<String,PanGIAOutput> output = new HashMap<String,PanGIAOutput>();
+	public static final Map<String, PanGIAOutput> output = new HashMap<String, PanGIAOutput>();
 	private final CytoPanel cytoPanelWest;
 
 	private SearchPropertyPanel searchPanel;
@@ -57,13 +50,15 @@ public class PanGIAPlugin extends AbstractCyAction implements NetworkViewAddedLi
 	public void actionPerformed(ActionEvent e)
 	{
 		// If the state of the cytoPanelEast is HIDE, show it
-		if (cytoPanelWest.getState() == CytoPanelState.HIDE) {
+		if (cytoPanelWest.getState() == CytoPanelState.HIDE)
+		{
 			cytoPanelWest.setState(CytoPanelState.DOCK);
 		}
 
 		// Select the jActiveModules panel
 		int index = cytoPanelWest.indexOfComponent(searchPanel);
-		if (index == -1) {
+		if (index == -1)
+		{
 			return;
 		}
 

@@ -35,44 +35,10 @@ import java.util.HashMap;
 
 
 /**
- *  Used to scale a list of values to [a,b]
+ * Used to scale a list of values to [a,b]
  */
-class RankScaler extends AbstractScaler {
-	public double[] scale(final double values[], final double a, final double b) throws IllegalArgumentException
-	{
-		if (values.length < 2)
-			throw new IllegalArgumentException("need at least 2 values for scaling!");
-		if (a >= b)
-			throw new IllegalArgumentException("bad bounds!");
-
-		final double sortedValues[] = values.clone();
-		Arrays.sort(sortedValues);
-
-		final HashMap<Double, Double> origValueToRankValueMap = new HashMap<Double, Double>();
-		final double stepSize = (b - a) / values.length;
-		double currentValue = sortedValues[0];
-		double sum = stepSize / 2.0;
-		double count = 1.0;
-		for (int i = 1; i < values.length; ++i) {
-			final double currentRankValue = stepSize * (0.5 + i);
-			if (sortedValues[i] == currentValue) {
-				++count;
-				sum += currentRankValue;
-			} else {
-				origValueToRankValueMap.put(currentValue, sum / count);
-				currentValue = sortedValues[i];
-				sum = currentRankValue;
-				count = 1.0;
-			}
-		}
-		origValueToRankValueMap.put(sortedValues[values.length - 1], sum / count);
-
-		final double[] scaledValues = new double[values.length];
-		for (int i = 0; i < values.length; ++i)
-			scaledValues[i] = origValueToRankValueMap.get(values[i]);
-
-		return scaledValues;
-	}
+class RankScalar extends AbstractScalar
+{
 
 	public float[] scale(final float values[], final float a, final float b) throws IllegalArgumentException
 	{
@@ -89,12 +55,16 @@ class RankScaler extends AbstractScaler {
 		float currentValue = sortedValues[0];
 		float sum = stepSize / 2.0f;
 		float count = 1.0f;
-		for (int i = 1; i < values.length; ++i) {
+		for (int i = 1; i < values.length; ++i)
+		{
 			final float currentRankValue = stepSize * (0.5f + i);
-			if (sortedValues[i] == currentValue) {
+			if (sortedValues[i] == currentValue)
+			{
 				++count;
 				sum += currentRankValue;
-			} else {
+			}
+			else
+			{
 				origValueToRankValueMap.put(currentValue, sum / count);
 				currentValue = sortedValues[i];
 				sum = currentRankValue;

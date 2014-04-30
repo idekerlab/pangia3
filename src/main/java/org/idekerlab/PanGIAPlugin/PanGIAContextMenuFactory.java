@@ -31,15 +31,15 @@ public class PanGIAContextMenuFactory
 		boolean selectedHasNested = false;
 		CyNetwork network = netView.getModel();
 		List<CyNode> selectedNodes = CyTableUtil.getNodesInState(network, "selected", true);
-		if( nodeView != null )
+		if (nodeView != null)
 		{
 			CyNode clickedNode = nodeView.getModel();
-			if( !selectedNodes.contains(clickedNode) )
-				selectedNodes.add( clickedNode );
+			if (!selectedNodes.contains(clickedNode))
+				selectedNodes.add(clickedNode);
 		}
-		for( CyNode node : selectedNodes )
+		for (CyNode node : selectedNodes)
 		{
-			if( node.getNetworkPointer() != null )
+			if (node.getNetworkPointer() != null)
 				selectedHasNested = true;
 		}
 		final List<CyNode> finalSelectedNodes = selectedNodes;
@@ -73,7 +73,8 @@ public class PanGIAContextMenuFactory
 			item2.setText("Export Modules to Tab-Delimited File");
 			item2.addActionListener(new ActionListener()
 			{
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e)
+				{
 					saveModules(finalNetView);
 				}
 			});
@@ -87,7 +88,8 @@ public class PanGIAContextMenuFactory
 			item3.setText("Export Module Map to Tab-Delimited File");
 			item3.addActionListener(new ActionListener()
 			{
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e)
+				{
 					saveOverviewNetwork(finalNetView);
 				}
 			});
@@ -109,7 +111,7 @@ public class PanGIAContextMenuFactory
 
 			//String[] ean = edgeAttr.getAttributeNames();
 
-			String[] ean = new String[]{output.getPhysEdgeAttrName(),output.getGenEdgeAttrName()};
+			String[] ean = new String[]{output.getPhysEdgeAttrName(), output.getGenEdgeAttrName()};
 
 			List<String> eaNames = new ArrayList<String>(ean.length);
 			Collections.addAll(eaNames, ean);
@@ -124,17 +126,18 @@ public class PanGIAContextMenuFactory
 
 				eaItem.addActionListener(new ActionListener()
 				{
-					public void actionPerformed(ActionEvent e) {
+					public void actionPerformed(ActionEvent e)
+					{
 						JFileChooser jfc = new JFileChooser();
 						jfc.setCurrentDirectory(new File("."));
 						int returnVal = jfc.showSaveDialog(ServicesUtil.cySwingApplicationServiceRef.getJFrame());
 
-						if (returnVal==JFileChooser.APPROVE_OPTION)
+						if (returnVal == JFileChooser.APPROVE_OPTION)
 						{
-							if( ea.equals( output.getPhysEdgeAttrName()) )
-								saveNodesToMatrix(finalNetView, jfc.getSelectedFile(), ea,finalSelectedNodes, output.getOrigPhysNetwork());
-							else if( ea.equals( output.getGenEdgeAttrName() ) )
-								saveNodesToMatrix(finalNetView, jfc.getSelectedFile(), ea,finalSelectedNodes, output.getOrigGenNetwork());
+							if (ea.equals(output.getPhysEdgeAttrName()))
+								saveNodesToMatrix(finalNetView, jfc.getSelectedFile(), ea, finalSelectedNodes, output.getOrigPhysNetwork());
+							else if (ea.equals(output.getGenEdgeAttrName()))
+								saveNodesToMatrix(finalNetView, jfc.getSelectedFile(), ea, finalSelectedNodes, output.getOrigGenNetwork());
 						}
 					}
 				});
@@ -158,9 +161,9 @@ public class PanGIAContextMenuFactory
 		List<CyNode> choiceNodes = new ArrayList<CyNode>();
 		List<String> ids = new ArrayList<String>();
 		HashMap<CyNode, String> selectedNodeNameMap = new HashMap<CyNode, String>();
-		for( CyNode node : selectedNodes )
+		for (CyNode node : selectedNodes)
 		{
-			if( node.getNetworkPointer() == null )
+			if (node.getNetworkPointer() == null)
 			{
 				choiceNodes.add(node);
 				String id = network.getRow(node).get(output.getNodeAttrName(), String.class);
@@ -170,7 +173,7 @@ public class PanGIAContextMenuFactory
 			else
 			{
 				CyNetwork nestedNetwork = node.getNetworkPointer();
-				for( CyNode nestedNode : nestedNetwork.getNodeList() )
+				for (CyNode nestedNode : nestedNetwork.getNodeList())
 				{
 					choiceNodes.add(nestedNode);
 					String id = nestedNetwork.getRow(nestedNode).get(output.getNodeAttrName(), String.class);
@@ -189,16 +192,16 @@ public class PanGIAContextMenuFactory
 
 		double[][] m = new double[choiceNodes.size()][];
 
-		for (int i=0;i<choiceNodes.size();i++)
+		for (int i = 0; i < choiceNodes.size(); i++)
 		{
-			int jcount = i+1;
+			int jcount = i + 1;
 			m[i] = new double[jcount];
 
 			CyNode iNode = choiceNodes.get(i);
 			String iNodeName = selectedNodeNameMap.get(iNode);
 			CyNode firstNode = originNameNodeMap.get(iNodeName);
 
-			for (int j=0;j<jcount;j++)
+			for (int j = 0; j < jcount; j++)
 			{
 				m[i][j] = Double.NaN;
 
@@ -208,10 +211,10 @@ public class PanGIAContextMenuFactory
 
 				List<CyEdge> edges = originNetwork.getConnectingEdgeList(firstNode, secondNode, CyEdge.Type.ANY);
 
-				for( CyEdge edge : edges )
+				for (CyEdge edge : edges)
 				{
 					Double d = originNetwork.getRow(edge).get(eattr, Double.class);
-					if( d != null )
+					if (d != null)
 					{
 						m[i][j] = d;
 						break;
@@ -227,18 +230,18 @@ public class PanGIAContextMenuFactory
 			bw.write("Gene");
 
 			for (String id : ids)
-				bw.write("\t"+id);
+				bw.write("\t" + id);
 
 			bw.write("\n");
 
-			for (int i=0;i<m.length;i++)
+			for (int i = 0; i < m.length; i++)
 			{
 				bw.write(ids.get(i));
-				for (int j=0;j<=i;j++)
-					bw.write("\t"+m[i][j]);
+				for (int j = 0; j <= i; j++)
+					bw.write("\t" + m[i][j]);
 
-				for (int i2=i+1;i2<m.length;i2++)
-					bw.write("\t"+m[i2][i]);
+				for (int i2 = i + 1; i2 < m.length; i2++)
+					bw.write("\t" + m[i2][i]);
 
 				bw.write("\n");
 			}
@@ -247,10 +250,11 @@ public class PanGIAContextMenuFactory
 
 			JOptionPane.showMessageDialog(null, "Matrix saved successfully.");
 
-		}catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "There was a problem saving the matrix: "+e.getMessage());
+			JOptionPane.showMessageDialog(null, "There was a problem saving the matrix: " + e.getMessage());
 		}
 	}
 
@@ -259,7 +263,7 @@ public class PanGIAContextMenuFactory
 		JFileChooser jfc = new JFileChooser();
 		jfc.setCurrentDirectory(new File("."));
 		int returnVal = jfc.showSaveDialog(ServicesUtil.cySwingApplicationServiceRef.getJFrame());
-		if( returnVal != JFileChooser.APPROVE_OPTION )
+		if (returnVal != JFileChooser.APPROVE_OPTION)
 			return;
 
 		String col3 = NestedNetworkCreator.EDGE_SCORE;
@@ -275,21 +279,21 @@ public class PanGIAContextMenuFactory
 		PrintWriter pw = null;
 		try
 		{
-			pw = new PrintWriter( new BufferedWriter( new FileWriter(jfc.getSelectedFile()) ) );
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(jfc.getSelectedFile())));
 			String line = "NodeA\tNodeB\t";
-			for( int i = 0; i < remainingColumns.length - 1; i++ )
+			for (int i = 0; i < remainingColumns.length - 1; i++)
 				line += remainingColumns[i] + "\t";
-			line += remainingColumns[remainingColumns.length-1];
+			line += remainingColumns[remainingColumns.length - 1];
 			pw.println(line);
 
 			CyNetwork overviewNetwork = view.getModel();
 			List<CyEdge> edges = overviewNetwork.getEdgeList();
-			for( CyEdge edge : edges )
+			for (CyEdge edge : edges)
 			{
 				String name = overviewNetwork.getRow(edge).get(CyNetwork.NAME, String.class);
 				line = name.replace(" (" + NestedNetworkCreator.COMPLEX_INTERACTION_TYPE + ") ", "\t");
 				line += "\t";
-				for( int i = 0; i < remainingColumns.length - 1; i++ )
+				for (int i = 0; i < remainingColumns.length - 1; i++)
 				{
 					String col = remainingColumns[i];
 					Object value = overviewNetwork.getRow(edge).get(col, Object.class);
@@ -306,11 +310,11 @@ public class PanGIAContextMenuFactory
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "There was a problem saving the modules: "+e.getMessage());
+			JOptionPane.showMessageDialog(null, "There was a problem saving the modules: " + e.getMessage());
 		}
 		finally
 		{
-			if( pw != null )
+			if (pw != null)
 				pw.close();
 		}
 	}
@@ -321,22 +325,22 @@ public class PanGIAContextMenuFactory
 		jfc.setCurrentDirectory(new File("."));
 		int returnVal = jfc.showSaveDialog(ServicesUtil.cySwingApplicationServiceRef.getJFrame());
 
-		if( returnVal != JFileChooser.APPROVE_OPTION )
+		if (returnVal != JFileChooser.APPROVE_OPTION)
 			return;
 
 		PrintWriter pw = null;
 		try
 		{
-			pw = new PrintWriter( new BufferedWriter( new FileWriter(jfc.getSelectedFile()) ) );
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(jfc.getSelectedFile())));
 			CyNetwork overviewNetwork = view.getModel();
-			for( CyNode node : overviewNetwork.getNodeList() )
+			for (CyNode node : overviewNetwork.getNodeList())
 			{
 				String line = overviewNetwork.getRow(node).get(CyNetwork.NAME, String.class) + "\t";
 				CyNetwork nestedNetwork = node.getNetworkPointer();
-				if( nestedNetwork != null )
+				if (nestedNetwork != null)
 				{
 					List<CyNode> nestedNodes = nestedNetwork.getNodeList();
-					for( int i = 0; i < nestedNodes.size() - 1; i++)
+					for (int i = 0; i < nestedNodes.size() - 1; i++)
 					{
 						CyNode nestedNode = nestedNodes.get(i);
 						line += nestedNetwork.getRow(nestedNode).get(CyNetwork.NAME, String.class) + "|";
@@ -351,11 +355,11 @@ public class PanGIAContextMenuFactory
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "There was a problem saving the overview network: "+e.getMessage());
+			JOptionPane.showMessageDialog(null, "There was a problem saving the overview network: " + e.getMessage());
 		}
 		finally
 		{
-			if( pw != null )
+			if (pw != null)
 				pw.close();
 		}
 	}

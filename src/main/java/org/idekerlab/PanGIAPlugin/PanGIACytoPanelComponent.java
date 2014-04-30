@@ -11,29 +11,34 @@ public class PanGIACytoPanelComponent implements CytoPanelComponent
 {
 
 	SearchPropertyPanel panel;
-	
-	public PanGIACytoPanelComponent(SearchPropertyPanel panel) {
+
+	public PanGIACytoPanelComponent(SearchPropertyPanel panel)
+	{
 		this.panel = panel;
 		this.panel.setPreferredSize(new Dimension(450, 300));
 	}
-	
+
 	@Override
-	public Component getComponent() {
+	public Component getComponent()
+	{
 		return panel;
 	}
 
 	@Override
-	public CytoPanelName getCytoPanelName() {
+	public CytoPanelName getCytoPanelName()
+	{
 		return CytoPanelName.WEST;
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitle()
+	{
 		return "PanGIA";
 	}
 
 	@Override
-	public Icon getIcon() {
+	public Icon getIcon()
+	{
 		return null;
 	}
 }

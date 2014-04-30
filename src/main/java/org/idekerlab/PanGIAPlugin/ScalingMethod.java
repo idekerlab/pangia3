@@ -1,7 +1,8 @@
 package org.idekerlab.PanGIAPlugin;
 
 
-public enum ScalingMethodX {
+public enum ScalingMethod
+{
 	NONE("none (prescaled)"),
 	LINEAR_LOWER("lower"),
 	LINEAR_UPPER("upper");
@@ -10,12 +11,20 @@ public enum ScalingMethodX {
 
 	private String displayString;
 
-	ScalingMethodX(final String displayString) { this.displayString = displayString; }
+	ScalingMethod(final String displayString)
+	{
+		this.displayString = displayString;
+	}
 
-	public String getDisplayString() { return displayString; }
+	public String getDisplayString()
+	{
+		return displayString;
+	}
 
-	static public ScalingMethodX getEnumValue(final String displayString) {
-		for (final ScalingMethodX method : ScalingMethodX.values()) {
+	static public ScalingMethod getEnumValue(final String displayString)
+	{
+		for (final ScalingMethod method : ScalingMethod.values())
+		{
 			if (method.getDisplayString().equals(displayString))
 				return method;
 		}

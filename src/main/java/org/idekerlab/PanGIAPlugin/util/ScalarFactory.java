@@ -1,5 +1,5 @@
 /*
-  File: Scaler.java
+  File: ScalerFactory.java
 
   Copyright (c) 2010, The Cytoscape Consortium (www.cytoscape.org)
 
@@ -30,19 +30,47 @@
 package org.idekerlab.PanGIAPlugin.util;
 
 
-import java.util.AbstractCollection;
+import java.util.Map;
+import java.util.TreeMap;
 
 
-/**
- *  Used to scale a list of values to [a,b]
- */
-public interface Scaler {
-	double[] scale(final double values[], final double a, final double b) throws IllegalArgumentException;
-	double[] scale(final AbstractCollection<Double> values, final double a, final double b) throws IllegalArgumentException;
+public class ScalarFactory
+{
+	private static Map<String, Scalar> typeToScalerMap = null;
 
-	float[] scale(final float values[], final float a, final float b) throws IllegalArgumentException;
-	float[] scale(final AbstractCollection<Float> values, final float a, final float b) throws IllegalArgumentException;
+	/**
+	 * @return one of the registered Scaler types.  Preregistered are "linear" and "rank".
+	 */
+	public static synchronized Scalar getScaler(final String type) throws IllegalArgumentException
+	{
+		if (typeToScalerMap == null)
+			init();
+
+		final Scalar scalar = typeToScalerMap.get(type);
+		if (scalar == null)
+			throw new IllegalArgumentException("unknown type \"" + type + "\"!");
+
+		return scalar;
+	}
+
+	public static synchronized void registerScaler(final String type, final Scalar newScalar)
+	{
+		if (typeToScalerMap == null)
+			init();
+
+		if (typeToScalerMap.containsKey(type))
+			throw new IllegalArgumentException("trying to register a duplicate type \"" + type + "\"!");
+
+		typeToScalerMap.put(type, newScalar);
+	}
+
+	private static void init()
+	{
+		if (typeToScalerMap != null)
+			throw new IllegalStateException("already initialised!");
+		typeToScalerMap = new TreeMap<String, Scalar>();
+
+		typeToScalerMap.put("linear", new LinearScalar());
+		typeToScalerMap.put("rank", new RankScalar());
+	}
 }
-
-
-

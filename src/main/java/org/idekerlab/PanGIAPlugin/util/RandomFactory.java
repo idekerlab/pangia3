@@ -13,15 +13,18 @@ public class RandomFactory
 	{
 		RandomFactory.seed = seed;
 	}
-	public static void destroySeed() { seed = null; }
+
+	public static void destroySeed()
+	{
+		seed = null;
+	}
 
 	public static Random make()
 	{
-		if( seed != null )
+		if (seed != null)
 			return new Random(seed);
 		return new Random();
 	}
-
 
 
 }

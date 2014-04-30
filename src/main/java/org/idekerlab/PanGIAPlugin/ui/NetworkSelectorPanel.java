@@ -17,6 +17,7 @@ import java.util.TreeSet;
 
 /**
  * A convenience JPanel for selecting networks.
+ *
  * @CyAPI.Final.Class
  */
 public final class NetworkSelectorPanel extends JPanel implements NetworkAddedListener, NetworkDestroyedListener
@@ -36,10 +37,12 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 
 	/**
 	 * Constructor.
+	 *
 	 * @param cyApplicationManager The application manager used for tracking the current network.
-	 * @param cyNetworkManager The network manager used for accessing all available networks.
+	 * @param cyNetworkManager     The network manager used for accessing all available networks.
 	 */
-	public NetworkSelectorPanel(CyApplicationManager cyApplicationManager, CyNetworkManager cyNetworkManager) {
+	public NetworkSelectorPanel(CyApplicationManager cyApplicationManager, CyNetworkManager cyNetworkManager)
+	{
 		super();
 		this.setLayout(new BorderLayout());
 		networkComboBox = new JComboBox();
@@ -61,10 +64,13 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 	 *
 	 * @return The network that was selected.
 	 */
-	public CyNetwork getSelectedNetwork() {
-		for (CyNetwork net : this.cyNetworkManager.getNetworkSet()) {
+	public CyNetwork getSelectedNetwork()
+	{
+		for (CyNetwork net : this.cyNetworkManager.getNetworkSet())
+		{
 			String networkTitle = net.getRow(net).get("name", String.class);
-			if (networkTitle == null||networkTitle.equalsIgnoreCase("")){
+			if (networkTitle == null || networkTitle.equalsIgnoreCase(""))
+			{
 				continue;
 			}
 			if (networkTitle.equals(networkComboBox.getSelectedItem()))
@@ -73,12 +79,15 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 		return null;
 	}
 
-	private void updateNetworkList() {
+	private void updateNetworkList()
+	{
 		final Set<CyNetwork> networks = this.cyNetworkManager.getNetworkSet();
 		final SortedSet<String> networkNames = new TreeSet<String>();
 
-		for (CyNetwork net : networks) {
-			if (net == null){
+		for (CyNetwork net : networks)
+		{
+			if (net == null)
+			{
 				continue;
 			}
 			networkNames.add(net.getRow(net).get("name", String.class));
@@ -95,7 +104,8 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 			networkComboBox.addItem(name);
 
 		CyNetwork currNetwork = this.cyApplicationManager.getCurrentNetwork();
-		if (currNetwork != null) {
+		if (currNetwork != null)
+		{
 			String networkTitle = currNetwork.getRow(currNetwork).get("name", String.class);
 			networkComboBox.setSelectedItem(networkTitle);
 		}
@@ -106,40 +116,48 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 
 	/**
 	 * Updates the list based on network added events.
+	 *
 	 * @param e The network added event.
 	 */
-	public void handleEvent(NetworkAddedEvent e){
+	public void handleEvent(NetworkAddedEvent e)
+	{
 
 //		System.out.println("NetworkSelectorPanel: got NetworkAddedEvent");
-		if( searchRunning )
+		if (searchRunning)
 			return;
 		updateNetworkList();
 	}
 
 	/**
 	 * Updates the list based on network destroyed events.
+	 *
 	 * @param e The network destroyed event.
 	 */
-	public void handleEvent(NetworkDestroyedEvent e){
+	public void handleEvent(NetworkDestroyedEvent e)
+	{
 //		System.out.println("NetworkSelectorPanel: got NetworkDestroyedEvent");
-		if( searchRunning )
+		if (searchRunning)
 			return;
 		updateNetworkList();
 	}
 
 	/**
 	 * Installs a new item listener for the embedded combo box.
+	 *
 	 * @param newListener The new item listener to be added.
 	 */
-	public void addItemListener(final ItemListener newListener) {
+	public void addItemListener(final ItemListener newListener)
+	{
 		networkComboBox.addItemListener(newListener);
 	}
 
 	/**
 	 * Returns the network combobox.
+	 *
 	 * @return The network combobox.
 	 */
-	public JComboBox getJCombobox(){
+	public JComboBox getJCombobox()
+	{
 		return this.networkComboBox;
 	}
 }

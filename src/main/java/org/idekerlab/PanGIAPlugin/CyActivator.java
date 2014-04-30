@@ -25,8 +25,10 @@ import static org.cytoscape.work.ServiceProperties.*;
 
 //import org.cytoscape.task.creation.LoadVisualStylesFromFileFactory;
 
-public class CyActivator extends AbstractCyActivator {
-	public CyActivator() {
+public class CyActivator extends AbstractCyActivator
+{
+	public CyActivator()
+	{
 		super();
 	}
 
@@ -35,24 +37,24 @@ public class CyActivator extends AbstractCyActivator {
 	{
 		System.out.println("Loading PanGIA...");
 
-		CySwingApplication cySwingApplicationServiceRef = getService(bc,CySwingApplication.class);
-		CyApplicationManager cyApplicationManagerServiceRef = getService(bc,CyApplicationManager.class);
-		CyNetworkViewManager cyNetworkViewManagerServiceRef = getService(bc,CyNetworkViewManager.class);
-		CyNetworkManager cyNetworkManagerServiceRef = getService(bc,CyNetworkManager.class);
-		CyServiceRegistrar cyServiceRegistrarServiceRef = getService(bc,CyServiceRegistrar.class);
-		CyEventHelper cyEventHelperServiceRef = getService(bc,CyEventHelper.class);
-		TaskManager taskManagerServiceRef = getService(bc,TaskManager.class);
+		CySwingApplication cySwingApplicationServiceRef = getService(bc, CySwingApplication.class);
+		CyApplicationManager cyApplicationManagerServiceRef = getService(bc, CyApplicationManager.class);
+		CyNetworkViewManager cyNetworkViewManagerServiceRef = getService(bc, CyNetworkViewManager.class);
+		CyNetworkManager cyNetworkManagerServiceRef = getService(bc, CyNetworkManager.class);
+		CyServiceRegistrar cyServiceRegistrarServiceRef = getService(bc, CyServiceRegistrar.class);
+		CyEventHelper cyEventHelperServiceRef = getService(bc, CyEventHelper.class);
+		TaskManager taskManagerServiceRef = getService(bc, TaskManager.class);
 
 		CyProperty<Properties> cytoscapePropertiesServiceRef = getService(bc, CyProperty.class, "(cyPropertyName=cytoscape3.props)");
-		VisualMappingManager visualMappingManagerRef = getService(bc,VisualMappingManager.class);
-		CyNetworkFactory cyNetworkFactoryServiceRef = getService(bc,CyNetworkFactory.class);
+		VisualMappingManager visualMappingManagerRef = getService(bc, VisualMappingManager.class);
+		CyNetworkFactory cyNetworkFactoryServiceRef = getService(bc, CyNetworkFactory.class);
 
-		CyRootNetworkManager cyRootNetworkFactory = getService(bc,CyRootNetworkManager.class);
-		CyNetworkViewFactory cyNetworkViewFactoryServiceRef = getService(bc,CyNetworkViewFactory.class);
-		CyLayoutAlgorithmManager cyLayoutsServiceRef = getService(bc,CyLayoutAlgorithmManager.class);
+		CyRootNetworkManager cyRootNetworkFactory = getService(bc, CyRootNetworkManager.class);
+		CyNetworkViewFactory cyNetworkViewFactoryServiceRef = getService(bc, CyNetworkViewFactory.class);
+		CyLayoutAlgorithmManager cyLayoutsServiceRef = getService(bc, CyLayoutAlgorithmManager.class);
 
 		//DW: Added, April 4, 2014
-		LoadVizmapFileTaskFactory loadVizmapFileTaskFactory =  getService(bc,LoadVizmapFileTaskFactory.class);
+		LoadVizmapFileTaskFactory loadVizmapFileTaskFactory = getService(bc, LoadVizmapFileTaskFactory.class);
 
 		//DW: Added, April 9, 2014
 		CyServiceRegistrar registrar = getService(bc, CyServiceRegistrar.class);
@@ -78,9 +80,9 @@ public class CyActivator extends AbstractCyActivator {
 		PanGIACytoPanelComponent panGIACytoPanelComponent = new PanGIACytoPanelComponent(searchPanel);
 		PanGIAPlugin panGIAPlugin = new PanGIAPlugin(searchPanel);
 
-		registerService(bc,panGIACytoPanelComponent,CytoPanelComponent.class, new Properties());
-		registerAllServices(bc,searchPanel, new Properties());
-		registerAllServices(bc,panGIAPlugin, new Properties());
+		registerService(bc, panGIACytoPanelComponent, CytoPanelComponent.class, new Properties());
+		registerAllServices(bc, searchPanel, new Properties());
+		registerAllServices(bc, panGIAPlugin, new Properties());
 
 		PanGIANodeViewContextMenuFactory panGIANodeViewContextMenuFactory = new PanGIANodeViewContextMenuFactory();
 		Properties panGIANodeViewContextMenuFactoryProps = new Properties();
@@ -88,7 +90,7 @@ public class CyActivator extends AbstractCyActivator {
 		panGIANodeViewContextMenuFactoryProps.setProperty(PREFERRED_MENU, NODE_APPS_MENU);
 		panGIANodeViewContextMenuFactoryProps.setProperty(MENU_GRAVITY, "10.0");
 		panGIANodeViewContextMenuFactoryProps.setProperty(TITLE, "PanGIA");
-		registerAllServices(bc,panGIANodeViewContextMenuFactory, panGIANodeViewContextMenuFactoryProps);
+		registerAllServices(bc, panGIANodeViewContextMenuFactory, panGIANodeViewContextMenuFactoryProps);
 
 		PanGIAEdgeViewContextMenuFactory panGIAEdgeViewContextMenuFactory = new PanGIAEdgeViewContextMenuFactory();
 		Properties panGIAEdgeViewContextMenuFactoryProps = new Properties();
@@ -96,7 +98,7 @@ public class CyActivator extends AbstractCyActivator {
 		panGIAEdgeViewContextMenuFactoryProps.setProperty(PREFERRED_MENU, NODE_APPS_MENU);
 		panGIAEdgeViewContextMenuFactoryProps.setProperty(MENU_GRAVITY, "10.0");
 		panGIAEdgeViewContextMenuFactoryProps.setProperty(TITLE, "PanGIA");
-		registerAllServices(bc,panGIAEdgeViewContextMenuFactory, panGIAEdgeViewContextMenuFactoryProps);
+		registerAllServices(bc, panGIAEdgeViewContextMenuFactory, panGIAEdgeViewContextMenuFactoryProps);
 
 		PanGIANetworkViewContextMenuFactory panGIANetworkViewContextMenuFactory = new PanGIANetworkViewContextMenuFactory();
 		Properties panGIANetworkViewContextMenuFactoryProps = new Properties();
@@ -104,7 +106,7 @@ public class CyActivator extends AbstractCyActivator {
 		panGIANetworkViewContextMenuFactoryProps.setProperty(PREFERRED_MENU, NODE_APPS_MENU);
 		panGIANetworkViewContextMenuFactoryProps.setProperty(MENU_GRAVITY, "10.0");
 		panGIANetworkViewContextMenuFactoryProps.setProperty(TITLE, "PanGIA");
-		registerAllServices(bc,panGIANetworkViewContextMenuFactory, panGIANetworkViewContextMenuFactoryProps);
+		registerAllServices(bc, panGIANetworkViewContextMenuFactory, panGIANetworkViewContextMenuFactoryProps);
 	}
 }
 

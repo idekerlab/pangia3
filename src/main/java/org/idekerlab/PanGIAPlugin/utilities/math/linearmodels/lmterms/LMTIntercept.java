@@ -6,27 +6,17 @@ public final class LMTIntercept extends LMTerm
 	{
 		return 1;
 	}
-	
-	public double evaluate(float[][] data, int row)
-	{
-		return 1;
-	}
-	
-	public double evaluate(byte[][] data, int row)
-	{
-		return 1;
-	}
-	
+
 	public String toString()
 	{
 		return "1";
 	}
-	
+
 	public int hashCode()
 	{
 		return -1;
 	}
-	
+
 	public boolean equals(Object other)
 	{
 		return other instanceof LMTIntercept;

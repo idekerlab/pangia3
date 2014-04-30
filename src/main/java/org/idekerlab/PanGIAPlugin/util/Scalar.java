@@ -1,5 +1,5 @@
 /*
-  File: AbstractScaler.java
+  File: Scaler.java
 
   Copyright (c) 2010, The Cytoscape Consortium (www.cytoscape.org)
 
@@ -30,38 +30,13 @@
 package org.idekerlab.PanGIAPlugin.util;
 
 
-import java.util.AbstractCollection;
-
-
 /**
- *  Used to scale a list of values to [a,b]
+ * Used to scale a list of values to [a,b]
  */
-public abstract class AbstractScaler implements Scaler {
-	public abstract double[] scale(final double values[], final double a, final double b) throws IllegalArgumentException;
-
-	public final double[] scale(final AbstractCollection<Double> values, final double a,
-				    final double b) throws IllegalArgumentException
-	{
-		// Convert the collection to an array:
-		final double[] array = new double[values.size()];
-		int i = 0;
-		for (final Double d : values)
-			array[i++] = d;
-
-		return scale(array, a, b);
-	}
-
-	public abstract float[] scale(final float values[], final float a, final float b) throws IllegalArgumentException;
-
-	public final float[] scale(final AbstractCollection<Float> values, final float a,
-				   final float b) throws IllegalArgumentException
-	{
-		// Convert the collection to an array:
-		final float[] array = new float[values.size()];
-		int i = 0;
-		for (final Float f : values)
-			array[i++] = f;
-
-		return scale(array, a, b);
-	}
+public interface Scalar
+{
+	float[] scale(final float values[], final float a, final float b) throws IllegalArgumentException;
 }
+
+
+

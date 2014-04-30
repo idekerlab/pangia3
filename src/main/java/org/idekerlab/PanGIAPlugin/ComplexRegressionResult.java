@@ -12,7 +12,7 @@ public final class ComplexRegressionResult
 	public final int absentHits;
 	public final int absentMisses;
 	public final double background;
-	
+
 	public ComplexRegressionResult(SFNetwork net, double[] x, double[] y, double coef, double intercept, int absentHits, int absentMisses, double background)
 	{
 		this.net = net;

@@ -1,5 +1,5 @@
 /*
-  File: ScalerFactory.java
+  File: AbstractScaler.java
 
   Copyright (c) 2010, The Cytoscape Consortium (www.cytoscape.org)
 
@@ -30,43 +30,10 @@
 package org.idekerlab.PanGIAPlugin.util;
 
 
-import java.util.Map;
-import java.util.TreeMap;
-
-
-public class ScalerFactory {
-	private static Map<String, Scaler> typeToScalerMap = null;
-
-	/**
-	 *  @return one of the registered Scaler types.  Preregistered are "linear" and "rank".
-	 */
-	public static synchronized Scaler getScaler(final String type) throws IllegalArgumentException {
-		if (typeToScalerMap == null)
-			init();
-
-		final Scaler scaler = typeToScalerMap.get(type);
-		if (scaler == null)
-			throw new IllegalArgumentException("unknown type \"" + type + "\"!");
-
-		return scaler;
-	}
-
-	public static synchronized void registerScaler(final String type, final Scaler newScaler) {
-		if (typeToScalerMap == null)
-			init();
-
-		if (typeToScalerMap.containsKey(type))
-			throw new IllegalArgumentException("trying to register a duplicate type \"" + type + "\"!");
-
-		typeToScalerMap.put(type, newScaler);
-	}
-
-	private static void init() {
-		if (typeToScalerMap != null)
-			throw new IllegalStateException("already initialised!");
-		typeToScalerMap = new TreeMap<String, Scaler>();
-
-		typeToScalerMap.put("linear", new LinearScaler());
-		typeToScalerMap.put("rank", new RankScaler());
-	}
+/**
+ * Used to scale a list of values to [a,b]
+ */
+public abstract class AbstractScalar implements Scalar
+{
+	public abstract float[] scale(final float values[], final float a, final float b) throws IllegalArgumentException;
 }

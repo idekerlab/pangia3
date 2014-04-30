@@ -7,5 +7,5 @@ package org.idekerlab.PanGIAPlugin.networks.linkedNetworks;
  */
 public interface Finalish
 {
-	
+
 }

@@ -24,37 +24,36 @@ import java.util.TreeSet;
 
 /**
  * @author kono, ghannum, welker
- *
- * 5/25/10: Removed restrictions on machine-generated sections. (Greg) 
+ *         <p/>
+ *         5/25/10: Removed restrictions on machine-generated sections. (Greg)
  */
 public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener,
-		ItemListener {
+		ItemListener
+{
 	private static final long serialVersionUID = -3352470909434196700L;
 
-	private static final double DEF_ALPHA = 1.6;
-	private static final double DEF_ALPHA_MUL = 0.0;
 	private static final double DEF_COMPLEX_REWARD = 0;
 	private static final String DEF_DEGREE = "2";
-	private static final double DEF_CUTOFF = 20.0;
 	private static final double DEF_PVALUE_THRESHOLD = .1;
-	private static final int DEF_NUMBER_OF_SAMPLES = 1000;
 	private static final String DEFAULT_ATTRIBUTE = "none";
 
-	private Container container;
 	private SearchParameters parameters;
 	private JPanel scrollablePanel;
 	private JScrollPane scrollPane;
 
 
-	/** Creates new form SearchPropertyPanel */
-	public SearchPropertyPanel() {
+	/**
+	 * Creates new form SearchPropertyPanel
+	 */
+	public SearchPropertyPanel()
+	{
 
 		//this.physicalNetworkPanel = physicalNetworkPanel;
 		//this.geneticNetworkPanel = geneticNetworkPanel;
 
 		scrollablePanel = new JPanel();
 		scrollablePanel.setLayout(new GridBagLayout());
-		scrollablePanel.setBorder( BorderFactory.createLineBorder(Color.GREEN));
+		scrollablePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 		scrollPane = new JScrollPane(scrollablePanel);
 
 		initComponents(); // the main panel
@@ -62,8 +61,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		this.setLayout(new BorderLayout());
 		this.add(scrollPane, BorderLayout.CENTER);
 
-		final ItemListener updateSearchButton = new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
+		final ItemListener updateSearchButton = new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
+			{
 				updateSearchButtonState();
 			}
 		};
@@ -72,7 +73,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		physicalNetworkPanel.addItemListener(updateSearchButton);
 		geneticNetworkPanel.addItemListener(updateSearchButton);
 		//DW: Added 3/26/2014
-		physicalNetworkPanel.addItemListener( new ItemListener()
+		physicalNetworkPanel.addItemListener(new ItemListener()
 		{
 			@Override
 			public void itemStateChanged(ItemEvent e)
@@ -121,16 +122,14 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 	}
 
-	public void itemStateChanged(ItemEvent itemEvent){
+	public void itemStateChanged(ItemEvent itemEvent)
+	{
 		updateAttributeLists();
 	}
 
-	public SearchParameters getParameters() {
-		return parameters;
-	}
 
-
-	private void initComponents() {
+	private void initComponents()
+	{
 		java.awt.GridBagConstraints gridBagConstraints;
 
 		topPane = new javax.swing.JPanel();
@@ -152,7 +151,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		closeButton = new javax.swing.JButton();
 		searchButton = new javax.swing.JButton();
 
-		parameterErrorTextArea= new JTextArea();
+		parameterErrorTextArea = new JTextArea();
 
 		//setLayout(new java.awt.GridBagLayout());
 
@@ -189,15 +188,14 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-		physicalEdgeAttribComboBox.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		physicalEdgeAttribComboBox.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				updateFilteringOptions();
 			}
 		});
 		topPane.add(physicalEdgeAttribComboBox, gridBagConstraints);
-
-
-
 
 
 		lbPhysicalScale.setText("Scale:");
@@ -259,8 +257,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-		geneticEdgeAttribComboBox.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		geneticEdgeAttribComboBox.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				updateFilteringOptions();
 			}
 		});
@@ -320,8 +320,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		//Button panel
 		buttonPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        /*
-        helpButton.setText("Help");
+		/*
+		helpButton.setText("Help");
         helpButton.setToolTipText("Get help for PanGIA.");
         CyHelpBroker.getHelpBroker().enableHelpOnButton(helpButton, "Topic", null);
 
@@ -329,8 +329,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
         */
 		aboutButton.setText("About");
 		aboutButton.setToolTipText("Learn more about PanGIA.");
-		aboutButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		aboutButton.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				aboutButtonActionPerformed();
 			}
 		});
@@ -339,8 +341,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		closeButton.setText("Close");
 		closeButton.setToolTipText("Close the PanGIA plugin.");
-		closeButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		closeButton.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				closeButtonActionPerformed();
 			}
 		});
@@ -349,8 +353,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		searchButton.setText("Search");
 		searchButton.setToolTipText("Perform a PanGIA search using the specified options.");
-		searchButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		searchButton.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				searchButtonActionPerformed();
 			}
 		});
@@ -367,9 +373,9 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	}// </editor-fold>
 
 
-
 	// The following UI is for parameter panel
-	private void initComponents2() {
+	private void initComponents2()
+	{
 		java.awt.GridBagConstraints gridBagConstraints;
 
 		pnlParameter = new javax.swing.JPanel();
@@ -425,10 +431,20 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		pnlParameter.setLayout(new java.awt.GridBagLayout());
 
-		final java.awt.event.KeyListener textFieldKeyListener = new java.awt.event.KeyListener() {
-			public void keyPressed(java.awt.event.KeyEvent evt) {}
-			public void keyTyped(java.awt.event.KeyEvent evt) {}
-			public void keyReleased(java.awt.event.KeyEvent evt) {textFieldActionPerformed();}
+		final java.awt.event.KeyListener textFieldKeyListener = new java.awt.event.KeyListener()
+		{
+			public void keyPressed(java.awt.event.KeyEvent evt)
+			{
+			}
+
+			public void keyTyped(java.awt.event.KeyEvent evt)
+			{
+			}
+
+			public void keyReleased(java.awt.event.KeyEvent evt)
+			{
+				textFieldActionPerformed();
+			}
 		};
 
 		//nodeAttrPanel
@@ -441,7 +457,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		nodeAttrLabel.setToolTipText("Choose the node attribute specifying node identifiers.");
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints.insets = new java.awt.Insets(0, 5,3, 5);
+		gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 1;
 		nodeAttrPanel.add(nodeAttrLabel, gridBagConstraints);
@@ -472,7 +488,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		complexRewardLabel.setToolTipText("Module size parameters AB. (Module reward = AB * size ^ |AB|)");
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints.insets = new java.awt.Insets(0, 5,3, 5);
+		gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 5);
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 1;
 		scorePanel.add(complexRewardLabel, gridBagConstraints);
@@ -482,7 +498,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		complexRewardSliderLabels.setFont(edgeFilterSliderLabels.getFont().deriveFont(10.0f));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-		gridBagConstraints.insets = new java.awt.Insets(0, 5,3, 10);
+		gridBagConstraints.insets = new java.awt.Insets(0, 5, 3, 10);
 		gridBagConstraints.gridx = 2;
 		gridBagConstraints.gridy = 1;
 		scorePanel.add(complexRewardSliderLabels, gridBagConstraints);
@@ -499,8 +515,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		complexRewardSlider.setPaintTicks(false);
 		complexRewardSlider.setPaintTrack(true);
 		complexRewardSlider.setEnabled(true);
-		complexRewardSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-			public void stateChanged(javax.swing.event.ChangeEvent evt) {
+		complexRewardSlider.addChangeListener(new javax.swing.event.ChangeListener()
+		{
+			public void stateChanged(javax.swing.event.ChangeEvent evt)
+			{
 				complexRewardSliderMoved();
 			}
 		});
@@ -514,13 +532,19 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		complexRewardTextField.setPreferredSize(new java.awt.Dimension(50, 25));
 		complexRewardTextField.addKeyListener(textFieldKeyListener);
 		complexRewardTextField.setToolTipText(complexRewardSlider.getToolTipText());
-		complexRewardTextField.addKeyListener(new java.awt.event.KeyListener(){
-			public void keyPressed(java.awt.event.KeyEvent evt){
+		complexRewardTextField.addKeyListener(new java.awt.event.KeyListener()
+		{
+			public void keyPressed(java.awt.event.KeyEvent evt)
+			{
 			}
-			public void keyTyped(java.awt.event.KeyEvent evt){
+
+			public void keyTyped(java.awt.event.KeyEvent evt)
+			{
 
 			}
-			public void keyReleased(java.awt.event.KeyEvent evt){
+
+			public void keyReleased(java.awt.event.KeyEvent evt)
+			{
 				complexRewardTextChanged();
 			}
 		});
@@ -593,7 +617,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-		gridBagConstraints.gridx=3;
+		gridBagConstraints.gridx = 3;
 		gridBagConstraints.weightx = 1.0;
 		scorePanel.add(lbPlaceHolder1, gridBagConstraints);
 
@@ -640,8 +664,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		edgeFilterSlider.setPaintTicks(false);
 		edgeFilterSlider.setPaintTrack(true);
 		edgeFilterSlider.setEnabled(false);
-		edgeFilterSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-			public void stateChanged(javax.swing.event.ChangeEvent evt) {
+		edgeFilterSlider.addChangeListener(new javax.swing.event.ChangeListener()
+		{
+			public void stateChanged(javax.swing.event.ChangeEvent evt)
+			{
 				edgeFilterSliderMoved();
 			}
 		});
@@ -663,13 +689,19 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		edgeFilteringPanel.add(pValueThresholdLabel, gridBagConstraints);
 
 		edgeFilterTextField.setToolTipText("Strength of the edge filter. (0 returns all edges)");
-		edgeFilterTextField.addKeyListener(new java.awt.event.KeyListener(){
-			public void keyPressed(java.awt.event.KeyEvent evt){
+		edgeFilterTextField.addKeyListener(new java.awt.event.KeyListener()
+		{
+			public void keyPressed(java.awt.event.KeyEvent evt)
+			{
 			}
-			public void keyTyped(java.awt.event.KeyEvent evt){
+
+			public void keyTyped(java.awt.event.KeyEvent evt)
+			{
 
 			}
-			public void keyReleased(java.awt.event.KeyEvent evt){
+
+			public void keyReleased(java.awt.event.KeyEvent evt)
+			{
 				edgeFilterTextChanged();
 			}
 		});
@@ -710,8 +742,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		trainingPanel.add(lbComplexFile, gridBagConstraints);
 
 		annotationAttribComboBox.setToolTipText(lbComplexFile.getToolTipText());
-		annotationAttribComboBox.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		annotationAttribComboBox.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				trainingComboBoxActionPerformed();
 			}
 		});
@@ -736,8 +770,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		trainingCheckBox.setSelected(false);
 		trainingCheckBox.setToolTipText(trainingLabel.getToolTipText());
 		trainingCheckBox.setEnabled(false);
-		trainingCheckBox.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		trainingCheckBox.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				updateFilteringOptions();
 			}
 		});
@@ -812,8 +848,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
-		annotationCheckBox.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		annotationCheckBox.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				annotationCheckBoxActionPerformed();
 			}
 		});
@@ -877,8 +915,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		reportPathButton.setText("...");
 		reportPathButton.setToolTipText("Select a location for the report.");
 		reportPathButton.setPreferredSize(new java.awt.Dimension(25, 25));
-		reportPathButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		reportPathButton.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(java.awt.event.ActionEvent evt)
+			{
 				reportPathButtionActionPerformed();
 			}
 		});
@@ -932,7 +972,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		pnlParameter.add(lbPlaceHolder3, gridBagConstraints);
 	}
 
-	private void searchButtonActionPerformed() {
+	private void searchButtonActionPerformed()
+	{
 //		physicalNetworkPanel.establishSelected();
 //		geneticNetworkPanel.establishSelected();
 
@@ -969,7 +1010,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	}
 
 
-	private void closeButtonActionPerformed() {
+	private void closeButtonActionPerformed()
+	{
 
 		System.out.println("Entering SearchPropertyPanel.closeButtonActionPerformed()....");
 		// Close parent tab
@@ -977,12 +1019,13 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 //		cytoPanel.remove(this.getParent().getParent());
 	}
 
-	private void aboutButtonActionPerformed() {
+	private void aboutButtonActionPerformed()
+	{
 
 		JFrame aboutFrame = new JFrame();
-		aboutFrame.setTitle("About PanGIA v"+PanGIAPlugin.VERSION);
+		aboutFrame.setTitle("About PanGIA v" + PanGIAPlugin.VERSION);
 
-		aboutFrame.setSize(new Dimension(400,175));
+		aboutFrame.setSize(new Dimension(400, 175));
 		aboutFrame.setResizable(false);
 		aboutFrame.setLocationRelativeTo(null);
 		aboutFrame.setLayout(new java.awt.GridBagLayout());
@@ -995,16 +1038,17 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			aboutFrame.setIconImage(smallIcon);
 
 			BufferedImage img = ImageIO.read(PanGIAPlugin.class.getClassLoader().getResource("images/PanGIA_Graphic.jpg"));
-			Image imgScaled = img.getScaledInstance(80,80, Image.SCALE_SMOOTH);
+			Image imgScaled = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
 			JLabel imgLabel = new JLabel(new ImageIcon(imgScaled));
 
 			java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-			gridBagConstraints.gridx=1;
-			gridBagConstraints.gridy=0;
+			gridBagConstraints.gridx = 1;
+			gridBagConstraints.gridy = 0;
 			gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 25);
 
-			aboutFrame.add(imgLabel,gridBagConstraints);
-		}catch (Exception e)
+			aboutFrame.add(imgLabel, gridBagConstraints);
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -1017,14 +1061,14 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		text.setWrapStyleWord(true);
 		text.setLineWrap(true);
 		text.setColumns(10);
-		text.setPreferredSize(new Dimension(250,100));
+		text.setPreferredSize(new Dimension(250, 100));
 		text.setText("PanGIA is a tool for aligning physical and genetic interaction networks.\n\nPlease cite:\n...\n...");
 
 		java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-		gridBagConstraints.gridx=2;
-		gridBagConstraints.gridy=0;
+		gridBagConstraints.gridx = 2;
+		gridBagConstraints.gridy = 0;
 
-		aboutFrame.add(text,gridBagConstraints);
+		aboutFrame.add(text, gridBagConstraints);
 		
 		/*
 		gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1038,7 +1082,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 	}
 
-	private void textFieldActionPerformed() {
+	private void textFieldActionPerformed()
+	{
 		updateSearchButtonState();
 	}
 
@@ -1046,7 +1091,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	{
 		if (!edgeFilterSliderEventLock)
 		{
-			edgeFilterTextField.setText(String.valueOf((edgeFilterSlider.getValue())/100.0));
+			edgeFilterTextField.setText(String.valueOf((edgeFilterSlider.getValue()) / 100.0));
 			updateSearchButtonState();
 		}
 	}
@@ -1055,7 +1100,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	{
 		if (!complexRewardSliderEventLock)
 		{
-			complexRewardTextField.setText(String.valueOf(complexRewardSlider.getValue()/601.0*6.0-3.0).substring(0, 4));
+			complexRewardTextField.setText(String.valueOf(complexRewardSlider.getValue() / 601.0 * 6.0 - 3.0).substring(0, 4));
 			updateSearchButtonState();
 		}
 	}
@@ -1066,10 +1111,13 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		{
 			double val = Double.valueOf(edgeFilterTextField.getText());
 			edgeFilterSliderEventLock = true;
-			edgeFilterSlider.setValue((int)Math.round(val*100));
+			edgeFilterSlider.setValue((int) Math.round(val * 100));
 			edgeFilterSliderEventLock = false;
 			//edgeFilterTextField.setText(String.valueOf((int)Math.round(val)));
-		} catch (Exception ignored){}
+		}
+		catch (Exception ignored)
+		{
+		}
 
 		updateSearchButtonState();
 	}
@@ -1080,15 +1128,19 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		{
 			double val = Double.valueOf(complexRewardTextField.getText());
 			complexRewardSliderEventLock = true;
-			complexRewardSlider.setValue((int)Math.round((val+3.0)*(601/6)));
+			complexRewardSlider.setValue((int) Math.round((val + 3.0) * (601 / 6)));
 			complexRewardSliderEventLock = false;
 			//complexRewardTextField.setText(String.valueOf(val));
-		} catch (Exception ignored){}
+		}
+		catch (Exception ignored)
+		{
+		}
 
 		updateSearchButtonState();
 	}
 
-	private void reportPathButtionActionPerformed() {
+	private void reportPathButtionActionPerformed()
+	{
 
 		JFileChooser reportFileChooser = new JFileChooser(".");
 		reportFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1097,7 +1149,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		reportFileChooser.setSelectedFile(new File(new File("PanGIA_Report.html").getAbsoluteFile().getName()));
 		int returnVal = reportFileChooser.showSaveDialog(reportPathButton);
 
-		if (returnVal==JFileChooser.APPROVE_OPTION)
+		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			File f = reportFileChooser.getSelectedFile();
 
@@ -1105,7 +1157,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			reportPathTextField.setText(f.getName());
 			reportPathTextField.setToolTipText(this.reportPath);
 			reportPathTextField.setEnabled(true);
-		}else
+		}
+		else
 		{
 			this.reportPath = "";
 			reportPathTextField.setText("");
@@ -1124,7 +1177,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 	private void annotationCheckBoxActionPerformed()
 	{
-		boolean attribChosen = annotationAttribComboBox.getSelectedIndex()>=0;
+		boolean attribChosen = annotationAttribComboBox.getSelectedIndex() >= 0;
 
 		if (attribChosen)
 		{
@@ -1142,7 +1195,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 				annotationThresholdTextField.setEnabled(annotationCheckBox.isSelected());
 				annotationThresholdLabel.setEnabled(annotationCheckBox.isSelected());
 			}
-		}else
+		}
+		else
 		{
 			trainingLabel.setEnabled(false);
 			trainingCheckBox.setEnabled(false);
@@ -1170,7 +1224,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
     */
 
 	private JLabel nodeAttrLabel;
-	private JComboBox  nodeAttrComboBox;
+	private JComboBox nodeAttrComboBox;
 
 	private JLabel complexRewardLabel;
 	private boolean complexRewardSliderEventLock = false;
@@ -1224,7 +1278,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	private JLabel reportPathLabel;
 	private JTextField reportPathTextField;
 	private JButton reportPathButton;
-	private String reportPath="";
+	private String reportPath = "";
 	private JTextField seedTextField;
 
 	private JTextArea parameterErrorTextArea;
@@ -1238,7 +1292,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	private NetworkSelectorPanel physicalNetworkPanel = new NetworkSelectorPanel(ServicesUtil.cyApplicationManagerServiceRef, ServicesUtil.cyNetworkManagerServiceRef);
 	private NetworkSelectorPanel geneticNetworkPanel = new NetworkSelectorPanel(ServicesUtil.cyApplicationManagerServiceRef, ServicesUtil.cyNetworkManagerServiceRef);
 
-	public void updateAttributeLists() {
+	public void updateAttributeLists()
+	{
 		// Save current selection
 		final Object nodeSelected = nodeAttrComboBox.getSelectedItem();
 		final Object geneticEdgeSelected = geneticEdgeAttribComboBox.getSelectedItem();
@@ -1258,43 +1313,51 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		//Populate the node boxes
 		CyTable nodeAttr_phy = null;
 		Set<String> nodeAttrNames_phy = null;
-		if (this.physicalNetworkPanel.getSelectedNetwork() != null){
+		if (this.physicalNetworkPanel.getSelectedNetwork() != null)
+		{
 			nodeAttr_phy = this.physicalNetworkPanel.getSelectedNetwork().getDefaultNodeTable();
 			nodeAttrNames_phy = CyTableUtil.getColumnNames(nodeAttr_phy);
 		}
 
 		CyTable nodeAttr_gen = null;
 		Set<String> nodeAttrNames_gen = null;
-		if (this.geneticNetworkPanel.getSelectedNetwork() != null){
+		if (this.geneticNetworkPanel.getSelectedNetwork() != null)
+		{
 			nodeAttr_gen = this.geneticNetworkPanel.getSelectedNetwork().getDefaultNodeTable();
 			nodeAttrNames_gen = CyTableUtil.getColumnNames(nodeAttr_gen);
 		}
 
 		// Find common nodeAttr names for both network
 		Set<String> nodeAttrNames = null;
-		if (nodeAttrNames_phy != null){
+		if (nodeAttrNames_phy != null)
+		{
 			nodeAttrNames = new TreeSet<String>();
 			Iterator<String> it = nodeAttrNames_phy.iterator();
-			while (it.hasNext()){
+			while (it.hasNext())
+			{
 				String name = it.next();
-				if (nodeAttrNames_gen != null && nodeAttrNames_gen.contains(name)){
+				if (nodeAttrNames_gen != null && nodeAttrNames_gen.contains(name))
+				{
 					nodeAttrNames.add(name);
 				}
 			}
 		}
 
 		boolean isNodeSelectedExist = false;
-		if (nodeAttrNames != null){
+		if (nodeAttrNames != null)
+		{
 			for (String name : nodeAttrNames)
 			{
 				// Use only double or int attributes
 				Class<?> attribType_phy = nodeAttr_phy.getColumn(name).getType();
 				Class<?> attribType_gen = nodeAttr_gen.getColumn(name).getType();
-				if (attribType_phy != attribType_gen){
+				if (attribType_phy != attribType_gen)
+				{
 					continue;
 				}
 
-				if (name.equals("shared name")){
+				if (name.equals("shared name"))
+				{
 					continue;
 				}
 
@@ -1311,19 +1374,21 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		//Populate the edge box -- physical
 		CyTable edgeAttr_phy = null;
 		Set<String> edgeAttrNames_phy = null;
-		if (this.physicalNetworkPanel.getSelectedNetwork() != null){
+		if (this.physicalNetworkPanel.getSelectedNetwork() != null)
+		{
 			edgeAttr_phy = this.physicalNetworkPanel.getSelectedNetwork().getDefaultEdgeTable();
 			edgeAttrNames_phy = CyTableUtil.getColumnNames(edgeAttr_phy);
 		}
 
 
 		boolean isPhysicalEdgeSelectedExist = false;
-		if (edgeAttrNames_phy != null){
+		if (edgeAttrNames_phy != null)
+		{
 			for (String name : edgeAttrNames_phy)
 			{
 				// Use only double or int attributes
 				if (edgeAttr_phy.getColumn(name).getType() == Double.class || edgeAttr_phy.getColumn(name).getType() == Float.class
-						||edgeAttr_phy.getColumn(name).getType() == Integer.class)
+						|| edgeAttr_phy.getColumn(name).getType() == Integer.class)
 				{
 					physicalEdgeAttribComboBox.addItem(name);
 					if (name.equals(physicalEdgeSelected)) isPhysicalEdgeSelectedExist = true;
@@ -1336,7 +1401,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		CyTable edgeAttr_gen = null;
 		Set<String> edgeAttrNames_gen = null;
 
-		if (this.geneticNetworkPanel.getSelectedNetwork() != null){
+		if (this.geneticNetworkPanel.getSelectedNetwork() != null)
+		{
 			edgeAttr_gen = this.geneticNetworkPanel.getSelectedNetwork().getDefaultEdgeTable();
 			edgeAttrNames_gen = CyTableUtil.getColumnNames(edgeAttr_gen);
 		}
@@ -1344,12 +1410,13 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		boolean isGeneticEdgeSelectedExist = false;
 
-		if (edgeAttrNames_gen != null){
+		if (edgeAttrNames_gen != null)
+		{
 			for (String name : edgeAttrNames_gen)
 			{
 				// Use only double or int attributes
 				if (edgeAttr_gen.getColumn(name).getType() == Double.class || edgeAttr_gen.getColumn(name).getType() == Float.class
-						||edgeAttr_gen.getColumn(name).getType() == Integer.class)
+						|| edgeAttr_gen.getColumn(name).getType() == Integer.class)
 				{
 					geneticEdgeAttribComboBox.addItem(name);
 					if (name.equals(geneticEdgeSelected)) isGeneticEdgeSelectedExist = true;
@@ -1361,14 +1428,15 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		//Populate the annotation box
 		boolean isAnnotSelectedExist = false;
-		if (nodeAttrNames != null){
+		if (nodeAttrNames != null)
+		{
 			for (String name : nodeAttrNames)
 			{
 				// Use only string attributes
 				Class<?> attribType = nodeAttr_phy.getColumn(name).getType();
-				if ( (attribType == String.class || attribType == java.util.List.class) )
+				if ((attribType == String.class || attribType == java.util.List.class))
 				{
-					if( name.equals("canonicalName") || name.equals("shared name") || name.equals("name") )
+					if (name.equals("canonicalName") || name.equals("shared name") || name.equals("name"))
 						continue;
 					annotationAttribComboBox.addItem(name);
 					if (name.equals(geneticEdgeSelected)) isAnnotSelectedExist = true;
@@ -1382,18 +1450,22 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		updateSearchButtonState();
 	}
 
-	private void updateScalingMethods() {
-		for (final ScalingMethodX method : ScalingMethodX.values()) {
+	private void updateScalingMethods()
+	{
+		for (final ScalingMethod method : ScalingMethod.values())
+		{
 			phyScalingMethodComboBox.addItem(method.getDisplayString());
 			genScalingMethodComboBox.addItem(method.getDisplayString());
 		}
 	}
 
-	/***
-	 * 5/26/10: Error checking moved to updateSearchButtonState. Invalid parameters should never be allowed into this function.(Greg) 
+	/**
+	 * 5/26/10: Error checking moved to updateSearchButtonState. Invalid parameters should never be allowed into this function.(Greg)
+	 *
 	 * @return
 	 */
-	private void buildSearchParameters() {
+	private void buildSearchParameters()
+	{
 		parameters = new SearchParameters();
 
 		// Set networks
@@ -1401,16 +1473,18 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		parameters.setGeneticNetwork(geneticNetworkPanel.getSelectedNetwork());
 
 		// Set edge attributes.
-		final Object geneticEdgeItem  = geneticEdgeAttribComboBox.getSelectedItem();
+		final Object geneticEdgeItem = geneticEdgeAttribComboBox.getSelectedItem();
 		final Object physicalEdgeItem = physicalEdgeAttribComboBox.getSelectedItem();
 
 		String geneticEdgeAttrName = geneticEdgeItem.toString();
 		String physicalEdgeAttrName = physicalEdgeItem.toString();
 
-		if (geneticEdgeAttrName.equalsIgnoreCase(DEFAULT_ATTRIBUTE)){
+		if (geneticEdgeAttrName.equalsIgnoreCase(DEFAULT_ATTRIBUTE))
+		{
 			geneticEdgeAttrName = "";
 		}
-		if (physicalEdgeAttrName.equalsIgnoreCase(DEFAULT_ATTRIBUTE)){
+		if (physicalEdgeAttrName.equalsIgnoreCase(DEFAULT_ATTRIBUTE))
+		{
 			physicalEdgeAttrName = "";
 		}
 
@@ -1419,11 +1493,13 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		parameters.setGeneticEdgeAttrName(geneticEdgeAttrName);
 		parameters.setPhysicalEdgeAttrName(physicalEdgeAttrName);
 
-		if (phyScalingMethodComboBox.isEnabled()) parameters.setPhysicalScalingMethod((String)phyScalingMethodComboBox.getSelectedItem());
-		else parameters.setPhysicalScalingMethod(ScalingMethodX.NONE.getDisplayString());
+		if (phyScalingMethodComboBox.isEnabled())
+			parameters.setPhysicalScalingMethod((String) phyScalingMethodComboBox.getSelectedItem());
+		else parameters.setPhysicalScalingMethod(ScalingMethod.NONE.getDisplayString());
 
-		if (genScalingMethodComboBox.isEnabled()) parameters.setGeneticScalingMethod((String)genScalingMethodComboBox.getSelectedItem());
-		else parameters.setGeneticScalingMethod(ScalingMethodX.NONE.getDisplayString());
+		if (genScalingMethodComboBox.isEnabled())
+			parameters.setGeneticScalingMethod((String) genScalingMethodComboBox.getSelectedItem());
+		else parameters.setGeneticScalingMethod(ScalingMethod.NONE.getDisplayString());
 
 		//parameters.setAlpha(Double.parseDouble(alphaTextField.getText()));
 		//parameters.setAlphaMultiplier(Double.parseDouble(alphaMultiplierTextField.getText()));
@@ -1438,7 +1514,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		{
 			final double pValueThreshold = Double.parseDouble(edgeFilterTextField.getText());
 			parameters.setPValueThreshold(pValueThreshold);
-		}else parameters.setPValueThreshold(Double.NaN);
+		}
+		else parameters.setPValueThreshold(Double.NaN);
 
 		//final int numberOfSamples = Integer.parseInt(numberOfSamplesTextField.getText());
 		//parameters.setNumberOfSamples(numberOfSamples);
@@ -1449,49 +1526,48 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		parameters.setComplexTrainingPhysical(trainingCheckBox.isSelected());
 		parameters.setComplexTrainingGenetic(trainingCheckBox.isSelected());
 
-		if (annotationAttribComboBox.getSelectedItem()==null) parameters.setAnnotationAttrName("");
+		if (annotationAttribComboBox.getSelectedItem() == null) parameters.setAnnotationAttrName("");
 		else parameters.setAnnotationAttrName(annotationAttribComboBox.getSelectedItem().toString());
 
 		parameters.setReportPath(reportPath);
 	}
 
-	public void setContainer(final Container container) {
-		this.container = container;
-	}
-
 	public void updateFilteringOptions()
 	{
-		final String physicalAttrName = (String)physicalEdgeAttribComboBox.getSelectedItem();
-		final String geneticAttrName = (String)geneticEdgeAttribComboBox.getSelectedItem();
+		final String physicalAttrName = (String) physicalEdgeAttribComboBox.getSelectedItem();
+		final String geneticAttrName = (String) geneticEdgeAttribComboBox.getSelectedItem();
 
-		if (physicalAttrName==null || physicalAttrName.equals(DEFAULT_ATTRIBUTE) || trainingCheckBox.isSelected())
+		if (physicalAttrName == null || physicalAttrName.equals(DEFAULT_ATTRIBUTE) || trainingCheckBox.isSelected())
 		{
 			lbPhysicalScale.setEnabled(false);
 			phyScalingMethodComboBox.setEnabled(false);
-		}else
+		}
+		else
 		{
 			lbPhysicalScale.setEnabled(true);
 			phyScalingMethodComboBox.setEnabled(true);
 		}
 
-		if (geneticAttrName==null || geneticAttrName.equals(DEFAULT_ATTRIBUTE) || trainingCheckBox.isSelected())
+		if (geneticAttrName == null || geneticAttrName.equals(DEFAULT_ATTRIBUTE) || trainingCheckBox.isSelected())
 		{
 			lbGeneticScale.setEnabled(false);
 			genScalingMethodComboBox.setEnabled(false);
-		}else
+		}
+		else
 		{
 			lbGeneticScale.setEnabled(true);
 			genScalingMethodComboBox.setEnabled(true);
 		}
 
 
-		if (geneticAttrName==null || geneticAttrName.equals(DEFAULT_ATTRIBUTE))
+		if (geneticAttrName == null || geneticAttrName.equals(DEFAULT_ATTRIBUTE))
 		{
 			edgeFilterSliderLabels.setEnabled(false);
 			edgeFilterSlider.setEnabled(false);
 			pValueThresholdLabel.setEnabled(false);
 			edgeFilterTextField.setEnabled(false);
-		}else
+		}
+		else
 		{
 			edgeFilterSliderLabels.setEnabled(true);
 			edgeFilterSlider.setEnabled(true);
@@ -1501,9 +1577,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	}
 
 	//private boolean searchRunning =
-	private void updateSearchButtonState() {
-		final String geneticAttrName = (String)geneticEdgeAttribComboBox.getSelectedItem();
-		final String physicalAttrName = (String)physicalEdgeAttribComboBox.getSelectedItem();
+	private void updateSearchButtonState()
+	{
+		final String geneticAttrName = (String) geneticEdgeAttribComboBox.getSelectedItem();
+		final String physicalAttrName = (String) physicalEdgeAttribComboBox.getSelectedItem();
 		if (geneticAttrName == null || physicalAttrName == null)
 		{
 			searchButton.setEnabled(false);
@@ -1514,7 +1591,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		final CyNetwork physicalNetwork = physicalNetworkPanel.getSelectedNetwork();
 		final CyNetwork geneticNetwork = geneticNetworkPanel.getSelectedNetwork();
 
-		if (physicalNetwork == null && geneticNetwork==null)
+		if (physicalNetwork == null && geneticNetwork == null)
 		{
 			searchButton.setEnabled(false);
 			parameterErrorTextArea.setText("Please choose physical and genetic networks.");
@@ -1535,7 +1612,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			return;
 		}
 
-		if (physicalNetwork==geneticNetwork && geneticAttrName.equals(physicalAttrName))
+		if (physicalNetwork == geneticNetwork && geneticAttrName.equals(physicalAttrName))
 		{
 			searchButton.setEnabled(false);
 			parameterErrorTextArea.setText("Please choose different networks or attributes.");
@@ -1546,7 +1623,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		String physicalSelected = physicalEdgeAttribComboBox.getSelectedItem().toString();
 
 		if (this.physicalNetworkPanel.getSelectedNetwork() != null &&
-				this.physicalNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(physicalSelected) != null){
+				this.physicalNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(physicalSelected) != null)
+		{
 			Class<?> attrType = this.physicalNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(physicalSelected).getType();
 
 			if (!physicalSelected.trim().equalsIgnoreCase(DEFAULT_ATTRIBUTE) && (attrType != Integer.class &&
@@ -1560,10 +1638,12 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		String geneticSelected = geneticEdgeAttribComboBox.getSelectedItem().toString();
 		if (this.geneticNetworkPanel.getSelectedNetwork() != null &&
-				this.geneticNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(geneticSelected) != null){
+				this.geneticNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(geneticSelected) != null)
+		{
 
 			if (this.geneticNetworkPanel.getSelectedNetwork() != null &&
-					this.geneticNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(geneticSelected) != null){
+					this.geneticNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(geneticSelected) != null)
+			{
 				Class<?> attrType2 = this.geneticNetworkPanel.getSelectedNetwork().getDefaultEdgeTable().getColumn(geneticSelected).getType();
 
 				if (!geneticSelected.trim().equalsIgnoreCase(DEFAULT_ATTRIBUTE) && (attrType2 != Integer.class &&
@@ -1576,7 +1656,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			}
 		}
 
-		if ((annotationCheckBox.isSelected() || trainingCheckBox.isSelected()) && annotationAttribComboBox.getSelectedIndex()<0)
+		if ((annotationCheckBox.isSelected() || trainingCheckBox.isSelected()) && annotationAttribComboBox.getSelectedIndex() < 0)
 		{
 			searchButton.setEnabled(false);
 			parameterErrorTextArea.setText("To use annotation, please choose an annotation node attribute.");
@@ -1603,7 +1683,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		}*/
 
 
-		try{Double.parseDouble(complexRewardTextField.getText());}
+		try
+		{
+			Double.parseDouble(complexRewardTextField.getText());
+		}
 		catch (NumberFormatException e)
 		{
 			searchButton.setEnabled(false);
@@ -1611,7 +1694,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			return;
 		}
 
-		if (Double.parseDouble(complexRewardTextField.getText())<-3 || Double.parseDouble(complexRewardTextField.getText())>3)
+		if (Double.parseDouble(complexRewardTextField.getText()) < -3 || Double.parseDouble(complexRewardTextField.getText()) > 3)
 		{
 			searchButton.setEnabled(false);
 			parameterErrorTextArea.setText("Please set module size in the range [-3,3].");
@@ -1619,12 +1702,12 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		}
 
 
-		if (degreeTextField.getText().length()>0)
+		if (degreeTextField.getText().length() > 0)
 		{
 			try
 			{
 				int d = Integer.parseInt(degreeTextField.getText());
-				if (d<0)
+				if (d < 0)
 				{
 					searchButton.setEnabled(false);
 					parameterErrorTextArea.setText("Please choose a positive value for degree filter.");
@@ -1643,7 +1726,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		try
 		{
 			double p = Double.parseDouble(edgeFilterTextField.getText());
-			if (p<.001 || p>1)
+			if (p < .001 || p > 1)
 			{
 				searchButton.setEnabled(false);
 				parameterErrorTextArea.setText("Please set edge-reporting in the range [.001,1].");
@@ -1683,7 +1766,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			try
 			{
 				double p = Double.parseDouble(annotationThresholdTextField.getText());
-				if (p<0 || p>1)
+				if (p < 0 || p > 1)
 				{
 					searchButton.setEnabled(false);
 					parameterErrorTextArea.setText("Please set labeling threshold in the range [0,1].");
@@ -1713,9 +1796,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	}
 
 	private boolean searchRunning = false;
+
 	public void handleEvent(ColumnCreatedEvent e)
 	{
-		if( searchRunning )
+		if (searchRunning)
 			return;
 		updateAttributeLists();
 	}

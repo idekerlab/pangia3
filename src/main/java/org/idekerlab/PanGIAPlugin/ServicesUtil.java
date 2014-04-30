@@ -19,19 +19,20 @@ import java.util.Properties;
 
 //import org.cytoscape.task.creation.LoadVisualStylesFromFileFactory;
 
-public class ServicesUtil {
+public class ServicesUtil
+{
 
-	
+
 	public static CySwingApplication cySwingApplicationServiceRef;
-	
+
 	public static CyApplicationManager cyApplicationManagerServiceRef;
-	
+
 	public static CyNetworkViewManager cyNetworkViewManagerServiceRef;
 	public static CyNetworkManager cyNetworkManagerServiceRef;
 	public static CyServiceRegistrar cyServiceRegistrarServiceRef;
 	public static CyEventHelper cyEventHelperServiceRef;
 	public static TaskManager taskManagerServiceRef;
-	
+
 	public static CyProperty<Properties> cytoscapePropertiesServiceRef;
 	public static VisualMappingManager visualMappingManagerRef;
 	public static CyNetworkFactory cyNetworkFactoryServiceRef;

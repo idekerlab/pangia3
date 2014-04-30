@@ -4,16 +4,19 @@ import org.cytoscape.work.AbstractTaskFactory;
 import org.cytoscape.work.TaskIterator;
 
 
-public class SearchTaskFactoryImpl extends AbstractTaskFactory { //implements TaskFactory {
+public class SearchTaskFactoryImpl extends AbstractTaskFactory
+{ //implements TaskFactory {
 
 	private SearchTask task;
-	
-	public SearchTaskFactoryImpl(SearchTask task) {
-		this.task = task; 
+
+	public SearchTaskFactoryImpl(SearchTask task)
+	{
+		this.task = task;
 	}
 
 	@Override
-	public TaskIterator createTaskIterator() {
+	public TaskIterator createTaskIterator()
+	{
 		return new TaskIterator(task);
 	}
 }

@@ -101,8 +101,6 @@ public class NestedNetworkCreator
 	// And its SQRT value for visual mapping
 	public static final String GENE_COUNT_SQRT = MODULE_FINDER_PREFIX + "SQRT of module size";
 
-	private static final String SCORE = MODULE_FINDER_PREFIX + "score";
-
 	private static final String MEMBERS = MODULE_FINDER_PREFIX + "members";
 
 	public static final String PHYSICAL_EDGE_COUNT = MODULE_FINDER_PREFIX + "physical interaction count";
@@ -123,7 +121,6 @@ public class NestedNetworkCreator
 	private int maxSize = 0;
 	private final PriorityQueue<NetworkAndScore> networksOrderedByScores = new PriorityQueue(100);
 
-	private double cutoff;
 	private CyNetwork origPhysNetwork;
 	private CyNetwork origGenNetwork;
 	private TypedLinkNetwork<String, Float> physicalNetwork;
@@ -131,7 +128,6 @@ public class NestedNetworkCreator
 	private float remainingPercentage;
 
 	private boolean isGNetSigned;
-	private String nodeAttrName;
 	private String geneticEdgeAttrName;
 	private TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> networkOfModules;
 	private Map<TypedLinkNodeModule<String, BFEdge>, String> module_name;
@@ -165,17 +161,14 @@ public class NestedNetworkCreator
 			final CyNetwork origPhysNetwork, final CyNetwork origGenNetwork,
 			final TypedLinkNetwork<String, Float> physicalNetwork,
 			final TypedLinkNetwork<String, Float> geneticNetwork,
-			final double cutoff,
 			final float remainingPercentage,
 			Map<TypedLinkNodeModule<String, BFEdge>, String> module_name,
 			String networkName,
 			boolean isGNetSigned,
-			String nodeAttrName,
 			String geneticEdgeAttrName,
 			SearchParameters searchParameters
 	)
 	{
-		this.cutoff = cutoff;
 		this.origGenNetwork = origGenNetwork;
 		this.origPhysNetwork = origPhysNetwork;
 		this.physicalNetwork = physicalNetwork;
@@ -183,7 +176,6 @@ public class NestedNetworkCreator
 		this.remainingPercentage = remainingPercentage;
 
 		this.isGNetSigned = isGNetSigned;
-		this.nodeAttrName = nodeAttrName;
 		this.geneticEdgeAttrName = geneticEdgeAttrName;
 		this.networkOfModules = networkOfModules;
 
@@ -310,7 +302,7 @@ public class NestedNetworkCreator
 		CyNetwork nestedNetwork = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
 
 		HashMap<String, CyNode> nestedNodeNameMap = new HashMap<String, CyNode>();
-		for( String nodeName : nodeNames )
+		for (String nodeName : nodeNames)
 		{
 			CyNode node = nestedNetwork.addNode();
 			nestedNetwork.getRow(node).set(CyNetwork.NAME, nodeName);
@@ -321,25 +313,24 @@ public class NestedNetworkCreator
 		if (edgeTable.getColumn(PanGIA.INTERACTION_TYPE) == null)
 			edgeTable.createColumn(PanGIA.INTERACTION_TYPE, String.class, false);
 		String pScoreColumnName = searchParameters.getPhysicalEdgeAttrName();
-  		String gScoreColumnName = searchParameters.getGeneticEdgeAttrName();
-		if( !pScoreColumnName.equals("none") )
+		String gScoreColumnName = searchParameters.getGeneticEdgeAttrName();
+		if (!pScoreColumnName.equals("none"))
 		{
 			if (edgeTable.getColumn(pScoreColumnName) == null)
 				edgeTable.createColumn(pScoreColumnName, Double.class, false);
 		}
-		if( !gScoreColumnName.equals("none") )
+		if (!gScoreColumnName.equals("none"))
 		{
 			if (edgeTable.getColumn(gScoreColumnName) == null)
 				edgeTable.createColumn(gScoreColumnName, Double.class, false);
 		}
 
 
-
-		for( CyEdge edge : origPhysNetwork.getEdgeList() )
+		for (CyEdge edge : origPhysNetwork.getEdgeList())
 		{
 			CyNode source = edge.getSource();
 			CyNode target = edge.getTarget();
-			if( !nodes.contains(source) || !nodes.contains(target) )
+			if (!nodes.contains(source) || !nodes.contains(target))
 				continue;
 			String sourceName = origPhysNetwork.getRow(source).get(CyNetwork.NAME, String.class);
 			String targetName = origPhysNetwork.getRow(target).get(CyNetwork.NAME, String.class);
@@ -351,11 +342,11 @@ public class NestedNetworkCreator
 			nestedNetwork.getRow(newEdge).set(pScoreColumnName, pScore);
 		}
 
-		for( CyEdge edge : origGenNetwork.getEdgeList() )
+		for (CyEdge edge : origGenNetwork.getEdgeList())
 		{
 			CyNode source = edge.getSource();
 			CyNode target = edge.getTarget();
-			if( !nodes.contains(source) || !nodes.contains(target) )
+			if (!nodes.contains(source) || !nodes.contains(target))
 				continue;
 			String sourceName = origGenNetwork.getRow(source).get(CyNetwork.NAME, String.class);
 			String targetName = origGenNetwork.getRow(target).get(CyNetwork.NAME, String.class);
@@ -365,16 +356,16 @@ public class NestedNetworkCreator
 			CyRow edgeRow = nestedNetwork.getRow(newEdge);
 			String existing = edgeRow.get(PanGIA.INTERACTION_TYPE, String.class);
 			String interactionType = "";
-			if (existing == null || !existing.equals("Physical") )
+			if (existing == null || !existing.equals("Physical"))
 				interactionType = "Genetic";
 			else
 				interactionType = "Physical&Genetic";
 			if (isGNetSigned)
 			{
 				Double geneticScore = origGenNetwork.getRow(edge).get(geneticEdgeAttrName, Double.class);
-				if( geneticScore != null )
+				if (geneticScore != null)
 				{
-					if ( geneticScore < 0)
+					if (geneticScore < 0)
 						interactionType += "(negative)";
 					else
 						interactionType += "(positive)";
@@ -408,7 +399,7 @@ public class NestedNetworkCreator
 			settings.put("defaultSpringLength", 100);
 			settings.put("defaultNodeMass", 20);
 			TunableSetter setter = ServicesUtil.registrar.getService(TunableSetter.class);
-			setter.applyTunables(ctx,settings);
+			setter.applyTunables(ctx, settings);
 
 			TaskIterator ti = alg.createTaskIterator(view, ctx, CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
 			try
@@ -506,7 +497,7 @@ public class NestedNetworkCreator
 			settings.put("defaultSpringLength", 100);
 			settings.put("defaultNodeMass", 20);
 			TunableSetter setter = ServicesUtil.registrar.getService(TunableSetter.class);
-			setter.applyTunables(ctx,settings);
+			setter.applyTunables(ctx, settings);
 
 			TaskIterator ti = alg.createTaskIterator(view, ctx, CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
 			try
@@ -521,35 +512,6 @@ public class NestedNetworkCreator
 		}
 	}
 
-	/**
-	 * @returns the list of nodes that are both, in "network", and in "nodes"
-	 */
-	private List<CyNode> getIntersectingNodes(final CyNetwork network, final List<CyNode> nodes)
-	{
-		final List<CyNode> commonNodes = new ArrayList<CyNode>();
-		for (final CyNode node : nodes)
-		{
-			if (network.containsNode(node))
-				commonNodes.add(node);
-		}
-		return commonNodes;
-	}
-
-	private List<CyEdge> getConnectingEdges(CyNetwork network, List<CyNode> nodeList)
-	{
-		HashSet<CyEdge> edgeSet = new HashSet<CyEdge>();
-		Iterator<CyNode> it = nodeList.iterator();
-		while (it.hasNext())
-		{
-			CyNode node = it.next();
-			List<CyEdge> edgeList = network.getAdjacentEdgeList(node, CyEdge.Type.ANY);
-			edgeSet.addAll(edgeList);
-		}
-
-		return new ArrayList<CyEdge>(edgeSet);
-	}
-
-	private static boolean panGIAStylesLoaded = false;
 	private static VisualStyle overviewVS;
 	private static VisualStyle moduleVS;
 
@@ -557,9 +519,9 @@ public class NestedNetworkCreator
 	{
 		int numStylesLoaded = 0;
 		Set<VisualStyle> loadedVisualStyles = ServicesUtil.visualMappingManagerRef.getAllVisualStyles();
-		for( VisualStyle vs : loadedVisualStyles )
+		for (VisualStyle vs : loadedVisualStyles)
 		{
-			if( vs.getTitle().equals(PanGIA.VS_OVERVIEW_NAME) || vs.getTitle().equals(PanGIA.VS_MODULE_NAME) )
+			if (vs.getTitle().equals(PanGIA.VS_OVERVIEW_NAME) || vs.getTitle().equals(PanGIA.VS_MODULE_NAME))
 				numStylesLoaded++;
 		}
 		return numStylesLoaded == PanGIA.NUM_PANGIA_STYLES;
@@ -568,28 +530,30 @@ public class NestedNetworkCreator
 	private void isolatePangiaStyles()
 	{
 		Set<VisualStyle> loadedVisualStyles = ServicesUtil.visualMappingManagerRef.getAllVisualStyles();
-		for( VisualStyle vs : loadedVisualStyles )
+		for (VisualStyle vs : loadedVisualStyles)
 		{
 			String title = vs.getTitle();
-			if( title.equals(PanGIA.VS_OVERVIEW_NAME) )
+			if (title.equals(PanGIA.VS_OVERVIEW_NAME))
 				overviewVS = vs;
-			else if( title.equals(PanGIA.VS_MODULE_NAME) )
+			else if (title.equals(PanGIA.VS_MODULE_NAME))
 				moduleVS = vs;
 		}
 	}
+
 	public void run(TaskMonitor taskMonitor) throws Exception
 	{
 		int MAX_NETWORK_VIEWS;
 		try
 		{
 			MAX_NETWORK_VIEWS = new Integer(ServicesUtil.cytoscapePropertiesServiceRef.getProperties().getProperty("moduleNetworkViewCreationThreshold"));
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			MAX_NETWORK_VIEWS = 5;
 		}
 
 		//Code to load styles.
-		if( !areAllPangiaStylesAlreadyLoaded() )
+		if (!areAllPangiaStylesAlreadyLoaded())
 		{
 			InputStream urlStream = getClass().getResource("/PangiaVS.xml").openStream();
 			Set<VisualStyle> vsSet = ServicesUtil.loadVizmapFileTaskFactory.loadStyles(urlStream);
@@ -641,7 +605,7 @@ public class NestedNetworkCreator
 
 			String sourceName = overviewNetwork.getRow(sourceNode).get(CyNetwork.NAME, String.class);
 			String targetName = overviewNetwork.getRow(targetNode).get(CyNetwork.NAME, String.class);
-			edgeRow.set(CyNetwork.NAME, sourceName + " ("+COMPLEX_INTERACTION_TYPE+") " + targetName);
+			edgeRow.set(CyNetwork.NAME, sourceName + " (" + COMPLEX_INTERACTION_TYPE + ") " + targetName);
 
 
 			CyTable edgeTable = overviewNetwork.getDefaultEdgeTable();

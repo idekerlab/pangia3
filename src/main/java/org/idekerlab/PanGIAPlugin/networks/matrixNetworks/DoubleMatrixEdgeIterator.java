@@ -15,63 +15,63 @@ public class DoubleMatrixEdgeIterator implements Iterator<SDEdge>
 	private final boolean directed;
 	private int nexti;
 	private int nextj;
-	
+
 	private int lasti;
 	private int lastj;
-	
-	
+
+
 	public DoubleMatrixEdgeIterator(DoubleMatrixNetwork mnet)
 	{
 		this.nodeValues = mnet.getNodeListData();
 		this.connectivity = mnet.getConnectivityMatrix();
 		this.directed = mnet.isDirected();
-		
-		lasti=-1;
-		lastj=-1;
-		
-		nexti=0;
-		nextj=0;
-		
+
+		lasti = -1;
+		lastj = -1;
+
+		nexti = 0;
+		nextj = 0;
+
 		getNextIJ();
 	}
-	
+
 	public boolean hasNext()
 	{
-		return nexti!=-1;
+		return nexti != -1;
 	}
-	
+
 	public SDEdge next()
 	{
-		if (nexti==-1) throw new NoSuchElementException();
-		
-		SDEdge out = (directed) ? new DirectedSDEdge(nodeValues.get(nexti),nodeValues.get(nextj),connectivity[nexti][nextj]) : new UndirectedSDEdge(nodeValues.get(nexti),nodeValues.get(nextj),connectivity[nexti][nextj]);
-		
+		if (nexti == -1) throw new NoSuchElementException();
+
+		SDEdge out = (directed) ? new DirectedSDEdge(nodeValues.get(nexti), nodeValues.get(nextj), connectivity[nexti][nextj]) : new UndirectedSDEdge(nodeValues.get(nexti), nodeValues.get(nextj), connectivity[nexti][nextj]);
+
 		getNextIJ();
-		
+
 		return out;
 	}
-	
+
 	public void remove()
 	{
-		if (nexti==-1) throw new IllegalStateException();
-		
+		if (nexti == -1) throw new IllegalStateException();
+
 		connectivity[lasti][lastj] = Double.NaN;
 	}
-	
+
 	private void getNextIJ()
 	{
 		lasti = nexti;
 		lastj = nextj;
-		
-		for (int i=nexti;i<connectivity.length;i++)
-			for (int j=nextj;j<connectivity[i].length;j++)
+
+		for (int i = nexti; i < connectivity.length; i++)
+			for (int j = nextj; j < connectivity[i].length; j++)
 				if (!Double.isNaN(connectivity[i][j]))
-				{	
+				{
 					nexti = i;
 					nextj = j;
 					return;
 				}
-		
+
 		nexti = -1;
 		nextj = -1;
 	}
