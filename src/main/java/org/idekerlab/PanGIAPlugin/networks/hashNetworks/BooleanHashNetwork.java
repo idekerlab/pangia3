@@ -1,16 +1,13 @@
 package org.idekerlab.PanGIAPlugin.networks.hashNetworks;
 
-import java.util.*;
-
 import org.idekerlab.PanGIAPlugin.data.StringVector;
-
 import org.idekerlab.PanGIAPlugin.networks.*;
-import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
 import org.idekerlab.PanGIAPlugin.util.RandomFactory;
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
-import org.idekerlab.PanGIAPlugin.utilities.files.*;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
 
-import java.io.*;
+import java.util.*;
 
 public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 {
@@ -33,32 +30,14 @@ public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 		for (String n : net.nodeMap.keySet())
 			this.nodeMap.put(n, new HashSet<SEdge>(net.nodeMap.get(n)));
 	}
-	
-	public BooleanHashNetwork(String file)
-	{
-		super(false,false);
-		load(file,0,1);
-	}
-	
+
 	public BooleanHashNetwork(boolean selfOk, boolean directed, int startsize)
 	{
 		super(selfOk,directed);
 		this.edgeSet = new HashSet<SEdge>(startsize);
 		this.nodeMap = new HashMap<String,Set<SEdge>>(100);
 	}
-	
-	public BooleanHashNetwork(String file, boolean selfOk, boolean directed)
-	{
-		super(selfOk,directed);
-		load(file,0,1);
-	}
-	
-	public BooleanHashNetwork(String file, boolean selfOk, boolean directed, int n1col, int n2col)
-	{
-		super(selfOk,directed);
-		load(file,n1col,n2col);
-	}
-	
+
 	private void load(String file, int n1col, int n2col)
 	{
 		int numEdges = FileUtil.countLines(file);
@@ -215,77 +194,5 @@ public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 	{
 		return new HashSet<SEdge>(this.edgeSet);
 	}
-	
-	public static BooleanHashNetwork allVsAll(Set<String> nodes)
-	{
-		BooleanHashNetwork out = new BooleanHashNetwork(false,false,nodes.size()*(nodes.size()-1)/2);
-		
-		for (String s1 : nodes)
-			for (String s2 : nodes)
-				if (!s1.equals(s2)) out.add(s1, s2);
-		
-		return out;
-	}
-	
-	public BooleanHashNetwork sampleEdges(int samplesize, boolean replace)
-	{
-		BooleanHashNetwork out = new BooleanHashNetwork(this.selfOk,this.directed,samplesize);
-		
-		List<SEdge> edgeList = new ArrayList<SEdge>(this.edgeSet);
-		
-		Random randgen = RandomFactory.make();
-		
-		if (replace)
-		{
-			for (int r=0;r<samplesize;r++)
-			{
-				int rand = randgen.nextInt(edgeList.size());
-				out.add(edgeList.get(rand));
-			}
-		}else
-		{
-			int lsizem1 = edgeList.size()-1;
-			
-			for (int i=0;i<samplesize;i++)
-			{
-				int swapi = lsizem1-randgen.nextInt(edgeList.size()-i);
-				SEdge temp = edgeList.get(i);
-				edgeList.set(i, edgeList.get(swapi));
-				edgeList.set(swapi, temp);
-			}
-			
-			for (int i=0;i<samplesize;i++)
-				out.add(edgeList.get(i));
-		}
-		
-		return out;
-	}
-	
-	public static int intesectSize(BooleanHashNetwork net1, BooleanHashNetwork net2)
-	{
-		int count = 0;
-		
-		for (SEdge e : net1.edgeSet)
-			if (net2.contains(e)) count++;
-		
-		return count;
-	}
-	
-	public static BooleanHashNetwork intersect(BooleanHashNetwork net1, BooleanHashNetwork net2)
-	{
-		BooleanHashNetwork out = new BooleanHashNetwork(false,false);
-		
-		for (SEdge i : net1.edgeIterator())
-			if (net2.contains(i)) out.add(i);
-		
-		return out;
-	}
-	
-	public static BooleanHashNetwork union(BooleanHashNetwork net1, BooleanHashNetwork net2)
-	{
-		BooleanHashNetwork out = new BooleanHashNetwork(net1);
-		out.addAll(net2);
-		
-		return out;
-	}
+
 }

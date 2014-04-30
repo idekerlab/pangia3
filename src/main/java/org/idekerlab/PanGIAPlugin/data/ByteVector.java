@@ -2,11 +2,7 @@ package org.idekerlab.PanGIAPlugin.data;
 
 import org.idekerlab.PanGIAPlugin.util.RandomFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ByteVector extends DataVector {
 
@@ -17,121 +13,22 @@ public class ByteVector extends DataVector {
 		Initialize(0);
 	}
 
-	public ByteVector(double[] data) {
-		this.data = new byte[data.length];
-		this.size = data.length;
-
-		for (int i = 0; i < data.length; i++)
-			this.data[i] = (byte) data[i];
-	}
-
-	public ByteVector(float[] data) {
-		this.data = new byte[data.length];
-		this.size = data.length;
-
-		for (int i = 0; i < data.length; i++)
-			this.data[i] = (byte) data[i];
-	}
-
-	public ByteVector(short[] data) {
-		this.data = new byte[data.length];
-		this.size = data.length;
-
-		for (int i = 0; i < data.length; i++)
-			this.data[i] = (byte) data[i];
-	}
-
-	public ByteVector(int[] data) {
-		this.data = new byte[data.length];
-		this.size = data.length;
-
-		for (int i = 0; i < data.length; i++)
-			this.data[i] = (byte) data[i];
-	}
-
 	public ByteVector(byte[] data) {
 		this.data = data;
 		this.size = data.length;
-	}
-
-	public ByteVector(List<?> vals) {
-		this.data = new byte[vals.size()];
-		this.size = vals.size();
-
-		if (vals.size() == 0)
-			return;
-
-		if (vals.get(0) instanceof String) {
-			for (int i = 0; i < vals.size(); i++)
-				data[i] = Byte.valueOf((String) vals.get(i));
-		}
-
-		if (vals.get(0) instanceof Double) {
-			for (int i = 0; i < vals.size(); i++)
-				data[i] = (Byte) vals.get(i);
-		}
-
-		if (vals.get(0) instanceof Byte) {
-			for (int i = 0; i < vals.size(); i++)
-				data[i] = (Byte) vals.get(i);
-		}
-	}
-
-	public ByteVector(Set<Byte> vals) {
-		this.data = new byte[vals.size()];
-		this.size = vals.size();
-
-		int i = 0;
-		for (Byte b : vals) {
-			data[i] = b;
-			i++;
-		}
-	}
-
-	public ByteVector(int size, List<String> elementnames, String listname) {
-		Initialize(size);
-
-		setElementNames(elementnames);
-
-		setListName(listname);
 	}
 
 	public ByteVector(int size) {
 		Initialize(size);
 	}
 
-	public ByteVector(int size, byte vals) {
-		Initialize(size, vals);
-	}
-
-	public ByteVector(int size, int vals) {
-		Initialize(size, vals);
-	}
-
-	public ByteVector(StringVector sv) {
-		Initialize(sv.size());
-
-		if (sv.hasElementNames())
-			setElementNames(sv.getElementNames());
-		if (sv.hasListName())
-			setListName(sv.getListName());
-
-		for (int i = 0; i < sv.size(); i++)
-			add(Byte.valueOf(sv.get(i)));
-	}
-
 	public ByteVector(String file, boolean arerownames, boolean arecolname) {
 		LoadColumn(file, arerownames, arecolname, 0);
 	}
 
-	public ByteVector(String file, boolean arerownames, boolean arecolname,
-			int column) {
-		LoadColumn(file, arerownames, arecolname, column);
-	}
-
 	public void Initialize(int size) {
 		data = new byte[size];
-		size = 0;
+		this.size = 0;
 	}
 
 	public void Initialize(int count, byte val) {
@@ -150,8 +47,7 @@ public class ByteVector extends DataVector {
 		byte[] out = new byte[size];
 
 		int n = Math.min(vec.length, size);
-		for (int i = 0; i < n; i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, n);
 
 		return out;
 	}
@@ -196,12 +92,6 @@ public class ByteVector extends DataVector {
 
 		for (int i = 0; i < vals.size; i++)
 			this.add(vals.get(i));
-	}
-
-	public void addFromFile(String fileName, boolean arerownames,
-			boolean arecolumnnames) {
-		ByteVector other = new ByteVector(fileName, arerownames, arecolumnnames);
-		this.addAll(other);
 	}
 
 	public void add(byte Byte, String name) {
@@ -270,36 +160,6 @@ public class ByteVector extends DataVector {
 		data[i] = Byte.valueOf(val);
 	}
 
-	public double getEmpiricalPvalue(double score, boolean upperTail) {
-		if (this.size() == 0)
-			return Double.NaN;
-
-		int gtoe = -1;
-
-		if (upperTail)
-			gtoe = this.greaterThanOrEqual(score).sum();
-		else
-			gtoe = this.lessThanOrEqual(score).sum();
-
-		double pval = (double) gtoe / this.size();
-
-		double min = 1.0 / this.size();
-		if (pval < min)
-			pval = min;
-
-		return pval;
-	}
-
-	public double getEmpiricalValueFromSortedDist(double score) {
-		int count;
-		for (count = 0; count < this.size(); count++) {
-			if (score < this.get(count))
-				break;
-		}
-		return (count == (this.size()) ? (1 / (double) this.size())
-				: (1.0 - ((double) (count) / this.size())));
-	}
-
 	public ByteVector clone() {
 		ByteVector copy = new ByteVector(ByteVector.copy(this.data));
 
@@ -313,8 +173,7 @@ public class ByteVector extends DataVector {
 
 	public static byte[] copy(byte[] data) {
 		byte[] out = new byte[data.length];
-		for (int i = 0; i < data.length; i++)
-			out[i] = data[i];
+		System.arraycopy(data, 0, out, 0, data.length);
 
 		return out;
 	}
@@ -338,61 +197,6 @@ public class ByteVector extends DataVector {
 		return out;
 	}
 
-	public ByteVector reOne(byte one) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < data.length; i++)
-			if (out.get(i) == 1)
-				out.set(i, one);
-
-		return out;
-	}
-
-	public ByteVector subtract(ByteVector data2) {
-		ByteVector out = this.clone();
-
-		if (data2.size() != size()) {
-			System.out
-					.println("Error Subtract: Vectors must be the same size.");
-			System.exit(0);
-		}
-
-		for (int i = 0; i < data.length; i++)
-			out.set(i, out.get(i) - data2.get(i));
-
-		return out;
-	}
-
-	public ByteVector plus(ByteVector data2) {
-		if (data2.size() != size()) {
-			System.out
-					.println("Error Subtract: Vectors must be the same size.");
-			System.exit(0);
-		}
-
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < data.length; i++)
-			out.set(i, out.get(i) + data2.get(i));
-
-		return out;
-	}
-
-	public ByteVector minus(ByteVector data2) {
-		if (data2.size() != size()) {
-			System.out
-					.println("Error Subtract: Vectors must be the same size.");
-			System.exit(0);
-		}
-
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < data.length; i++)
-			out.set(i, out.get(i) - data2.get(i));
-
-		return out;
-	}
-
 	public int max() {
 		if (size() == 0)
 			return -1;
@@ -402,80 +206,6 @@ public class ByteVector extends DataVector {
 			if (data[i] > max)
 				max = data[i];
 		return max;
-	}
-
-	public int maxI() {
-		int max = data[0];
-		int index = 0;
-
-		for (int i = 1; i < data.length; i++) {
-			if (data[i] > max) {
-				max = data[i];
-				index = i;
-			}
-		}
-
-		return index;
-	}
-
-	public IntVector maxIs(int num) {
-		IntVector maxes = new IntVector(num);
-
-		while (maxes.size() < num) {
-			double max = Double.NaN;
-			int maxI = -1;
-
-			for (int i = 0; i < this.size(); i++) {
-				if (maxes.contains(i))
-					continue;
-
-				if (this.get(i) > max || Double.isNaN(max)) {
-					maxI = i;
-					max = this.get(i);
-				}
-			}
-
-			maxes.add(maxI);
-		}
-
-		return maxes;
-	}
-
-	public IntVector minIs(int num) {
-		IntVector mins = new IntVector(num);
-
-		while (mins.size() < num) {
-			double min = Double.NaN;
-			int minI = -1;
-
-			for (int i = 0; i < this.size(); i++) {
-				if (mins.contains(i))
-					continue;
-
-				if (this.get(i) < min || Double.isNaN(min)) {
-					minI = i;
-					min = this.get(i);
-				}
-			}
-
-			mins.add(minI);
-		}
-
-		return mins;
-	}
-
-	public int minI() {
-		double min = data[0];
-		int index = 0;
-
-		for (int i = 0; i < data.length; i++) {
-			if (!Double.isNaN(data[i]) && data[i] < min) {
-				min = data[i];
-				index = i;
-			}
-		}
-
-		return index;
 	}
 
 	public int min() {
@@ -508,69 +238,6 @@ public class ByteVector extends DataVector {
 		return out;
 	}
 
-	public ByteVector plus(int val) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			out.set(i, out.get(i) + val);
-
-		return out;
-	}
-
-	public ByteVector minus(int val) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			out.set(i, out.get(i) - val);
-
-		return out;
-	}
-
-	public ByteVector subtract(int val) {
-		ByteVector s = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			s.set(i, s.get(i) - val);
-
-		return s;
-	}
-
-	public ByteVector divideBy(ByteVector val) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			out.set(i, out.get(i) / val.get(i));
-
-		return out;
-	}
-
-	public ByteVector divideBy(int val) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			out.set(i, out.get(i) / val);
-
-		return out;
-	}
-
-	public ByteVector times(ByteVector val) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			out.set(i, out.get(i) * val.get(i));
-
-		return out;
-	}
-
-	public ByteVector times(int val) {
-		ByteVector out = this.clone();
-
-		for (int i = 0; i < size(); i++)
-			out.set(i, out.get(i) * val);
-
-		return out;
-	}
-
 	public boolean isNaN() {
 		for (int i = 0; i < size(); i++)
 			if (!Double.isNaN(data[i]))
@@ -594,46 +261,6 @@ public class ByteVector extends DataVector {
 			return Double.NaN;
 
 		return sum / (valcount);
-	}
-
-	public double std() {
-		double avg = mean();
-
-		double sum = 0.0;
-		int valcount = 0;
-
-		for (int i = 0; i < size(); i++)
-			if (!Double.isNaN(get(i))) {
-				sum += Math.pow((get(i) - avg), 2);
-				valcount++;
-			}
-
-		if (valcount == 0)
-			return Double.NaN;
-
-		sum = sum / (valcount - 1);
-
-		return Math.pow(sum, .5);
-	}
-
-	public ZStat zstat() {
-		double avg = mean();
-
-		double sum = 0.0;
-		int valcount = 0;
-
-		for (int i = 0; i < size(); i++)
-			if (!Double.isNaN(get(i))) {
-				sum += Math.pow((get(i) - avg), 2);
-				valcount++;
-			}
-
-		if (valcount == 0)
-			return new ZStat(Double.NaN, Double.NaN);
-
-		sum = sum / (valcount - 1);
-
-		return new ZStat(avg, Math.pow(sum, .5));
 	}
 
 	public int sum() {

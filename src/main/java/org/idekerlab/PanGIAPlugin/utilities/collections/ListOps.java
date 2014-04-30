@@ -1,14 +1,9 @@
 package org.idekerlab.PanGIAPlugin.utilities.collections;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.idekerlab.PanGIAPlugin.data.IntVector;
 import org.idekerlab.PanGIAPlugin.util.RandomFactory;
+
+import java.util.*;
 
 /**
  * A utility class providing commonly-used operations on lists (vectors).
@@ -93,8 +88,7 @@ public class ListOps {
 		List<String> newlist = new ArrayList<String>();
 
 		if (array != null) {
-			for (int i = 0; i < array.length; i++)
-				newlist.add(array[i]);
+			Collections.addAll(newlist, array);
 		}
 
 		return (newlist);
@@ -143,8 +137,7 @@ public class ListOps {
 
 	public static String[] Unique(String[] st) {
 		HashSet<String> hs = new HashSet<String>();
-		for (int i = 0; i < st.length; i++)
-			hs.add(st[i]);
+		Collections.addAll(hs, st);
 
 		return hs.toArray(new String[hs.size()]);
 	}

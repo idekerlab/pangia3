@@ -1,6 +1,6 @@
 package org.idekerlab.PanGIAPlugin.networks.linkedNetworks;
 
-import java.util.*;
+import java.util.Set;
 
 public final class TypedLinkEdge<NT,ET> implements Finalish
 {

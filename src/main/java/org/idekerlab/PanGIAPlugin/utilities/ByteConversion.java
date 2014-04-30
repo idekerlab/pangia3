@@ -374,7 +374,7 @@ public class ByteConversion
 	      /* ========================= */
 	       
 	      public static boolean toBoolean(byte[] data) {
-	      return (data == null || data.length == 0) ? false : data[0] != 0x00;
+	      return (!(data == null || data.length == 0)) && data[0] != 0x00;
 	      }
 	       
 	      public static boolean[] toBooleanA(byte[] data) {

@@ -1,13 +1,9 @@
 package org.idekerlab.PanGIAPlugin.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import org.idekerlab.PanGIAPlugin.util.RandomFactory;
 import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+
+import java.util.*;
 
 
 public class FloatVector extends DataVector {
@@ -181,8 +177,7 @@ public class FloatVector extends DataVector {
 		float[] out = new float[size];
 
 		int n = Math.min(vec.length, size);
-		for (int i = 0; i < n; i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, n);
 
 		return out;
 	}
@@ -1781,8 +1776,7 @@ public class FloatVector extends DataVector {
 	public static float[] copy(float[] vec) {
 		float[] out = new float[vec.length];
 
-		for (int i = 0; i < vec.length; i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, vec.length);
 
 		return out;
 	}

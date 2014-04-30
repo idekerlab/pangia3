@@ -1,9 +1,9 @@
 package org.idekerlab.PanGIAPlugin;
 
-
-import cytoscape.CyNetwork;
 //import cytoscape.util.ScalingMethod;
 
+
+import org.cytoscape.model.CyNetwork;
 
 public final class SearchParameters {
 	private CyNetwork physicalNetwork;

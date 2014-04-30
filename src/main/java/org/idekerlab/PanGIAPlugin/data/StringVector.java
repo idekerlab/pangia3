@@ -25,8 +25,7 @@ public class StringVector extends DataVector implements Iterable<String>{
 	public StringVector(String[] vals)
 	{
 		Initialize(vals.length);
-		for(int i=0; i<vals.length; i++)
-			data.add(vals[i]);
+		Collections.addAll(data, vals);
 	}
 	
 	public StringVector(double[] vals)
@@ -188,9 +187,8 @@ public class StringVector extends DataVector implements Iterable<String>{
 	public void set(String[] newData)
 	{
 		this.data = new ArrayList<String>(newData.length);
-		
-		for (int i=0;i<newData.length;i++)
-			this.data.add(newData[i]);
+
+		Collections.addAll(this.data, newData);
 	}
 	
 	public void set(int i, String val)

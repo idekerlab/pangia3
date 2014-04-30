@@ -1,42 +1,20 @@
 package org.idekerlab.PanGIAPlugin.networks.matrixNetworks;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.idekerlab.PanGIAPlugin.utilities.ByteConversion;
-import org.idekerlab.PanGIAPlugin.utilities.IIterator;
-
-import org.idekerlab.PanGIAPlugin.networks.AbstractNetwork;
-import org.idekerlab.PanGIAPlugin.networks.DirectedSDEdge;
-import org.idekerlab.PanGIAPlugin.networks.SDEdge;
-import org.idekerlab.PanGIAPlugin.networks.SDNetwork;
-import org.idekerlab.PanGIAPlugin.networks.SEdge;
-import org.idekerlab.PanGIAPlugin.networks.SNetwork;
-import org.idekerlab.PanGIAPlugin.networks.UndirectedSDEdge;
+import org.idekerlab.PanGIAPlugin.data.DoubleVector;
+import org.idekerlab.PanGIAPlugin.data.IntVector;
+import org.idekerlab.PanGIAPlugin.data.StringTable;
+import org.idekerlab.PanGIAPlugin.networks.*;
 import org.idekerlab.PanGIAPlugin.networks.hashNetworks.DoubleHashNetwork;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
 import org.idekerlab.PanGIAPlugin.networks.util.Mergers;
-import org.idekerlab.PanGIAPlugin.data.DoubleVector;
-import org.idekerlab.PanGIAPlugin.data.FloatMatrix;
-import org.idekerlab.PanGIAPlugin.data.IntVector;
-import org.idekerlab.PanGIAPlugin.data.StringTable;
-
-import org.idekerlab.PanGIAPlugin.utilities.files.*;
+import org.idekerlab.PanGIAPlugin.utilities.ByteConversion;
+import org.idekerlab.PanGIAPlugin.utilities.IIterator;
 import org.idekerlab.PanGIAPlugin.utilities.collections.SetUtil;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
+
+import java.io.*;
+import java.util.*;
 
 
 public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
@@ -96,8 +74,7 @@ public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
 		Initialize(nodeValues.size());
 		
 		for (int i=0;i<connectivity.length;i++)
-			for (int j=0;j<connectivity[i].length;j++)
-				connectivity[i][j] = net.connectivity[i][j];
+			System.arraycopy(net.connectivity[i], 0, connectivity[i], 0, connectivity[i].length);
 		
 	}
 	
@@ -252,8 +229,7 @@ public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
 	public void SetData(double[][] data)
 	{
 		for (int i=0;i<connectivity.length;i++)
-			for (int j=0;j<connectivity[i].length;j++)
-				connectivity[i][j] = data[i][j];
+			System.arraycopy(data[i], 0, connectivity[i], 0, connectivity[i].length);
 	}
 	
 	public String getNodeValue(int i)
@@ -580,8 +556,8 @@ public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
 		{
 			BufferedInputStream bos = new BufferedInputStream(new FileInputStream(file));
 			
-			boolean selfOk = (bos.read()==0) ? false : true;
-			boolean directed = (bos.read()==0) ? false : true;
+			boolean selfOk = (bos.read() != 0);
+			boolean directed = (bos.read() != 0);
 			
 			byte[] f4 = new byte[4];
 			bos.read(f4);
@@ -594,9 +570,8 @@ public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
 			byte[] stringBytes = new byte[numBytes];
 			bos.read(stringBytes);
 			String[] nodeString = new String(stringBytes).split("\t");
-			
-			for (String n : nodeString)
-				nodelist.add(n);
+
+			Collections.addAll(nodelist, nodeString);
 			
 			net = new DoubleMatrixNetwork(selfOk,directed,nodelist);
 			
@@ -636,9 +611,8 @@ public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
 			byte[] stringBytes = new byte[numBytes];
 			bos.read(stringBytes);
 			String[] nodeString = new String(stringBytes).split("\t");
-			
-			for (String n : nodeString)
-				nodelist.add(n);
+
+			Collections.addAll(nodelist, nodeString);
 			
 			return nodelist;
 			
@@ -673,8 +647,7 @@ public class DoubleMatrixNetwork extends SDNetwork implements Iterable<SDEdge>
 		double[][] out = new double[nodeValues.size()][nodeValues.size()];
 		
 		for (int i=0;i<this.connectivity.length;i++)
-			for (int j=0;j<this.connectivity[i].length;j++)
-				out[i][j] = this.connectivity[i][j];
+			System.arraycopy(this.connectivity[i], 0, out[i], 0, this.connectivity[i].length);
 		
 		if (!this.directed)
 			for (int i=0;i<this.connectivity.length;i++)

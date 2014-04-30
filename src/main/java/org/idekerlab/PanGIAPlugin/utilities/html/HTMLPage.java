@@ -1,8 +1,10 @@
 package org.idekerlab.PanGIAPlugin.utilities.html;
 
-import java.io.*;
-import org.idekerlab.PanGIAPlugin.data.*;
-import org.idekerlab.PanGIAPlugin.utilities.files.*;
+import org.idekerlab.PanGIAPlugin.data.StringTable;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class HTMLPage extends HTMLHyperBlock
 {

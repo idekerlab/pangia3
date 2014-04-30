@@ -216,8 +216,7 @@ public class DoubleVector extends DataVector {
 		double[] out = new double[size];
 		
 		int n = Math.min(vec.length, size);
-		for (int i=0;i<n;i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, n);
 		
 		return out;
 	}
@@ -564,9 +563,8 @@ public class DoubleVector extends DataVector {
 		int[] minIs = new int[num];
 		
 		int[] order = new DoubleVector(v).sort_I().getData();
-		
-		for (int i=0;i<num;i++)
-			minIs[i] = order[i];
+
+		System.arraycopy(order, 0, minIs, 0, num);
 					
 		return minIs;
 	}
@@ -660,9 +658,8 @@ public class DoubleVector extends DataVector {
 		double[] mins = new double[num];
 		
 		double[] sorted = new DoubleVector(v).sort().getData();
-		
-		for (int i=0;i<num;i++)
-			mins[i] = sorted[i];
+
+		System.arraycopy(sorted, 0, mins, 0, num);
 		
 		return mins;
 	}
@@ -1140,12 +1137,10 @@ public class DoubleVector extends DataVector {
 	public static double[] join(double[] vals1, double[] vals2)
 	{
 		double[] out = new double[vals1.length+vals2.length];
-		
-		for (int i=0;i<vals1.length;i++)
-			out[i] = vals1[i];
-		
-		for (int i=0;i<vals2.length;i++)
-			out[i+vals1.length] = vals2[i];
+
+		System.arraycopy(vals1, 0, out, 0, vals1.length);
+
+		System.arraycopy(vals2, 0, out, vals1.length, vals2.length);
 		
 		return out;
 	}
@@ -1155,9 +1150,8 @@ public class DoubleVector extends DataVector {
 		double[] out = new double[v.length+1];
 		
 		out[0] = val;
-		
-		for (int i=1;i<out.length;i++)
-			out[i] = v[i-1];
+
+		System.arraycopy(v, 0, out, 1, out.length - 1);
 		
 		return out;
 	}
@@ -1307,9 +1301,8 @@ public class DoubleVector extends DataVector {
 	public static double[] get(double[] v, int start, int end)
 	{
 		double[] out = new double[end-start+1];
-		
-		for (int i=start;i<=end;i++)
-			out[i] = v[i];
+
+		System.arraycopy(v, start, out, start, end + 1 - start);
 		
 		return out;
 	}

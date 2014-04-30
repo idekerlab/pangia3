@@ -1,26 +1,11 @@
 package org.idekerlab.PanGIAPlugin.utilities.collections;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 import org.idekerlab.PanGIAPlugin.structures.IntPair;
 import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
-import org.idekerlab.PanGIAPlugin.data.DoubleVector;
+
+import java.io.*;
+import java.util.*;
 
 public class HashMapUtil {
 
@@ -306,7 +291,7 @@ public class HashMapUtil {
 			PrintWriter out1 = new PrintWriter(fsout);
 
 			for (String eachKey : hm.keySet())
-				out1.println(eachKey.toString() + "\t" + hm.get(eachKey));
+				out1.println(eachKey + "\t" + hm.get(eachKey));
 
 			out1.close();
 		} catch (FileNotFoundException e) {
@@ -355,8 +340,7 @@ public class HashMapUtil {
 				String[] entries = cols[valcol].split("\\|");
 
 				List<String> vals = new ArrayList<String>(entries.length);
-				for (int a = 0; a < entries.length; a++)
-					vals.add(entries[a]);
+				Collections.addAll(vals, entries);
 
 				for (int a = 0; a < keys.length; a++) {
 					if (map.containsKey(keys[a]))
@@ -508,8 +492,7 @@ public class HashMapUtil {
 				String[] entries = cols[valcol].split(delim);
 
 				Set<String> vals = new HashSet<String>(entries.length);
-				for (int a = 0; a < entries.length; a++)
-					vals.add(entries[a]);
+				Collections.addAll(vals, entries);
 
 				for (int a = 0; a < keys.length; a++) {
 					if (map.containsKey(keys[a])) {
@@ -599,8 +582,7 @@ public class HashMapUtil {
 			String[] entries = cols[valcol].split(delim);
 
 			Set<String> vals = new HashSet<String>(entries.length);
-			for (int a = 0; a < entries.length; a++)
-				vals.add(entries[a]);
+			Collections.addAll(vals, entries);
 
 			for (int a = 0; a < keys.length; a++) {
 				Integer key = Integer.valueOf(keys[a]);

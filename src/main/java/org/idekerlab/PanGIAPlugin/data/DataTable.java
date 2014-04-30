@@ -1,18 +1,7 @@
 package org.idekerlab.PanGIAPlugin.data;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public abstract class DataTable {
 
@@ -25,7 +14,7 @@ public abstract class DataTable {
 	protected abstract void removeDataCol(int col);
 	protected abstract void TransposeData();
 	
-	public abstract void Initialize(int numrows, int numcols);
+	public abstract void Initialize(int numrows);
 	public abstract void InitializeRows(int numrows, int numcols);
 	public abstract void addtoRow(int row, String val);
 	
@@ -297,9 +286,7 @@ public abstract class DataTable {
 	
 	protected int getColIs(String rname)
 	{
-		int lis = DataUtil.getSListIs(colnames,rname);
-		
-		return lis;
+		return DataUtil.getSListIs(colnames,rname);
 	}
 	
 	protected IntVector getColIs(String[] rnames)
@@ -345,7 +332,7 @@ public abstract class DataTable {
 	
 	protected void Initialize(int numrows, int numcols, boolean arerownames, boolean arecolnames)
 	{
-		Initialize(numrows, numcols);
+		Initialize(numrows);
 		
 		if (arerownames)
 		{
@@ -436,7 +423,7 @@ public abstract class DataTable {
 	
 	public void Load(String file, boolean arerownames, boolean arecolnames, String delimiter)
 	{
-		Initialize(0,0);
+		Initialize(0);
 		
 		//Create a filereader and open the file
 		FileReader fr = null;

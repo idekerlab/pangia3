@@ -1,6 +1,7 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.svd;
 
-import org.idekerlab.PanGIAPlugin.data.*;
+import org.idekerlab.PanGIAPlugin.data.DoubleMatrix;
+import org.idekerlab.PanGIAPlugin.data.IntVector;
 
    /** Singular Value Decomposition.
    <P>
@@ -314,7 +315,7 @@ public class LinpackSVD extends SVD {
 	/**
 	 * Main iteration loop for the singular values.
 	 */
-	private void mainLoop(int m, int n, int nct, int nrt, double[] e, int p, boolean wantu, boolean wantv)
+	private void mainLoop(int m, int n, double[] e, int p, boolean wantu, boolean wantv)
 	{
 		int pp = p-1;
 		int iter = 0;
@@ -581,7 +582,7 @@ public class LinpackSVD extends SVD {
 		setupBidiag(A,m,n,nct,nrt,e,p,nu,wantu,wantv);
 
 		//Main loop for singular values
-		mainLoop(m,n,nct,nrt,e,p,wantu,wantv);
+		mainLoop(m,n, e,p,wantu,wantv);
 
 	}
 

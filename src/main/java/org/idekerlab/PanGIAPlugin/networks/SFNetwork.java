@@ -1,10 +1,9 @@
 package org.idekerlab.PanGIAPlugin.networks;
 
-import java.util.*;
-
+import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
-import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.*;
-import org.idekerlab.PanGIAPlugin.networks.hashNetworks.*;
+
+import java.util.Set;
 
 public abstract class SFNetwork extends SNetwork
 {

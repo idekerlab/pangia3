@@ -1,30 +1,18 @@
 package org.idekerlab.PanGIAPlugin.networks.hashNetworks;
 
-import giny.model.Edge;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import org.idekerlab.PanGIAPlugin.networks.DirectedSFEdge;
-import org.idekerlab.PanGIAPlugin.networks.SEdge;
-import org.idekerlab.PanGIAPlugin.networks.SFEdge;
-import org.idekerlab.PanGIAPlugin.networks.SFNetwork;
-import org.idekerlab.PanGIAPlugin.networks.UndirectedSEdge;
-import org.idekerlab.PanGIAPlugin.networks.UndirectedSFEdge;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyTable;
+import org.idekerlab.PanGIAPlugin.data.StringVector;
+import org.idekerlab.PanGIAPlugin.networks.*;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkEdge;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
 import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
 import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
-import cytoscape.CyNetwork;
-import cytoscape.Cytoscape;
-import cytoscape.data.CyAttributes;
-import org.idekerlab.PanGIAPlugin.data.StringVector;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge> {
 	private Map<String, Set<SEdge>> nodeMap;
@@ -47,20 +35,10 @@ public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge> {
 		Load(file, n1col, n2col, valcol);
 	}
 	
-	public FloatHashNetwork(final CyNetwork network, final String edgeAttrName, boolean selfOk, boolean directed) {
+	public FloatHashNetwork(final CyNetwork network, boolean selfOk, boolean directed) {
 		super(selfOk, directed);
 		this.edgeMap = new HashMap<SEdge, SFEdge>(network.getEdgeCount());
 		this.nodeMap = new HashMap<String, Set<SEdge>>();
-		final CyAttributes edgeAttrs = Cytoscape.getEdgeAttributes();
-		
-		for (Integer edgeIdx: network.getEdgeIndicesArray()) {
-			final Edge edge = network.getEdge(edgeIdx);
-			final Double attrValue = edgeAttrs.getDoubleAttribute(edge.getIdentifier(), edgeAttrName);
-			if (attrValue != null)
-				add(new UndirectedSFEdge(edge.getSource().getIdentifier(), edge.getTarget().getIdentifier(), 
-					 attrValue.floatValue()));
-		}
-		
 	}
 	
 
@@ -73,10 +51,6 @@ public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge> {
 
 		for (TypedLinkEdge<String, Float> e : net.edgeIterator())
 			this.add(e.source().value(), e.target().value(), e.value());
-	}
-	
-	private void convert(final CyNetwork network, final CyAttributes edgeAttr, final String attrName) {
-		
 	}
 
 	protected void Load(String file, int n1col, int n2col, int valcol) {

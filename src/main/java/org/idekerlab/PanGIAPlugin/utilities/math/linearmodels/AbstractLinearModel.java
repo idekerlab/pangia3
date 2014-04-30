@@ -1,12 +1,9 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.linearmodels;
 
-import java.util.*;
-
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTIntercept;
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTSingle;
+import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTerm;
 
-import org.idekerlab.PanGIAPlugin.data.*;
+import java.util.List;
 
 public abstract class AbstractLinearModel
 {
@@ -29,12 +26,12 @@ public abstract class AbstractLinearModel
 	{
 		this.terms.add(term);
 	}
-	
+
 	public void removeTerm(LMTerm term)
 	{
 		this.terms.remove(term);
 	}
-	
+
 	public int numTerms()
 	{
 		return terms.size();
@@ -51,8 +48,6 @@ public abstract class AbstractLinearModel
 	public abstract double logLikelyhoodBinary();
 	public abstract DoubleVector coefficients();
 	public abstract LogisticModelD getSubmodel();
-	protected double effectiveTests = Double.NaN;
-	
-	
-	
+
+
 }

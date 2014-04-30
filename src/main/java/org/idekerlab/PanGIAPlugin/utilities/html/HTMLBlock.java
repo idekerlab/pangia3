@@ -1,6 +1,6 @@
 package org.idekerlab.PanGIAPlugin.utilities.html;
 
-import java.io.*;
+import java.io.BufferedWriter;
 
 public abstract class HTMLBlock
 {

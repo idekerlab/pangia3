@@ -1,8 +1,11 @@
 package org.idekerlab.PanGIAPlugin.networks.linkedNetworks;
 
-import java.util.*;
-
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class TypedLinkNode<NT,ET> implements Finalish
 {
@@ -16,14 +19,7 @@ public class TypedLinkNode<NT,ET> implements Finalish
 		neighbors = new HashMap<TypedLinkNode<NT,ET>,TypedLinkEdge<NT,ET>>();
 		this.hc = value.hashCode();
 	}
-	
-	public TypedLinkNode(NT value, int numNeighbors)
-	{
-		this.value = value;
-		neighbors = new HashMap<TypedLinkNode<NT,ET>,TypedLinkEdge<NT,ET>>(numNeighbors);
-		this.hc = value.hashCode();
-	}
-	
+
 	public int hashCode()
 	{
 		return hc;

@@ -1,11 +1,10 @@
 package org.idekerlab.PanGIAPlugin.utilities.files;
 
-import java.io.*;
-import java.util.zip.*;
-import java.util.*;
-
 import org.idekerlab.PanGIAPlugin.data.StringVector;
-import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
+
+import java.io.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 
 public class FileUtil
@@ -20,7 +19,7 @@ public class FileUtil
 		return null;
 	}
 	
-	public static BufferedWriter getGZBufferedWriter(String file, boolean append)
+	public static BufferedWriter getGZBufferedWriter(String file)
 	{
 		try
 		{
@@ -212,9 +211,7 @@ public class FileUtil
 			System.exit(0);
 		}
 		
-		BufferedWriter bw = new BufferedWriter(fw);
-		
-		return bw;
+		return new BufferedWriter(fw);
 	}
 	
 	public static BufferedReader getBufferedReader(String srFile)
@@ -229,9 +226,7 @@ public class FileUtil
 			System.exit(0);
 		}
 		
-		BufferedReader br = new BufferedReader(fr);
-		
-		return br;
+		return new BufferedReader(fr);
 	}
 	
 	public static boolean exists(String file)

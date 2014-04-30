@@ -1,20 +1,15 @@
 package org.idekerlab.PanGIAPlugin.data;
 
+import org.idekerlab.PanGIAPlugin.util.RandomFactory;
+import org.idekerlab.PanGIAPlugin.utilities.ByteConversion;
+import org.idekerlab.PanGIAPlugin.utilities.math.svd.LinpackSVD;
+import org.idekerlab.PanGIAPlugin.utilities.math.svd.SVD;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import org.idekerlab.PanGIAPlugin.util.RandomFactory;
-import org.idekerlab.PanGIAPlugin.utilities.math.svd.*;
-
-import java.util.concurrent.*;
-
-import org.idekerlab.PanGIAPlugin.utilities.ByteConversion;
+import java.util.*;
 
 public class DoubleMatrix extends DataMatrix{
 
@@ -54,8 +49,7 @@ public class DoubleMatrix extends DataMatrix{
 		double[][] out = new double[m.length][m[0].length];
 		
 		for (int i=0;i<m.length;i++)
-			for (int j=0;j<m[0].length;j++)
-				out[i][j] = m[i][j];
+			System.arraycopy(m[i], 0, out[i], 0, m[0].length);
 		
 		return out;
 	}
@@ -167,8 +161,7 @@ public class DoubleMatrix extends DataMatrix{
 		for (int i=0;i<data.length;i++)
 			for (int j=0;j<data[0].length;j++)
 				data[i][j] = (data[i][j]>=0) ? data[i][j] : -data[i][j];
-				
-		return;
+
 	}
 	
 	public DoubleMatrix abs()
@@ -215,8 +208,7 @@ public class DoubleMatrix extends DataMatrix{
 		double[][] da = new double[this.numRows()][this.numCols()];
 		
 		for (int i=0;i<this.numRows();i++)
-			for (int j=0;j<this.numCols();j++)
-				da[i][j] = data[i][j];
+			System.arraycopy(data[i], 0, da[i], 0, this.numCols());
 		
 		return da;
 	}
@@ -231,27 +223,12 @@ public class DoubleMatrix extends DataMatrix{
 		
 		return da;
 	}
-	
-	public DoubleVector getRow(String rowname)
-	{
-		return getRow(getRowIndex(rowname));
-	}
-	
-	public DoubleMatrix getRow(StringVector names)
-	{
-		return getRow(getRowIs(names));
-	}
-	
+
 	public DoubleVector getCol(String colname)
 	{
 		return getCol(getColIs(colname));
 	}
-	
-	public DoubleMatrix getCol(StringVector names)
-	{
-		return getCol(getColIs(names));
-	}
-	
+
 	public DoubleMatrix clone()
 	{
 		return new DoubleMatrix(this);
@@ -317,12 +294,7 @@ public class DoubleMatrix extends DataMatrix{
 	{
 		return(data[i][j]);
 	}
-	
-	public int getAsInteger(int i, int j)
-	{
-		return((int)data[i][j]);
-	}
-	
+
 	public double getAsDouble(int i, int j)
 	{
 		return(data[i][j]);
@@ -347,13 +319,8 @@ public class DoubleMatrix extends DataMatrix{
 	{
 		return Double.toString(get(row,col));
 	}
-	
-	public float getAsFloat(int i, int j)
-	{
-		return((float)data[i][j]);
-	}
-	
-	public DoubleVector getCol(int col)
+
+	private DoubleVector getCol(int col)
 	{
 		double[] cola = new double[this.data.length];
 		
@@ -398,7 +365,7 @@ public class DoubleMatrix extends DataMatrix{
 		return getCol(bv.asIndexes());
 	}
 	
-	public DoubleMatrix getCol(IntVector indexes)
+	private DoubleMatrix getCol(IntVector indexes)
 	{
 		DoubleMatrix cols = new DoubleMatrix(this.numRows(),indexes.size(),this.hasRowNames(),this.hasColNames());
 		
@@ -409,19 +376,7 @@ public class DoubleMatrix extends DataMatrix{
 		
 		return cols;
 	}
-	
-	public DoubleMatrix getCol(int[] indexes)
-	{
-		DoubleMatrix cols = new DoubleMatrix(this.numRows(),indexes.length,this.hasRowNames(),this.hasColNames());
-		
-		if (rownames!=null) cols.setRowNames(rownames);
-		
-		for (int i=0;i<indexes.length;i++)
-			cols.setCol(i,getCol(indexes[i]));
-		
-		return cols;
-	}
-	
+
 	public static double[][] getCol(double[][] x, int[] indexes)
 	{
 		if (indexes.length==0) return new double[0][0];
@@ -465,8 +420,7 @@ public class DoubleMatrix extends DataMatrix{
 		for (int i=0;i<indexes.length;i++)
 		{
 			int indexi = indexes[i];
-			for (int j=0;j<x[0].length;j++)
-				rows[i][j] = x[indexi][j];
+			System.arraycopy(x[indexi], 0, rows[i], 0, x[0].length);
 		}
 			
 		return rows;
@@ -514,7 +468,7 @@ public class DoubleMatrix extends DataMatrix{
 		return cdm;
 	}
 	
-	public DoubleVector getRow(int row)
+	private DoubleVector getRow(int row)
 	{
 		DoubleVector arow = new DoubleVector(dim(1));
 		
@@ -537,7 +491,7 @@ public class DoubleMatrix extends DataMatrix{
 		return getRow(is);
 	}
 	
-	public DoubleMatrix getRow(IntVector indexes)
+	private DoubleMatrix getRow(IntVector indexes)
 	{
 		DoubleMatrix rows = new DoubleMatrix(indexes.size(),this.numCols());
 		
@@ -1535,8 +1489,7 @@ public class DoubleMatrix extends DataMatrix{
 			double[][] dmim = dms[dmi].getData();
 			for (int i=0;i<dms[dmi].numRows();i++)
 			{
-				for (int j=0;j<dms[0].numCols();j++)
-					m[curRow][j] = dmim[i][j];
+				System.arraycopy(dmim[i], 0, m[curRow], 0, dms[0].numCols());
 					
 				curRow++;
 			}
@@ -1612,12 +1565,10 @@ public class DoubleMatrix extends DataMatrix{
 		double[][] out = new double[dm1.length][dm1[0].length+dm2[0].length];
 		
 		for (int i=0;i<dm1.length;i++)
-			for (int j=0;j<dm1[0].length;j++)
-				out[i][j] = dm1[i][j];
+			System.arraycopy(dm1[i], 0, out[i], 0, dm1[0].length);
 		
 		for (int i=0;i<dm2.length;i++)
-			for (int j=0;j<dm2[0].length;j++)
-				out[i][j+dm1[0].length] = dm2[i][j];
+			System.arraycopy(dm2[i], 0, out[i], dm1[0].length, dm2[0].length);
 		
 		return out;
 	}
@@ -1677,39 +1628,7 @@ public class DoubleMatrix extends DataMatrix{
 				x[i][j] -= mean;
 		}
 	}
-	
-	public DoubleMatrix corr()
-	{
-		DoubleMatrix out = new DoubleMatrix(this.numCols(), this.numCols());
-		
-		DoubleMatrix data = new DoubleMatrix(this);
-		data.centerCols_ignoreNaN();
-		
-		DoubleVector colSums2 = data.sumSquareByCol_ignoreNaN();
-		
-		for (int i=0;i<this.numCols();i++)
-			out.set(i, i, 1);
-		
-		for (int i=0;i<this.numCols()-1;i++)
-			for (int j=i+1;j<this.numCols();j++)
-			{
-				double sum_xy = 0;
-				
-				for (int k=0;k<data.numRows();k++)
-					if (!Double.isNaN(data.get(k,i)) && !Double.isNaN(data.get(k,j))) sum_xy+=data.get(k,i)*data.get(k,j);
-				
-				double sumx2 = colSums2.get(i);
-				double sumy2 = colSums2.get(j);
-				
-				double cor = (this.numCols()*sum_xy)/(  Math.sqrt(  this.numCols()*sumx2  )*Math.sqrt(  this.numCols()*sumy2  )  );
-				
-				out.set(i, j, cor);
-				out.set(j, i, cor);
-			}
-		
-		return out;
-	}
-	
+
 	public static double[][] randNorm(int m, int n)
 	{
 		double[][] out = new double[m][n];
@@ -2126,9 +2045,8 @@ public class DoubleMatrix extends DataMatrix{
 				byte[] stringBytes = new byte[numBytes];
 				bos.read(stringBytes);
 				String[] nodeString = new String(stringBytes).split("\t");
-				
-				for (String n : nodeString)
-					rowNames.add(n);
+
+				Collections.addAll(rowNames, nodeString);
 			}
 			
 			bos.read(f4);
@@ -2143,9 +2061,8 @@ public class DoubleMatrix extends DataMatrix{
 				byte[] stringBytes = new byte[numBytes];
 				bos.read(stringBytes);
 				String[] nodeString = new String(stringBytes).split("\t");
-				
-				for (String n : nodeString)
-					colNames.add(n);
+
+				Collections.addAll(colNames, nodeString);
 			}
 						
 			bos.read(f4);
@@ -2473,11 +2390,9 @@ public class DoubleMatrix extends DataMatrix{
 		double[][] out = new double[m.length+1][m[0].length];
 		
 		for (int i=0;i<m.length;i++)
-			for (int j=0;j<m[i].length;j++)
-				out[i][j] = m[i][j];
-		
-		for (int i=0;i<row.length;i++)
-			out[m.length][i] = row[i];
+			System.arraycopy(m[i], 0, out[i], 0, m[i].length);
+
+		System.arraycopy(row, 0, out[m.length], 0, row.length);
 		
 		return out;
 	}

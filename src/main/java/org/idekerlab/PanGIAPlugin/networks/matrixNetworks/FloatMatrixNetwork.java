@@ -1,27 +1,16 @@
 package org.idekerlab.PanGIAPlugin.networks.matrixNetworks;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
-
+import org.idekerlab.PanGIAPlugin.data.IntVector;
+import org.idekerlab.PanGIAPlugin.data.StringTable;
+import org.idekerlab.PanGIAPlugin.data.StringVector;
+import org.idekerlab.PanGIAPlugin.networks.*;
+import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
 import org.idekerlab.PanGIAPlugin.utilities.ByteConversion;
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
 import org.idekerlab.PanGIAPlugin.utilities.collections.SetUtil;
 
-import org.idekerlab.PanGIAPlugin.networks.*;
-import org.idekerlab.PanGIAPlugin.networks.hashNetworks.*;
-import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
-import org.idekerlab.PanGIAPlugin.networks.util.Mergers;
-import org.idekerlab.PanGIAPlugin.data.DoubleVector;
-import org.idekerlab.PanGIAPlugin.data.IntVector;
-import org.idekerlab.PanGIAPlugin.data.StringTable;
-import org.idekerlab.PanGIAPlugin.data.StringVector;
+import java.io.*;
+import java.util.*;
 
 
 public class FloatMatrixNetwork extends SFNetwork
@@ -69,8 +58,7 @@ public class FloatMatrixNetwork extends SFNetwork
 		Initialize(nodeValues.size());
 		
 		for (int i=0;i<connectivity.length;i++)
-			for (int j=0;j<connectivity[i].length;j++)
-				connectivity[i][j] = net.connectivity[i][j];
+			System.arraycopy(net.connectivity[i], 0, connectivity[i], 0, connectivity[i].length);
 		
 	}
 	
@@ -130,8 +118,7 @@ public class FloatMatrixNetwork extends SFNetwork
 		float[][] out = new float[nodeValues.size()][nodeValues.size()];
 		
 		for (int i=0;i<this.connectivity.length;i++)
-			for (int j=0;j<this.connectivity[i].length;j++)
-				out[i][j] = this.connectivity[i][j];
+			System.arraycopy(this.connectivity[i], 0, out[i], 0, this.connectivity[i].length);
 		
 		if (!this.directed)
 			for (int i=0;i<this.connectivity.length;i++)
@@ -208,8 +195,7 @@ public class FloatMatrixNetwork extends SFNetwork
 	public void SetData(float[][] data)
 	{
 		for (int i=0;i<connectivity.length;i++)
-			for (int j=0;j<connectivity[i].length;j++)
-				connectivity[i][j] = data[i][j];
+			System.arraycopy(data[i], 0, connectivity[i], 0, connectivity[i].length);
 	}
 	
 	public String getNodeValue(int i)
@@ -584,8 +570,8 @@ public class FloatMatrixNetwork extends SFNetwork
 		{
 			BufferedInputStream bos = new BufferedInputStream(new FileInputStream(file));
 			
-			boolean selfOk = (bos.read()==0) ? false : true;
-			boolean directed = (bos.read()==0) ? false : true;
+			boolean selfOk = (bos.read() != 0);
+			boolean directed = (bos.read() != 0);
 			
 			byte[] f4 = new byte[4];
 			bos.read(f4);
@@ -599,9 +585,8 @@ public class FloatMatrixNetwork extends SFNetwork
 			byte[] stringBytes = new byte[numBytes];
 			bos.read(stringBytes);
 			String[] nodeString = new String(stringBytes).split("\t");
-			
-			for (String n : nodeString)
-				nodelist.add(n);
+
+			Collections.addAll(nodelist, nodeString);
 			
 			net = new FloatMatrixNetwork(selfOk,directed,nodelist);
 			

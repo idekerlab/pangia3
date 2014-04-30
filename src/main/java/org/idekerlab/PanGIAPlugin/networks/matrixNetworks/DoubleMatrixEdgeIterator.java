@@ -1,10 +1,12 @@
 package org.idekerlab.PanGIAPlugin.networks.matrixNetworks;
 
-import java.util.*;
-
 import org.idekerlab.PanGIAPlugin.networks.DirectedSDEdge;
 import org.idekerlab.PanGIAPlugin.networks.SDEdge;
 import org.idekerlab.PanGIAPlugin.networks.UndirectedSDEdge;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class DoubleMatrixEdgeIterator implements Iterator<SDEdge>
 {

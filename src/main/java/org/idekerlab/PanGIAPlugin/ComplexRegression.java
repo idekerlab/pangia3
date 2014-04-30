@@ -1,18 +1,18 @@
 package org.idekerlab.PanGIAPlugin;
 
-import org.idekerlab.PanGIAPlugin.networks.*;
 import org.idekerlab.PanGIAPlugin.networks.SEdge;
-import org.idekerlab.PanGIAPlugin.networks.SFEdge;
-import org.idekerlab.PanGIAPlugin.networks.hashNetworks.*;
-import java.util.*;
-
-import org.idekerlab.PanGIAPlugin.data.DoubleMatrix;
-import org.idekerlab.PanGIAPlugin.data.DoubleVector;
-
+import org.idekerlab.PanGIAPlugin.networks.SFNetwork;
+import org.idekerlab.PanGIAPlugin.networks.SNodeModule;
+import org.idekerlab.PanGIAPlugin.networks.UndirectedSEdge;
+import org.idekerlab.PanGIAPlugin.networks.hashNetworks.BooleanHashNetwork;
+import org.idekerlab.PanGIAPlugin.networks.hashNetworks.FloatHashNetwork;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.LogisticModelD;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTIntercept;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTSingle;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTerm;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 

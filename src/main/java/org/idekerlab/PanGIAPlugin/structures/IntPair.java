@@ -1,12 +1,12 @@
 package org.idekerlab.PanGIAPlugin.structures;
 
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
+
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
-import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
 
 public class IntPair {
 
@@ -27,11 +27,8 @@ public class IntPair {
 			return false;
 		if (p instanceof IntPair) {
 			IntPair other = (IntPair) p;
-			if ((other.n1 == this.n1 && other.n2 == this.n2)
-					|| (other.n1 == this.n2 && other.n2 == this.n1))
-				return true;
-			else
-				return false;
+			return (other.n1 == this.n1 && other.n2 == this.n2)
+					|| (other.n1 == this.n2 && other.n2 == this.n1);
 		} else
 			return false;
 	}

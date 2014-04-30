@@ -1,8 +1,8 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.linearmodels;
 
-import java.util.*;
+import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTerm;
 
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.*;
+import java.util.List;
 
 public class LogisticModelD extends AbstractSingleLinearModelD
 {

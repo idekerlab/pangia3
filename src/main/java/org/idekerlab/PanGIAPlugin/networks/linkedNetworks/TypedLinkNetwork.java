@@ -1,15 +1,9 @@
 package org.idekerlab.PanGIAPlugin.networks.linkedNetworks;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
 import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+
+import java.util.*;
 
 
 /**
@@ -94,17 +88,7 @@ public class TypedLinkNetwork<NT,ET>
 	
 		return connectedness;
 	}
-	
-	public int getConnectedness(TypedLinkNodeModule<NT,?> m1, TypedLinkNodeModule<NT,?> m2)
-	{
-		int connectedness = 0;
-		
-		for (TypedLinkNode<NT,?> n : m2)
-			connectedness += m1.getConnectedness(n);
-	
-		return connectedness;
-	}
-	
+
 	public int numNodes()
 	{
 		return nodes.size();
@@ -169,13 +153,7 @@ public class TypedLinkNetwork<NT,ET>
 		if (edge.source().numNeighbors()==0) this.removeNode(edge.source());
 		if (edge.target().numNeighbors()==0) this.removeNode(edge.target());
 	}
-	
-	public void removeAllNodes(Collection<TypedLinkNode<NT,ET>> nodes)
-	{
-		for (TypedLinkNode<NT,ET> node : nodes)
-			this.removeNode(node);
-	}
-	
+
 	public void removeAllEdges(Collection<TypedLinkEdge<NT,ET>> edges)
 	{
 		for (TypedLinkEdge<NT,ET> edge : edges)
@@ -227,12 +205,7 @@ public class TypedLinkNetwork<NT,ET>
 		
 		return out+"}";
 	}
-	
-	public boolean containsEdge(TypedLinkEdge<NT,ET> edge)
-	{
-		return edges.contains(edge);
-	}
-	
+
 	public boolean containsEdge(NT n1, NT n2)
 	{
 		return (this.getEdge(n1, n2)!=null);

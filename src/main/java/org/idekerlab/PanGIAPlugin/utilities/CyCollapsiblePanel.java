@@ -1,9 +1,8 @@
-package org.idekerlab.PanGIAPlugin.utilities; 
+package org.idekerlab.PanGIAPlugin.utilities;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

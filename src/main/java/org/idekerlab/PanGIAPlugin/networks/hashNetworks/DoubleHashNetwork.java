@@ -1,17 +1,17 @@
 package org.idekerlab.PanGIAPlugin.networks.hashNetworks;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.*;
-
 import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 import org.idekerlab.PanGIAPlugin.data.StringVector;
-
 import org.idekerlab.PanGIAPlugin.networks.*;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
 import org.idekerlab.PanGIAPlugin.networks.util.Mergers;
-import org.idekerlab.PanGIAPlugin.utilities.files.*;
-import org.idekerlab.PanGIAPlugin.utilities.*;
+import org.idekerlab.PanGIAPlugin.utilities.IIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class DoubleHashNetwork extends SDNetwork implements Iterable<SDEdge>
 {

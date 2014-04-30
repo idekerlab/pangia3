@@ -1,12 +1,14 @@
 package org.idekerlab.PanGIAPlugin.networks;
 
+import org.idekerlab.PanGIAPlugin.utilities.IIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+import org.idekerlab.PanGIAPlugin.utilities.files.FileUtil;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.*;
-
-import org.idekerlab.PanGIAPlugin.utilities.*;
-import org.idekerlab.PanGIAPlugin.utilities.files.*;
-import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public abstract class SNetwork extends AbstractNetwork
 {

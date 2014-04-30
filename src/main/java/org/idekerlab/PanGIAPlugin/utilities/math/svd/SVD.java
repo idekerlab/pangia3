@@ -1,9 +1,9 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.svd;
 
-import java.util.List;
-
 import org.idekerlab.PanGIAPlugin.data.DoubleMatrix;
 import org.idekerlab.PanGIAPlugin.data.DoubleVector;
+
+import java.util.List;
 
 public class SVD
 {
@@ -129,8 +129,7 @@ public class SVD
 		
 		double[][] newx = new double[U.length][numPC];
 		for (int i=0;i<U.length;i++)
-			for (int j=0;j<numPC;j++)
-				newx[i][j] = U[i][j];
+			System.arraycopy(U[i], 0, newx[i], 0, numPC);
 		
 		return newx;
 	}

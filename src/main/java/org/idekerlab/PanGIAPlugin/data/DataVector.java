@@ -1,8 +1,12 @@
 package org.idekerlab.PanGIAPlugin.data;
 
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+
 import java.io.*;
-import java.util.*;
-import org.idekerlab.PanGIAPlugin.utilities.files.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public abstract class DataVector {
 
@@ -13,7 +17,7 @@ public abstract class DataVector {
 	{
 	}
 	
-	public DataVector(int size, List<String> elementnames, String listname)
+	public DataVector(List<String> elementnames, String listname)
 	{
 		this.elementnames = elementnames;
 		this.listname = listname;

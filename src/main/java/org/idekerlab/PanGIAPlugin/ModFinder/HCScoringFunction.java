@@ -1,16 +1,16 @@
 package org.idekerlab.PanGIAPlugin.ModFinder;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 import org.idekerlab.PanGIAPlugin.networks.SFNetwork;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNode;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNodeModule;
 import org.idekerlab.PanGIAPlugin.networks.matrixNetworks.FloatMatrixNetwork;
 import org.idekerlab.PanGIAPlugin.util.RandomFactory;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class HCScoringFunction {
 

@@ -1,10 +1,10 @@
 package org.idekerlab.PanGIAPlugin.ModFinder;
 
+import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.Finalish;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.Finalish;
 
 /***
  * An edge object for use with ONetworks to track statistics for the HCNetsearch algorithm.
@@ -24,19 +24,7 @@ public class BFEdge implements Finalish{
 	public BFEdge()
 	{
 	}
-	
-	/**
-	 * Copy constructor.
-	 */
-	public BFEdge(BFEdge edge)
-	{
-		complexMerge = edge.complexMerge;
-		linkMerge = edge.linkMerge;
-		global = edge.global;
-		link = edge.link;
-		types = edge.types;
-	}
-	
+
 	/**
 	 * Preferred constructor. Initializes the linkscores object for physical interactions. 
 	 * @param type
@@ -44,7 +32,6 @@ public class BFEdge implements Finalish{
 	public BFEdge(InteractionType type)
 	{
 		this.types.add(type);
-		//if (type.equals(InteractionType.Physical)) linkscores = new HashMap<TypedLinkNode<TypedLinkNodeModule<String,BFEdge>,BFEdge>,Float>(30);
 	}
 	
 	public float complexMerge()

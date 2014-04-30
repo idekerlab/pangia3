@@ -23,8 +23,7 @@ public final class UndirectedSEdge extends SEdge{
 		if (inter instanceof SEdge)
 		{
 			SEdge other = (SEdge)inter;
-			if ((i1.equals(other.i1) && i2.equals(other.i2)) || (i1.equals(other.i2) && i2.equals(other.i1))) return true;
-			else return false;
+			return (i1.equals(other.i1) && i2.equals(other.i2)) || (i1.equals(other.i2) && i2.equals(other.i1));
 		}else return false;
 	}
 }

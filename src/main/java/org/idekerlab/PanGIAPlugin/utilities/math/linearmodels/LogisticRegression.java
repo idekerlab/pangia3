@@ -1,9 +1,7 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.linearmodels;
 
-import org.idekerlab.PanGIAPlugin.data.*;
-import java.util.*;
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.*;
-import org.idekerlab.PanGIAPlugin.utilities.*;
+import org.idekerlab.PanGIAPlugin.data.DoubleMatrix;
+import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 
 /**
  * Most of this code is translated directly from R-2.9.0

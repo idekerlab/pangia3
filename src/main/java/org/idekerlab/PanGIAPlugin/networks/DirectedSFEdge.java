@@ -23,8 +23,7 @@ public final class DirectedSFEdge extends SFEdge{
 		if (inter instanceof SEdge)
 		{
 			SEdge other = (SEdge)inter;
-			if (i1.equals(other.i1) && i2.equals(other.i2)) return true;
-			else return false;
+			return i1.equals(other.i1) && i2.equals(other.i2);
 		}else return false;
 	}
 

@@ -1,17 +1,12 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.linearmodels;
 
-import java.util.*;
-
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTInteraction;
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTIntercept;
+import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTSingle;
-import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTSingleIndicator;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTerm;
-
-
 import org.idekerlab.PanGIAPlugin.utilities.math.svd.SVD;
-import org.idekerlab.PanGIAPlugin.utilities.math.*;
-import org.idekerlab.PanGIAPlugin.data.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractSingleLinearModelD extends AbstractLinearModelD
 {

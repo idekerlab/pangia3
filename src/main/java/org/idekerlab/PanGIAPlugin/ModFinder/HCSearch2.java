@@ -1,15 +1,6 @@
 package org.idekerlab.PanGIAPlugin.ModFinder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
+import org.cytoscape.work.TaskMonitor;
 import org.idekerlab.PanGIAPlugin.SearchTask;
 import org.idekerlab.PanGIAPlugin.data.DoubleVector;
 import org.idekerlab.PanGIAPlugin.networks.SFEdge;
@@ -22,8 +13,11 @@ import org.idekerlab.PanGIAPlugin.utilities.MemoryReporter;
 import org.idekerlab.PanGIAPlugin.utilities.NumberFormatter;
 import org.idekerlab.PanGIAPlugin.utilities.ThreadPriorityFactory;
 
-import cytoscape.task.Task;
-import cytoscape.task.TaskMonitor;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 
 
 public class HCSearch2 {
@@ -41,27 +35,27 @@ public class HCSearch2 {
 		MemoryReporter.reportMemoryUsage();
 
 		// Need to construct the ONetwork<HyperModule<String>,BFEdge> object.
-		taskMonitor.setStatus("1. Building merged network.");
+		taskMonitor.setStatusMessage("1. Building merged network.");
 
 		TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> results = constructBaseNetwork(
 				pnet, gnet);
 		
-		if (parentTask.needsToHalt()) return null;
+		if (parentTask.wasCancelled()) return null;
 
 		System.gc();
 		MemoryReporter.reportMemoryUsage();
 
 		// Get the first-pass scores
-		taskMonitor.setStatus("2. Obtaining primary scores.");
+		taskMonitor.setStatusMessage("2. Obtaining primary scores.");
 		computePrimaryScores(results, sfunc);
 
-		if (parentTask.needsToHalt()) return null;
+		if (parentTask.wasCancelled()) return null;
 		
 		System.gc();
 		MemoryReporter.reportMemoryUsage();
 
 		// Merge best tree-pairs together
-		taskMonitor.setStatus("3. Forming clusters...");
+		taskMonitor.setStatusMessage("3. Forming clusters...");
 
 		// MemoryReporter.reportMemoryUsage();
 
@@ -80,7 +74,7 @@ public class HCSearch2 {
 				MemoryReporter.reportMemoryUsage();
 			}
 			
-			if (parentTask.needsToHalt()) return null;
+			if (parentTask.wasCancelled()) return null;
 			
 			// Identify the best physical edge to merge
 			Iterator<TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge>> edgei = results
@@ -154,7 +148,7 @@ public class HCSearch2 {
 				//Re-calculate global scores
 				for (TypedLinkEdge<TypedLinkNodeModule<String,BFEdge>,BFEdge> e : mergedNode.edgeIterator())
 					for (TypedLinkEdge<TypedLinkNodeModule<String,BFEdge>,BFEdge> e2 : e.opposite(mergedNode).edgeIterator())
-						computeGlobalScore(results,e2,sfunc);
+						computeGlobalScore(e2);
 		
 				globalscore += max;
 				global_scores.add(globalscore);
@@ -166,8 +160,8 @@ public class HCSearch2 {
 				for (TypedLinkNodeModule<String, BFEdge> m : allc)
 					csizes.add(m.size());
 				final int percentCompleted = Math.round((INITIAL_NODE_COUNT - results.numNodes()) * percentAllocated / INITIAL_NODE_COUNT);
-				taskMonitor.setPercentCompleted(percentCompleted);
-				taskMonitor.setStatus("3. Forming clusters (# of clusters: "
+				taskMonitor.setProgress(percentCompleted/100.0);
+				taskMonitor.setStatusMessage("3. Forming clusters (# of clusters: "
 				                      + results.numNodes() + ", largest cluster size: "
 						      + csizes.max(false) + ")");
 			}
@@ -175,7 +169,7 @@ public class HCSearch2 {
 			iter++;
 		}
 
-		taskMonitor.setPercentCompleted(Math.round(percentAllocated));
+		taskMonitor.setProgress(Math.round(percentAllocated/100.0));
 		System.out.println("Best score: " + global_scores.max(true));
 		System.out.println("Best score index: " + global_scores.maxI());
 		System.out.println("Number of edges before filtering: "+results.numEdges());
@@ -294,13 +288,11 @@ public class HCSearch2 {
 		// Compute global merging values
 		for (TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> ed : results
 				.edgeIterator())
-			computeGlobalScore(results, ed, sfunc);
+			computeGlobalScore(ed);
 	}
 
 	public static void computeGlobalScore(
-			TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> results,
-			TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> edge,
-			HCScoringFunction sfunc) {
+			TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> edge) {
 		// HyperModule<String> m1 =
 		// results.getNodeValue(results.getEdgeSource(edgeIndex));
 		// HyperModule<String> m2 =
@@ -398,9 +390,9 @@ public class HCSearch2 {
 			csizes.add(m.value().size());
 		}
 
-		builder.append("Best cluster score: " + NumberFormatter.formatNumber(cscores.max(false),3) + "\n");
-		builder.append("Worst cluster score: " + NumberFormatter.formatNumber(cscores.min(false),3) + "\n");
-		builder.append("Largest cluster size: " + (int)csizes.max(false) + "\n");
+		builder.append("Best cluster score: ").append(NumberFormatter.formatNumber(cscores.max(false), 3)).append("\n");
+		builder.append("Worst cluster score: ").append(NumberFormatter.formatNumber(cscores.min(false), 3)).append("\n");
+		builder.append("Largest cluster size: ").append((int) csizes.max(false)).append("\n");
 
 		DoubleVector escores = new DoubleVector(results.numEdges());
 		for (TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> ed : results
@@ -410,7 +402,7 @@ public class HCSearch2 {
 				escores.add(score);
 		}
 
-		builder.append("Best edge score: " + NumberFormatter.formatNumber(escores.max(false),3) + "\n");
+		builder.append("Best edge score: ").append(NumberFormatter.formatNumber(escores.max(false), 3)).append("\n");
 
 		// csizes.plothist(30);
 

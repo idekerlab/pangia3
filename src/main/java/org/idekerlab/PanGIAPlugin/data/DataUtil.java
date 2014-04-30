@@ -31,9 +31,7 @@ public class DataUtil {
 	
 	public static int getSListIs(List<String> sList, String name)
 	{
-		int index = sList.indexOf(name);
-			
-		return index;
+		return sList.indexOf(name);
 	}
 	
 	public static IntVector getSListIs(List<String> sList, List<String> names)

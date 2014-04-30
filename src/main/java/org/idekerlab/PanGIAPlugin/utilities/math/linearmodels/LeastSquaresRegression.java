@@ -13,9 +13,7 @@ public class LeastSquaresRegression
 		if (xTxinv == null) return null;
 		
 		double[] xTy = DoubleMatrix.xTy(x,y);
-		double[] coefficients = DoubleMatrix.times(xTxinv,xTy);
-		
-		return coefficients;
+		return DoubleMatrix.times(xTxinv,xTy);
 	}
 	
 	/**
@@ -36,23 +34,21 @@ public class LeastSquaresRegression
 		{
 			double[] xTy = DoubleMatrix.xTy(x,y[r]);
 			double[] coefr = DoubleMatrix.times(xTxinv,xTy);
-			
-			for (int c=0;c<x[0].length;c++)
-				coeff[r][c] = coefr[c];
+
+			System.arraycopy(coefr, 0, coeff[r], 0, x[0].length);
 		}
 		
 		return coeff;
 	}
 	
-	public static double[] leastSquaresRegression(double[][] x, double[][] y, int yi, double[][] xTx, double[][] xTxinv)
+	public static double[] leastSquaresRegression(double[][] x, double[][] y, int yi, double[][] xTxinv)
 	{
 		double[] xTy = DoubleMatrix.xTy(x,y[yi]);
 		double[] coefr = DoubleMatrix.times(xTxinv,xTy);
 			
 		double[] coeff = new double[x[0].length];
-		
-		for (int c=0;c<x[0].length;c++)
-			coeff[c] = coefr[c];
+
+		System.arraycopy(coefr, 0, coeff, 0, x[0].length);
 		
 		return coeff;
 	}

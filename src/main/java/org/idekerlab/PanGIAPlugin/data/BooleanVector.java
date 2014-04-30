@@ -2,82 +2,29 @@ package org.idekerlab.PanGIAPlugin.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 
 public class BooleanVector extends DataVector {
 
 	private boolean[] data;
 	private int size;
-	
-	public BooleanVector()
-	{
-		Initialize(0);
-	}
-	
+
 	public BooleanVector(boolean[] data)
 	{
 		this.data = data;
 		this.size = data.length;
 	}
-	
-	public BooleanVector(List<Boolean> vals)
-	{
-		data = new boolean[vals.size()];
-		size = vals.size();
-		
-		for (int i=0;i<vals.size();i++)
-			data[i] = vals.get(i);
-	}
-	
-	public BooleanVector(int size, List<String> elementnames, String listname)
-	{
-		Initialize(size);
-					
-		setElementNames(elementnames);
-		
-		setListName(listname);
-	}
-	
-	public BooleanVector(int size, boolean value, List<String> elementnames, String listname)
-	{
-		Initialize(size, value);
-					
-		setElementNames(elementnames);
-		
-		setListName(listname);
-	}
-	
+
 	public BooleanVector(int size)
 	{
 		Initialize(size);
 	}
-	
-	public BooleanVector(int size, boolean value)
-	{
-		Initialize(size,value);
-	}
-	
-	public BooleanVector(int size, Set<Integer> trues)
-	{
-		data = new boolean[size];
-		this.size = size;
-		
-		for (int i=0;i<size;i++)
-			data[i] = trues.contains(i);
-	}
-	
-	public BooleanVector(String file, boolean arerownames, boolean arecolname)
-	{
-		LoadColumn(file,arerownames,arecolname,0);
-	}
-	
+
 	public void Initialize(int size)
 	{
 		data = new boolean[size];
-		size = 0;
+		this.size = 0;
 	}
 	
 	public void Initialize(int count, boolean val)
@@ -105,8 +52,7 @@ public class BooleanVector extends DataVector {
 		boolean[] out = new boolean[size];
 		
 		int n = Math.min(vec.length, size);
-		for (int i=0;i<n;i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, n);
 		
 		return out;
 	}
@@ -198,9 +144,9 @@ public class BooleanVector extends DataVector {
 		return data[getElementNames().indexOf(element)];
 	}
 	
-	public Boolean set(int i, Boolean val)
+	public void set(int i, Boolean val)
 	{
-		return data[i] = val;
+		data[i] = val;
 	}
 	
 	public void set(int i, Integer val)
@@ -233,8 +179,7 @@ public class BooleanVector extends DataVector {
 	public static boolean[] copy(boolean[] data)
 	{
 		boolean[] out = new boolean[data.length];
-		for (int i=0;i<data.length;i++)
-			out[i] = data[i];
+		System.arraycopy(data, 0, out, 0, data.length);
 		
 		return out;
 	}
@@ -285,12 +230,7 @@ public class BooleanVector extends DataVector {
 		
 		return out;
 	}
-	
-	public Double mean()
-	{
-		return sum() / (double)size();
-	}
-	
+
 	public int sum()
 	{
 		return BooleanVector.sum(getData());
@@ -306,48 +246,7 @@ public class BooleanVector extends DataVector {
 		
 		return mysum;
 	}
-	
-	public int sumFalse()
-	{
-		int mySumFalse = 0;
-		for(int i=0; i<this.size(); i++)
-			if(!data[i]) 
-				mySumFalse++;
-	
-		return mySumFalse;
-	}
 
-	public static BooleanVector join(BooleanVector dt1, BooleanVector dt2)
-	{
-		int newsize = dt1.size() + dt2.size();
-				
-		List<String> rownames = dt1.getElementNames();
-		rownames.addAll(dt2.getElementNames());
-		
-		BooleanVector dtout = new BooleanVector(newsize, rownames, dt1.getListName());
-		
-		for (int i=0;i<dt1.size();i++)
-			dtout.set(i, dt1.get(i));
-		
-		for (int i=0;i<dt2.size();i++)
-			dtout.set(i+dt1.size(), dt2.get(i));
-		
-		return dtout;
-	}
-	
-	public static BooleanVector joinAll(List<BooleanVector> dtlist)
-	{
-		if (dtlist.size()==0) return null;
-		if (dtlist.size()==1) return dtlist.get(0);
-		
-		BooleanVector dtout = join(dtlist.get(0), dtlist.get(1));
-		
-		for (int i=2;i<dtlist.size();i++)
-			dtout = join(dtout, dtlist.get(i));
-		
-		return dtout;
-	}
-	
 	public static int[] asIndexes(boolean[] data)
 	{
 		int[] out = new int[BooleanVector.sum(data)];
@@ -378,25 +277,7 @@ public class BooleanVector extends DataVector {
 		
 		return sub;
 	}
-	
-	public BooleanVector reverse()
-	{
-		BooleanVector out = new BooleanVector(this.size());
-		
-		for (int i=this.size()-1;i>=0;i--)
-			out.add(get(i));
-		
-		return out;
-	}
-	
-	public boolean allEqualTo(boolean val)
-	{
-		for (int i=0;i<size();i++)
-			if(get(i)!=val) return false;
-		
-		return true;
-	}
-	
+
 	public boolean anyEqualTo(boolean val)
 	{
 		for (int i=0;i<size();i++)
@@ -404,26 +285,4 @@ public class BooleanVector extends DataVector {
 		
 		return false;
 	}
-	
-	public BooleanVector equalTo(boolean val)
-	{
-		BooleanVector out = new BooleanVector(size());
-		
-		for (int i=0;i<size();i++)
-			out.add(get(i)==val);
-		
-		return out;
-	}
-	
-	public BooleanVector notEqualTo(boolean val)
-	{
-		BooleanVector out = new BooleanVector(size());
-		
-		for (int i=0;i<size();i++)
-			out.add(get(i)!=val);
-		
-		return out;
-	}
-	
-
 }

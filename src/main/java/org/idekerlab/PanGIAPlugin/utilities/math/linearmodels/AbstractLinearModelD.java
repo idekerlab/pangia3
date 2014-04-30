@@ -1,15 +1,9 @@
 package org.idekerlab.PanGIAPlugin.utilities.math.linearmodels;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import org.idekerlab.PanGIAPlugin.data.DoubleMatrix;
 import org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms.LMTerm;
 
-import org.idekerlab.PanGIAPlugin.data.DoubleMatrix;
+import java.util.*;
 
 
 public abstract class AbstractLinearModelD extends AbstractLinearModel
@@ -28,13 +22,14 @@ public abstract class AbstractLinearModelD extends AbstractLinearModel
 		super(terms);
 		this.x = x;
 	}
-	
+
 	public AbstractLinearModelD(List<LMTerm> terms, float[][] x)
 	{
 		super(terms);
 		this.x = new DoubleMatrix(x).getData();
 	}
-	
+
+
 	public AbstractLinearModelD(List<LMTerm> terms, byte[][] x)
 	{
 		super(terms);

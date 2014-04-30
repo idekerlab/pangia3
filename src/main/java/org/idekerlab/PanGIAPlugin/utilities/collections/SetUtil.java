@@ -1,14 +1,11 @@
 package org.idekerlab.PanGIAPlugin.utilities.collections;
 
+import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
+import java.util.*;
 
 public class SetUtil {
 	public static <X> void saveToFile(Set<X> toOutput, String fout) {
@@ -61,8 +58,7 @@ public class SetUtil {
 
 	public static Set<String> setFromArray(String[] a) {
 		Set<String> blah = new HashSet<String>(a.length);
-		for (int i = 0; i < a.length; i++)
-			blah.add(a[i]);
+		Collections.addAll(blah, a);
 
 		return blah;
 	}
@@ -108,8 +104,7 @@ public class SetUtil {
 	public static Set<String> hashSetFromArray(String[] arr) {
 		Set<String> out = new HashSet<String>(arr.length, 1);
 
-		for (String s : arr)
-			out.add(s);
+		Collections.addAll(out, arr);
 
 		return out;
 	}

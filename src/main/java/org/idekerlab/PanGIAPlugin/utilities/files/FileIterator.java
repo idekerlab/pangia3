@@ -1,7 +1,8 @@
 package org.idekerlab.PanGIAPlugin.utilities.files;
 
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Iterator;
 
 public class FileIterator implements Iterator<String>, Iterable<String>
 {

@@ -1,6 +1,6 @@
 package org.idekerlab.PanGIAPlugin;
 
-import org.idekerlab.PanGIAPlugin.networks.*;
+import org.idekerlab.PanGIAPlugin.networks.SFNetwork;
 
 public final class ComplexRegressionResult
 {

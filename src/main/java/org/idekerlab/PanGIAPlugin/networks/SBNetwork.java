@@ -1,11 +1,5 @@
 package org.idekerlab.PanGIAPlugin.networks;
 
-import java.util.*;
-
-import org.idekerlab.PanGIAPlugin.utilities.IIterator;
-import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.*;
-import org.idekerlab.PanGIAPlugin.networks.hashNetworks.*;
-
 public abstract class SBNetwork extends SNetwork
 {
 	public abstract void add(SEdge e);

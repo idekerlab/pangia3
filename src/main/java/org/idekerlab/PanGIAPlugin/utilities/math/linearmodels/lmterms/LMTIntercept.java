@@ -29,7 +29,6 @@ public final class LMTIntercept extends LMTerm
 	
 	public boolean equals(Object other)
 	{
-		if (other instanceof LMTIntercept) return true;
-		else return false;
+		return other instanceof LMTIntercept;
 	}
 }

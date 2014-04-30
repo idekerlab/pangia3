@@ -1,9 +1,7 @@
 package org.idekerlab.PanGIAPlugin.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StringTable extends DataTable{
 
@@ -18,48 +16,23 @@ public class StringTable extends DataTable{
 	{
 		InitializeRows(rows,cols);
 	}
-	
-	public StringTable(int rows, int cols, String val)
-	{
-		Initialize(rows,cols,val);
-	}
-	
+
 	public StringTable(int rows, int cols, boolean arerownames, boolean arecolnames)
 	{
 		Initialize(rows,cols,arerownames,arecolnames);
 	}
-	
-	public StringTable(List<String> rownames, List<String> colnames)
-	{
-		Initialize(rownames.size(),colnames.size(),"");
-			
-		setRowNames(rownames);
-		setColNames(colnames);
-	}
-	
+
 	public StringTable(String file, boolean arecolnames, boolean arerownames)
 	{
 		Load(file,arecolnames,arerownames,"\t");
 	}
-	
-	public StringTable(String file, boolean arecolnames, boolean arerownames, String delimiter)
-	{
-		Load(file,arecolnames,arerownames,delimiter);
-	}
-	
-	public StringTable(List<StringVector> rows)
-	{
-		data = new ArrayList<List<String>>(rows.size());
-		for (StringVector row : rows)
-			data.add(row.asStringList());
-	}
-	
-	public void Initialize(int numrows, int numcols)
+
+	public void Initialize(int numrows)
 	{
 		data = new ArrayList<List<String>>(numrows);
 	}
 	
-	public void Initialize(int numrows, int numcols, String val)
+	public void Initialize(int numrows, int numcols)
 	{
 		data = new ArrayList<List<String>>(numrows);
 		for (int row=0;row<numrows;row++)
@@ -80,13 +53,7 @@ public class StringTable extends DataTable{
 			data.add(newlist);
 		}
 	}
-	
-	public void addRow(int numcols)
-	{
-		ArrayList<String> newlist = new ArrayList<String>(numcols);
-		data.add(newlist);
-	}
-	
+
 	public void add(int row, String val)
 	{
 		data.get(row).add(val);
@@ -112,16 +79,6 @@ public class StringTable extends DataTable{
 		data.get(row).add(val);
 	}
 
-	public void addtoRow(int row, int val)
-	{
-		data.get(row).add(val+"");
-	}
-	
-	public void addtoRow(int row, Object o)
-	{
-		data.get(row).add(o.toString());
-	}
-	
 	public void removeDataRow(int row)
 	{
 		data.remove(row);
@@ -221,7 +178,7 @@ public class StringTable extends DataTable{
 	{
 		StringTable cols = new StringTable(dim(0),indexes.length,this.hasRowNames(),this.hasColNames());
 		
-		cols.Initialize(dim(0),indexes.length,"");
+		cols.Initialize(dim(0),indexes.length);
 		
 		if (this.hasRowNames()) cols.setRowNames(rownames);
 		
@@ -250,20 +207,7 @@ public class StringTable extends DataTable{
 		
 		return rows;
 	}
-	
-	public StringTable getRow(int firstIndex, int lastIndex)
-	{
-		int numRows = lastIndex-firstIndex+1;
-		StringTable rows = new StringTable(numRows,dim(1),this.hasRowNames(),this.hasColNames());
-		
-		for (int i=0;i<numRows;i++)
-			rows.addRow(getRow(i+firstIndex));
-		
-		if (this.hasColNames()) rows.setColNames(colnames);
-		
-		return rows;
-	}
-	
+
 	public StringTable getCol(StringVector names)
 	{
 		ArrayList<Integer> is = new ArrayList<Integer>(names.size());
@@ -289,15 +233,8 @@ public class StringTable extends DataTable{
 		
 		return getRow(is);
 	}
-	
-	public StringTable getRow(BooleanVector bv)
-	{
-		if (bv.size()!=this.numRows()) throw new IllegalArgumentException("Vector must be the same size as number of rows. vec="+bv.size()+", rows="+this.numRows());
-		
-		return getRow(bv.asIndexes());
-	}
 
-	
+
 	public StringTable getRow(StringVector names)
 	{
 		ArrayList<Integer> is = new ArrayList<Integer>(names.size());
@@ -364,19 +301,7 @@ public class StringTable extends DataTable{
 		for (int r=0;r<dim(0);r++)
 			set(r,col,st.get(r));
 	}
-	
-	public void setCol(int col, double[] list)
-	{
-		if (list.length!=dim(0))
-		{
-			System.err.println("Error StringTable.setCol(int, StringVector): Vector length must equal number of rows.");
-			System.exit(0);
-		}
-		
-		for (int r=0;r<this.numRows();r++)
-			set(r,col,list[r]);
-	}
-	
+
 	public synchronized void addRow(StringVector vec)
 	{
 		if (vec.size()!=numCols() && numRows()!=0)
@@ -394,45 +319,7 @@ public class StringTable extends DataTable{
 		
 		data.add(newRow);
 	}
-	
-	public void setRow(int row, StringVector st)
-	{
-		if (st.size()!=dim(1))
-		{
-			System.err.println("Error StringTable.setRow(int, StringVector): Vector length must equal number of cols.");
-			System.err.println("Vector length: "+st.size()+", Dim(1): "+dim(1));
-			System.exit(0);
-		}
-		
-		if (st.hasListName() && this.hasRowNames())
-			this.setRowName(row, st.listname);
-		
-		for (int c=0;c<dim(1);c++)
-			set(row,c,st.get(c));
-	}
-	
-	public List<String> asList()
-	{
-		List<String> array = new ArrayList<String>();
-		
-		if (dim(0)==1)
-		{
-			for (int i=0;i<dim(1);i++)
-				array.add(get(0,i));
-		}else if (dim(1)==1)
-		{
-			for (int i=0;i<dim(0);i++)
-				array.add(get(i,0));
-		}else
-		{
-			for (int i=0;i<dim(0);i++)
-				for (int j=0;j<dim(1);j++)
-					array.add(get(i,j));
-		}
-		
-		return array;
-	}
-	
+
 	public StringTable clone()
 	{
 		StringTable copy = new StringTable();
@@ -502,39 +389,6 @@ public class StringTable extends DataTable{
 		else return (min);
 	}
 
-	public static StringTable join(StringTable dt1, StringTable dt2)
-	{
-		int numcols = dt1.dim(1);
-		
-		ArrayList<String> rownames = dt1.getRowNames();
-		rownames.addAll(dt2.getRowNames());
-		
-		StringTable dtout = new StringTable(rownames, dt1.getColNames());
-		
-		for (int i=0;i<dt1.dim(0);i++)
-			for (int j=0;j<numcols;j++)
-				dtout.set(i, j, dt1.get(i, j));
-		
-		for (int i=0;i<dt2.dim(0);i++)
-			for (int j=0;j<numcols;j++)
-				dtout.set(i+dt1.dim(0), j, dt2.get(i, j));
-		
-		return dtout;
-	}
-	
-	public static StringTable joinAll(List<StringTable> dtlist)
-	{
-		if (dtlist.size()==0) return null;
-		if (dtlist.size()==1) return dtlist.get(0);
-		
-		StringTable dtout = join(dtlist.get(0), dtlist.get(1));
-		
-		for (int i=2;i<dtlist.size();i++)
-			dtout = join(dtout, dtlist.get(i));
-		
-		return dtout;
-	}
-	
 	protected void TransposeData()
 	{
 		ArrayList<List<String>> tempdata = new ArrayList<List<String>>(dim(1));
@@ -549,106 +403,7 @@ public class StringTable extends DataTable{
 		
 		data = tempdata;
 	}
-	
-	public void SortRows(int keycol)
-	{
-		StringVector sv = this.getCol(keycol);
-		
-		IntVector index = sv.sort_I();
-		
-		if (this.hasRowNames())	this.setRowNames(sv.getElementNames(index));
 
-		List<List<String>> mydata = new ArrayList<List<String>>(dim(0));
-		for (int row=0;row<dim(0);row++)
-		{
-			List<String> newlist = new ArrayList<String>(dim(1));
-			for (int col=0;col<dim(1);col++)
-				newlist.add(this.get(index.get(row),col));
-			
-			mydata.add(newlist);
-		}
-		
-		data = mydata;
-	}
-	
-	public void SortRowsAsDouble(int keycol)
-	{
-		DoubleVector dv = this.getCol(keycol).asDoubleVector();
-		
-		IntVector index = dv.sort_I();
-		
-		if (this.hasRowNames())
-		{
-			this.setRowNames(dv.getElementNames(index));
-			
-		}
-		List<List<String>> mydata = new ArrayList<List<String>>(dim(0));
-		for (int row=0;row<dim(0);row++)
-		{
-			List<String> newlist = new ArrayList<String>(dim(1));
-			for (int col=0;col<dim(1);col++)
-				newlist.add(this.get(index.get(row),col));
-			
-			mydata.add(newlist);
-		}
-		
-		data = mydata;
-	}
-	
-	public void SortRowsAsInt(int keycol)
-	{
-		IntVector dv = this.getCol(keycol).asIntVector();
-		
-		IntVector index = dv.sort_I();
-		
-		if (this.hasRowNames())	this.setRowNames(dv.getElementNames(index));
-
-		List<List<String>> mydata = new ArrayList<List<String>>(dim(0));
-		for (int row=0;row<dim(0);row++)
-		{
-			List<String> newlist = new ArrayList<String>(dim(1));
-			for (int col=0;col<dim(1);col++)
-				newlist.add(this.get(index.get(row),col));
-			
-			mydata.add(newlist);
-		}
-		
-		data = mydata;
-	}
-	
-	public StringTable buildMatrix(List<String> rows, List<String> cols, int rowKeyCol, int colKeyCol, int dataCol)
-	{
-		StringTable mat = new StringTable(rows,cols);
-				
-		for (int i=0;i<this.dim(0);i++)
-			if (rows.contains(this.get(i,rowKeyCol)) && cols.contains(this.get(i,colKeyCol)))
-				mat.set(rows.indexOf(this.get(i,rowKeyCol)), cols.indexOf(this.get(i,colKeyCol)), this.get(i, dataCol));
-		
-		return mat;
-	}
-	
-	public StringTable replace(String oldVal, String newVal)
-	{
-		StringTable out = this.clone();
-		
-		for (int i=0;i<this.dim(0);i++)
-			for (int j=0;j<this.dim(1);j++)
-				if (this.get(i, j).equals(oldVal)) out.set(i, j, newVal);
-		
-		return out;
-	}
-	
-	public void ReverseRows()
-	{
-		for (int i=0;i<this.dim(0)/2;i++)
-		{
-			int otheri = this.dim(0)-i-1;
-			List<String> temp = data.get(otheri);
-			data.set(otheri, data.get(i));
-			data.set(i, temp);
-		}
-	}
-	
 	public int numRows()
 	{
 		if (data!=null) return data.size();
@@ -660,19 +415,5 @@ public class StringTable extends DataTable{
 		if (data!=null && data.size()>0) return data.get(0).size();
 		else return 0;
 	}
-	
-	public Map<String,String> hash2columns (int keyColIndex, int valueColIndex)
-	{
-		Map<String,String> hashedColumns = new HashMap<String,String>(this.dim(0));
-		for(int i=0; i<this.dim(0); i++)
-			hashedColumns.put(this.get(i, keyColIndex),this.get(i, valueColIndex));
-		
-		return hashedColumns;
-	}
-	
-	public void addCol(DoubleVector v)
-	{
-		for (int i=0;i<v.size();i++)
-			data.get(i).add(v.getAsString(i));
-	}
+
 }

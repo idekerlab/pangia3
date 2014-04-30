@@ -2,7 +2,6 @@ package org.idekerlab.PanGIAPlugin.networks.linkedNetworks;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 public class TypedLinkNodeModule<NT,ET> implements Iterable<TypedLinkNode<NT,ET>>, Finalish{
@@ -35,26 +34,13 @@ public class TypedLinkNodeModule<NT,ET> implements Iterable<TypedLinkNode<NT,ET>
 		out.add(member);
 		return out;
 	}
-	
-	public TypedLinkNodeModule()
-	{
-		this.nodeSet = new HashSet<TypedLinkNode<NT,ET>>();
-		hc = nodeSet.hashCode();
-	}
-	
+
 	public TypedLinkNodeModule(int size)
 	{
 		this.nodeSet = new HashSet<TypedLinkNode<NT,ET>>(size);
 		hc = nodeSet.hashCode();
 	}
-	
-	public TypedLinkNodeModule(TypedLinkNodeModule<NT,ET> module)
-	{
-		this.nodeSet = new HashSet<TypedLinkNode<NT,ET>>(module.nodeSet);
-		this.score = module.score;
-		hc = nodeSet.hashCode();
-	}
-	
+
 	public void setScore(double score)
 	{
 		this.score = score;
@@ -69,37 +55,6 @@ public class TypedLinkNodeModule<NT,ET> implements Iterable<TypedLinkNode<NT,ET>
 	{
 		return this.nodeSet.iterator();
 	}
-	/*
-	public void add(TypedLinkNode<NT,ET> node)
-	{
-		this.nodeSet.add(node);
-	}
-	
-	public void addAll(Set<TypedLinkNode<NT,ET>> nodes)
-	{
-		this.nodeSet.addAll(nodes);
-	}
-	
-	public void add(TypedLinkNodeModule<NT,ET> module)
-	{
-		this.nodeSet.addAll(module.nodeSet);
-	}
-	
-	public void removeAll(TypedLinkNodeModule<NT,ET> module)
-	{
-		this.nodeSet.removeAll(module.nodeSet);
-	}
-	
-	public void retainAll(TypedLinkNodeModule<NT,ET> module)
-	{
-		this.nodeSet.retainAll(module.nodeSet);
-	}
-	
-	public void remove(NT node)
-	{
-		this.nodeSet.remove(node);
-	}
-	*/
 	
 	public boolean contains(NT node)
 	{
@@ -187,8 +142,7 @@ public class TypedLinkNodeModule<NT,ET> implements Iterable<TypedLinkNode<NT,ET>
 		if (mod instanceof TypedLinkNodeModule)
 		{
 			TypedLinkNodeModule<?,?> other = (TypedLinkNodeModule<?,?>)mod;
-			if (other.nodeSet.equals(this.nodeSet)) return true;
-			else return false;
+			return other.nodeSet.equals(this.nodeSet);
 		}else return false;
 	}
 	

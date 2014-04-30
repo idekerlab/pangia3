@@ -1,6 +1,6 @@
 package org.idekerlab.PanGIAPlugin.utilities.html;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class HTMLHead extends HTMLTextBlock
 {

@@ -1,13 +1,11 @@
 package org.idekerlab.PanGIAPlugin.networks;
 
+import org.idekerlab.PanGIAPlugin.data.DoubleVector;
+import org.idekerlab.PanGIAPlugin.networks.hashNetworks.BooleanHashNetwork;
+import org.idekerlab.PanGIAPlugin.networks.matrixNetworks.BooleanMatrixNetwork;
+
 import java.io.*;
 import java.util.*;
-
-import org.idekerlab.PanGIAPlugin.data.DoubleVector;
-import org.idekerlab.PanGIAPlugin.networks.matrixNetworks.*;
-import org.idekerlab.PanGIAPlugin.networks.SEdge;
-import org.idekerlab.PanGIAPlugin.networks.UndirectedSEdge;
-import org.idekerlab.PanGIAPlugin.networks.hashNetworks.*;
 
 public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>{
 
@@ -52,8 +50,7 @@ public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>{
 		if (c instanceof SNodeModule)
 		{
 			SNodeModule other = (SNodeModule)c;
-			if (other.id.equals(this.id) && other.members.equals(this.members)) return true;
-			else return false;
+			return other.id.equals(this.id) && other.members.equals(this.members);
 		}else return false;
 	}
 	

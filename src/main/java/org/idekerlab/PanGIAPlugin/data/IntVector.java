@@ -189,8 +189,7 @@ public class IntVector extends DataVector {
 		int[] out = new int[size];
 
 		int n = Math.min(vec.length, size);
-		for (int i = 0; i < n; i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, n);
 
 		return out;
 	}
@@ -242,8 +241,8 @@ public class IntVector extends DataVector {
 		return (data[getElementNames().indexOf(element)]);
 	}
 
-	public int set(int i, int val) {
-		return data[i] = val;
+	public void set(int i, int val) {
+		data[i] = val;
 	}
 
 	public void set(List<Integer> indices, int val) {
@@ -314,8 +313,7 @@ public class IntVector extends DataVector {
 	public static int[] copy(int[] vec) {
 		int[] out = new int[vec.length];
 
-		for (int i = 0; i < vec.length; i++)
-			out[i] = vec[i];
+		System.arraycopy(vec, 0, out, 0, vec.length);
 
 		return out;
 	}
@@ -1483,18 +1481,18 @@ public class IntVector extends DataVector {
 	public void removeElement(int value) {
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] == value)
+			{
 				this.removeElementAt(i);
-			break;
+				break;
+			}
 		}
 	}
 
 	public void removeElementAt(int index) {
 		int[] newdata = new int[data.length - 1];
 
-		for (int i = 0; i < index; i++)
-			newdata[i] = data[i];
+		System.arraycopy(data, 0, newdata, 0, index);
 
-		for (int i = index + 1; i < data.length; i++)
-			newdata[i - 1] = data[i];
+		System.arraycopy(data, index + 1, newdata, index + 1 - 1, data.length - (index + 1));
 	}
 }
