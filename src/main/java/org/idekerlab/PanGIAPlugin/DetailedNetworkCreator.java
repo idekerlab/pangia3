@@ -12,7 +12,42 @@ import java.util.*;
 
 public class DetailedNetworkCreator
 {
-	@SuppressWarnings("unchecked")
+
+	private static List<CyColumn> addColumns(CyTable originTable, CyTable nestedTable)
+	{
+		List<CyColumn> result = new ArrayList<CyColumn>();
+		for( CyColumn c : originTable.getColumns() )
+		{
+			String columnName = c.getName();
+			if( nestedTable.getColumn(columnName) == null )
+			{
+				if( c.getType().equals(java.util.List.class) )
+				{
+					nestedTable.createListColumn(columnName, c.getListElementType(), c.isImmutable());
+					result.add(c);
+				}
+				else
+				{
+					nestedTable.createColumn(columnName, c.getType(), c.isImmutable());
+					result.add(c);
+				}
+			}
+		}
+		return result;
+	}
+
+	private static HashMap<String,CyNode> createNodeNameMap(CyNetwork originNetwork)
+	{
+		HashMap<String, CyNode> result = new HashMap<String, CyNode>();
+		for (CyNode node : originNetwork.getNodeList())
+		{
+			String name = originNetwork.getRow(node).get(CyNetwork.NAME, String.class);
+			result.put(name, node);
+		}
+		return result;
+	}
+
+
 	public static void createDetailedView(CyNetworkView view, View<CyNode> nodeView)
 	{
 		List<CyNode> selectedNodes = CyTableUtil.getNodesInState(view.getModel(), CyNetwork.SELECTED, true);
@@ -58,14 +93,25 @@ public class DetailedNetworkCreator
 		String networkName = findNextAvailableNetworkName(title);
 
 		CyNetwork detailedNetwork = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
+
 		CyTable networkTable = detailedNetwork.getDefaultNetworkTable();
 		CyRow networkRow = detailedNetwork.getRow(detailedNetwork);
-		if (networkTable.getColumn("name") == null)
-			networkTable.createColumn("name", String.class, false);
 		networkRow.set("name", networkName);
 		if (networkTable.getColumn(PanGIA.NETWORK_TYPE_ATTRIBUTE_NAME) == null)
 			networkTable.createColumn(PanGIA.NETWORK_TYPE_ATTRIBUTE_NAME, String.class, false);
 		networkRow.set(PanGIA.NETWORK_TYPE_ATTRIBUTE_NAME, NetworkType.DETAILED.name());
+
+		//Physical and Genetic Node Tables
+		CyTable physicalNodeTable = origPhysNetwork.getDefaultNodeTable();
+		CyTable geneticNodeTable = origGenNetwork.getDefaultNodeTable();
+		//Nested Node Table
+		CyTable detailedNodeTable = detailedNetwork.getDefaultNodeTable();
+		List<CyColumn> addedPhysicalNodeColumns = addColumns(physicalNodeTable, detailedNodeTable);
+		List<CyColumn> addedGeneticNodeColumns = addColumns(geneticNodeTable, detailedNodeTable);
+		List<CyColumn> addedNodeColumns = new ArrayList<CyColumn>();
+		addedNodeColumns.addAll(addedPhysicalNodeColumns);
+		addedNodeColumns.addAll(addedGeneticNodeColumns);
+
 		ServicesUtil.cyNetworkManagerServiceRef.addNetwork(detailedNetwork);
 
 		//We need a new node in the detailed network for every node in the existing networks.
@@ -90,6 +136,13 @@ public class DetailedNetworkCreator
 				CyNode detailedNode = detailedNetwork.addNode();
 				String nodeName = nestedNetwork.getRow(node).get(CyNetwork.NAME, String.class);
 				detailedNetwork.getRow(detailedNode).set(CyNetwork.NAME, nodeName);
+				CyRow dRow = detailedNetwork.getRow(detailedNode);
+				CyRow nRow = nestedNetwork.getRow(node);
+				for (CyColumn c : addedNodeColumns)
+				{
+					dRow.set(c.getName(), nRow.get(c.getName(), c.getType()));
+				}
+
 				nestedNodeNameMap.put(nodeName, detailedNode);
 
 				nodeNames.add(nodeName);
@@ -107,6 +160,8 @@ public class DetailedNetworkCreator
 			physicalNodeNameMap.put(name, node);
 		}
 
+
+
 		List<CyNode> nodes = new ArrayList<CyNode>();
 		for (String name : nodeNames)
 		{
@@ -122,6 +177,17 @@ public class DetailedNetworkCreator
 			detailedEdgeTable.createColumn(pScoreColumnName, Double.class, false);
 		if (detailedEdgeTable.getColumn(gScoreColumnName) == null)
 			detailedEdgeTable.createColumn(gScoreColumnName, Double.class, false);
+
+		//Physical and Genetic Edge Tables
+		CyTable physicalEdgeTable = origPhysNetwork.getDefaultEdgeTable();
+		CyTable geneticEdgeTable = origGenNetwork.getDefaultEdgeTable();
+		//Nested Edge Table
+		List<CyColumn> addedPhysicalEdgeColumns = addColumns(physicalEdgeTable, detailedEdgeTable);
+		List<CyColumn> addedGeneticEdgeColumns = addColumns(geneticEdgeTable, detailedEdgeTable);
+		List<CyColumn> addedEdgeColumns = new ArrayList<CyColumn>();
+		addedEdgeColumns.addAll(addedPhysicalEdgeColumns);
+		addedEdgeColumns.addAll(addedGeneticEdgeColumns);
+
 
 		//Physical Edges
 		List<CyEdge> physicalEdges = origPhysNetwork.getEdgeList();
@@ -152,6 +218,13 @@ public class DetailedNetworkCreator
 			//GScore
 			Double gScore = physicalEdgeRow.get(gScoreColumnName, Double.class);
 			detailedEdgeRow.set(gScoreColumnName, gScore);
+
+			CyRow dRow = detailedEdgeRow;
+			CyRow pRow = physicalEdgeRow;
+			for (CyColumn c : addedEdgeColumns)
+			{
+				dRow.set(c.getName(), pRow.get(c.getName(), c.getType()));
+			}
 		}
 
 		//Genetic Edges
@@ -168,12 +241,7 @@ public class DetailedNetworkCreator
 			CyEdge newEdge = detailedNetwork.addEdge(s, t, edge.isDirected());
 			CyRow geneticEdgeRow = origGenNetwork.getRow(edge);
 			CyRow detailedEdgeRow = detailedNetwork.getRow(newEdge);
-			String existing = detailedEdgeRow.get(PanGIA.INTERACTION_TYPE, String.class);
 			String interactionType = "Genetic";
-			if (existing == null || !existing.equals("Physical"))
-				interactionType = "Genetic";
-			else
-				interactionType = "Physical&Genetic";
 			if (PanGIA.isGNetSigned)
 			{
 				Double geneticScore = geneticEdgeRow.get(genEdgeAttrName, Double.class);
@@ -199,6 +267,13 @@ public class DetailedNetworkCreator
 			//GScore
 			Double gScore = geneticEdgeRow.get(gScoreColumnName, Double.class);
 			detailedEdgeRow.set(gScoreColumnName, gScore);
+
+			CyRow dRow = detailedEdgeRow;
+			CyRow gRow = geneticEdgeRow;
+			for (CyColumn c : addedEdgeColumns)
+			{
+				dRow.set(c.getName(), gRow.get(c.getName(), c.getType()));
+			}
 		}
 
 		CyNetworkView fooView = ServicesUtil.cyNetworkViewFactoryServiceRef.createNetworkView(detailedNetwork);
@@ -228,7 +303,7 @@ public class DetailedNetworkCreator
 		}
 	}
 
-	public static void goToNestedNetwork(CyNode n)
+	private static void goToNestedNetwork(CyNode n)
 	{
 		// Sanity check.
 		// If this network does not have a network pointer, there is no nested network to go to.
@@ -270,7 +345,7 @@ public class DetailedNetworkCreator
 
 		for (int suffix = 1; true; ++suffix)
 		{
-			final String titleCandidate = initialPreference + "-" + suffix;
+			final String titleCandidate = initialPreference + '-' + suffix;
 			network = getNetworkByTitle(titleCandidate);
 			if (network == null)
 				return titleCandidate;

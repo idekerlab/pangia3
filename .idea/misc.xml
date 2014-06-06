@@ -3,6 +3,7 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0">
       <entry_point TYPE="method" FQNAME="org.idekerlab.PanGIAPlugin.CyActivator CyActivator()" />
+      <entry_point TYPE="method" FQNAME="org.idekerlab.PanGIAPlugin.SearchTask SearchTask(org.idekerlab.PanGIAPlugin.SearchParameters parameters, org.idekerlab.PanGIAPlugin.ui.SearchPropertyPanel searchPropertyPanel)" />
     </entry_points>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">

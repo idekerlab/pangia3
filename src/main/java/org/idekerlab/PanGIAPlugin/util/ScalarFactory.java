@@ -53,17 +53,6 @@ public class ScalarFactory
 		return scalar;
 	}
 
-	public static synchronized void registerScaler(final String type, final Scalar newScalar)
-	{
-		if (typeToScalerMap == null)
-			init();
-
-		if (typeToScalerMap.containsKey(type))
-			throw new IllegalArgumentException("trying to register a duplicate type \"" + type + "\"!");
-
-		typeToScalerMap.put(type, newScalar);
-	}
-
 	private static void init()
 	{
 		if (typeToScalerMap != null)

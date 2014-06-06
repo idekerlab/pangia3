@@ -1,6 +1,5 @@
 package org.idekerlab.PanGIAPlugin.networks.matrixNetworks;
 
-import org.idekerlab.PanGIAPlugin.networks.SEdge;
 import org.idekerlab.PanGIAPlugin.networks.SFEdge;
 import org.idekerlab.PanGIAPlugin.networks.SFNetwork;
 import org.idekerlab.PanGIAPlugin.networks.linkedNetworks.TypedLinkNetwork;
@@ -12,7 +11,7 @@ import java.util.*;
 public class FloatMatrixNetwork extends SFNetwork
 {
 	private Map<String, Integer> nodeLookup;
-	private List<String> nodeValues;
+	private final List<String> nodeValues;
 	private float[][] connectivity;
 
 	public FloatMatrixNetwork(boolean selfOk, boolean directed, Collection<String> nodeValues)
@@ -28,37 +27,6 @@ public class FloatMatrixNetwork extends SFNetwork
 		return new HashSet<String>(nodeValues);
 	}
 
-	public boolean contains(int i, int j)
-	{
-		if (j > i)
-		{
-			int temp = j;
-			j = i;
-			i = temp;
-		}
-
-		if (selfOk || i != j) return !Float.isNaN(connectivity[i][j]);
-		else return false;
-	}
-
-	public boolean contains(String n1, String n2)
-	{
-		Integer i1 = nodeLookup.get(n1);
-		Integer i2 = nodeLookup.get(n2);
-
-		if (i1 == null || i2 == null) return false;
-
-		return contains(i1, i2);
-	}
-
-	public void set(String n1, String n2, float value)
-	{
-		Integer i1 = nodeLookup.get(n1);
-		Integer i2 = nodeLookup.get(n2);
-
-		this.set(i1, i2, value);
-	}
-
 	public void set(int n1, int n2, float value)
 	{
 		if (!directed && n2 > n1)
@@ -68,15 +36,16 @@ public class FloatMatrixNetwork extends SFNetwork
 			n2 = temp;
 		}
 
-		if (selfOk || n1 != n2) this.connectivity[n1][n2] = value;
+		if (selfOk || n1 != n2)
+			this.connectivity[n1][n2] = value;
 	}
 
-	public String getNodeValue(int i)
+	protected String getNodeValue(int i)
 	{
 		return this.nodeValues.get(i);
 	}
 
-	public float edgeValue(int i, int j)
+	protected float edgeValue(int i, int j)
 	{
 		if (j > i)
 		{
@@ -85,8 +54,10 @@ public class FloatMatrixNetwork extends SFNetwork
 			i = temp;
 		}
 
-		if (selfOk || i != j) return connectivity[i][j];
-		else return Float.NaN;
+		if (selfOk || i != j)
+			return connectivity[i][j];
+		else
+			return Float.NaN;
 	}
 
 	public float edgeValue(String n1, String n2)
@@ -94,7 +65,8 @@ public class FloatMatrixNetwork extends SFNetwork
 		Integer i1 = nodeLookup.get(n1);
 		Integer i2 = nodeLookup.get(n2);
 
-		if (i1 == null || i2 == null) return Float.NaN;
+		if (i1 == null || i2 == null)
+			return Float.NaN;
 
 		return edgeValue(i1, i2);
 	}
@@ -115,8 +87,10 @@ public class FloatMatrixNetwork extends SFNetwork
 
 			for (int i = 0; i < size; i++)
 			{
-				if (selfOk) connectivity[i] = new float[i + 1];
-				else connectivity[i] = new float[i];
+				if (selfOk)
+					connectivity[i] = new float[i + 1];
+				else
+					connectivity[i] = new float[i];
 
 				for (int j = 0; j < connectivity[i].length; j++)
 					connectivity[i][j] = Float.NaN;
@@ -139,9 +113,14 @@ public class FloatMatrixNetwork extends SFNetwork
 	public int numEdges()
 	{
 		int count = 0;
-		for (int i = 0; i < connectivity.length; i++)
-			for (int j = 0; j < connectivity[i].length; j++)
-				if (!Float.isNaN(connectivity[i][j])) count++;
+		for (float[] aConnectivity : connectivity)
+			for (float anAConnectivity : aConnectivity)
+			{
+				if (!Float.isNaN(anAConnectivity))
+				{
+					count++;
+				}
+			}
 		return count;
 	}
 
@@ -170,10 +149,6 @@ public class FloatMatrixNetwork extends SFNetwork
 		return new IIterator<String>(this.nodeValues.iterator());
 	}
 
-	public boolean contains(SEdge e)
-	{
-		return contains(e.getI1(), e.getI2());
-	}
 }
 
 

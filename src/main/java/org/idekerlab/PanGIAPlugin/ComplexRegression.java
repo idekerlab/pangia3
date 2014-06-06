@@ -55,8 +55,10 @@ public class ComplexRegression
 
 				if (Double.isNaN(val))
 				{
-					if (within) absentHits++;
-					else absentMisses++;
+					if (within)
+						absentHits++;
+					else
+						absentMisses++;
 				}
 				else
 				{
@@ -79,8 +81,10 @@ public class ComplexRegression
 		weights[0] = absentHits;
 		weights[1] = absentMisses;
 
-		if (weights[0] == 0) weights[0] = 1e-6;
-		if (weights[1] == 0) weights[1] = 1e-6;
+		if (weights[0] == 0)
+			weights[0] = 1e-6;
+		if (weights[1] == 0)
+			weights[1] = 1e-6;
 
 		for (int i = 2; i < weights.length; i++)
 			weights[i] = 1;
@@ -106,8 +110,10 @@ public class ComplexRegression
 		{
 			double prob = lm.yhat(j);
 
-			if (prob == 1) prob = 1 - 1 / (double) n;
-			if (prob == 0) prob = 1 / (double) n;
+			if (prob == 1)
+				prob = 1 - 1 / (double) n;
+			if (prob == 0)
+				prob = 1 / (double) n;
 
 			//prob = Math.log(prob)-Math.log(1-prob);
 			prob = Math.log(prob) - logBackground;
@@ -121,7 +127,8 @@ public class ComplexRegression
 				prob = prob / (1-prob);
 			}*/
 
-			if (prob > 0) out.add(edgeList.get(j - 2).getI1(), edgeList.get(j - 2).getI2(), (float) prob);
+			if (prob > 0)
+				out.add(edgeList.get(j - 2).getI1(), edgeList.get(j - 2).getI2(), (float) prob);
 		}
 
 		return new ComplexRegressionResult(out, rawx, rawy, lm.coefficients().get(0), lm.coefficients().get(1), absentHits, absentMisses, background);

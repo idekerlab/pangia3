@@ -15,7 +15,8 @@ public class HashMapUtil
 			tset.add(addition);
 			map.put(key, tset);
 		}
-		else tset.add(addition);
+		else
+			tset.add(addition);
 	}
 
 }

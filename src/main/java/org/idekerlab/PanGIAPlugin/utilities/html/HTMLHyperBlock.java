@@ -6,19 +6,19 @@ import java.util.List;
 
 public class HTMLHyperBlock extends HTMLBlock
 {
-	protected List<HTMLBlock> blocks;
+	private final List<HTMLBlock> blocks;
 
-	public HTMLHyperBlock()
+	protected HTMLHyperBlock()
 	{
 		blocks = new ArrayList<HTMLBlock>();
 	}
 
-	public HTMLHyperBlock(int numblocks)
+	protected HTMLHyperBlock(int numblocks)
 	{
 		blocks = new ArrayList<HTMLBlock>(numblocks);
 	}
 
-	public void add(HTMLBlock block)
+	protected void add(HTMLBlock block)
 	{
 		this.blocks.add(block);
 	}

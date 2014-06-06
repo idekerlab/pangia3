@@ -1,7 +1,6 @@
 package org.idekerlab.PanGIAPlugin.networks.linkedNetworks;
 
 import org.idekerlab.PanGIAPlugin.utilities.IIterator;
-import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
 
 import java.util.*;
 
@@ -13,11 +12,11 @@ import java.util.*;
  */
 public class TypedLinkNetwork<NT, ET>
 {
-	private boolean selfOK;
-	private boolean directed;
+	private final boolean selfOK;
+	private final boolean directed;
 
-	private Map<NT, TypedLinkNode<NT, ET>> nodes;
-	private Set<TypedLinkEdge<NT, ET>> edges;
+	private final Map<NT, TypedLinkNode<NT, ET>> nodes;
+	private final Set<TypedLinkEdge<NT, ET>> edges;
 
 	public TypedLinkNetwork(boolean selfOK, boolean directed)
 	{
@@ -47,11 +46,6 @@ public class TypedLinkNetwork<NT, ET>
 	public boolean isDirected()
 	{
 		return directed;
-	}
-
-	public Set<TypedLinkNode<NT, ET>> nodes()
-	{
-		return new HashSet<TypedLinkNode<NT, ET>>(nodes.values());
 	}
 
 	public Set<TypedLinkEdge<NT, ET>> edges()
@@ -85,7 +79,8 @@ public class TypedLinkNetwork<NT, ET>
 
 		for (NT n1 : m1)
 			for (NT n2 : m2)
-				if (this.containsEdge(n1, n2)) connectedness++;
+				if (this.containsEdge(n1, n2))
+					connectedness++;
 
 		return connectedness;
 	}
@@ -108,7 +103,8 @@ public class TypedLinkNetwork<NT, ET>
 	public TypedLinkEdge<NT, ET> getEdge(NT n1, NT n2)
 	{
 		TypedLinkNode<NT, ET> node1 = nodes.get(n1);
-		if (node1 == null) return null;
+		if (node1 == null)
+			return null;
 
 		return node1.getEdge(n2);
 	}
@@ -123,7 +119,7 @@ public class TypedLinkNetwork<NT, ET>
 		nodes.put(node.value(), node);
 	}
 
-	public void addAllNodes(Collection<NT> cnodes)
+	protected void addAllNodes(Collection<NT> cnodes)
 	{
 		for (NT node : cnodes)
 			this.addNode(node);
@@ -138,21 +134,23 @@ public class TypedLinkNetwork<NT, ET>
 			this.removeEdge(ed);
 	}
 
-	public void removeEdge(TypedLinkEdge<NT, ET> edge)
+	protected void removeEdge(TypedLinkEdge<NT, ET> edge)
 	{
 		edges.remove(edge);
 		edge.source().removeNeighbor(edge.target());
 		edge.target().removeNeighbor(edge.source());
 	}
 
-	public void removeEdgeWNodeUpdate(TypedLinkEdge<NT, ET> edge)
+	protected void removeEdgeWNodeUpdate(TypedLinkEdge<NT, ET> edge)
 	{
 		edges.remove(edge);
 		edge.source().removeNeighbor(edge.target());
 		edge.target().removeNeighbor(edge.source());
 
-		if (edge.source().numNeighbors() == 0) this.removeNode(edge.source());
-		if (edge.target().numNeighbors() == 0) this.removeNode(edge.target());
+		if (edge.source().numNeighbors() == 0)
+			this.removeNode(edge.source());
+		if (edge.target().numNeighbors() == 0)
+			this.removeNode(edge.target());
 	}
 
 	public void removeAllEdges(Collection<TypedLinkEdge<NT, ET>> edges)
@@ -180,7 +178,7 @@ public class TypedLinkNetwork<NT, ET>
 		addEdgeWNodeUpdate(this.getNode(n1), this.getNode(n2), value);
 	}
 
-	public void addEdgeWNodeUpdate(TypedLinkEdge<NT, ET> edge)
+	protected void addEdgeWNodeUpdate(TypedLinkEdge<NT, ET> edge)
 	{
 		edges.add(edge);
 		edge.source().addNeighbor(edge.target(), edge);
@@ -195,47 +193,23 @@ public class TypedLinkNetwork<NT, ET>
 
 	public String toString()
 	{
-		if (this.numEdges() == 0) return "{}";
+		if (this.numEdges() == 0)
+			return "{}";
 
 		String out = "{";
 
 		Iterator<TypedLinkEdge<NT, ET>> ei = this.edges.iterator();
 		out += ei.next().toString();
 
-		while (ei.hasNext()) out += "," + ei.next().toString();
+		while (ei.hasNext())
+			out += ',' + ei.next().toString();
 
-		return out + "}";
+		return out + '}';
 	}
 
-	public boolean containsEdge(NT n1, NT n2)
+	protected boolean containsEdge(NT n1, NT n2)
 	{
 		return (this.getEdge(n1, n2) != null);
-	}
-
-	public boolean containsNode(NT node)
-	{
-		return nodes.containsKey(node);
-	}
-
-	public static TypedLinkNetwork<String, Double> loadSD(String file, int coln1, int coln2, int coledge)
-	{
-		TypedLinkNetwork<String, Double> out = new TypedLinkNetwork<String, Double>(false, false);
-
-		int row = 1;
-		for (String line : new FileIterator(file))
-		{
-			if (row % 1000000 == 0) System.out.println("Row: " + row);
-			String[] cols = line.split("\t");
-
-			if (!out.containsNode(cols[coln1])) out.addNode(cols[coln1]);
-			if (!out.containsNode(cols[coln2])) out.addNode(cols[coln2]);
-
-			if (!out.containsEdge(cols[coln1], cols[coln2]))
-				out.addEdgeWNodeUpdate(cols[coln1], cols[coln2], Double.valueOf(cols[coledge]));
-			row++;
-		}
-
-		return out;
 	}
 
 	public TypedLinkNetwork<NT, ET> subNetwork(Set<NT> nodes)
@@ -262,7 +236,8 @@ public class TypedLinkNetwork<NT, ET>
 			for (NT node : nodes)
 			{
 				TypedLinkNode<NT, ET> n = this.getNode(node);
-				if (n != null) toadd.addAll(n.neighbors(degree).getMemberValues());
+				if (n != null)
+					toadd.addAll(n.neighbors(degree).getMemberValues());
 			}
 
 			allNodes.addAll(toadd);

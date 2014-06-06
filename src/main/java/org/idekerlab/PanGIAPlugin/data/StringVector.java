@@ -10,25 +10,17 @@ public class StringVector extends DataVector implements Iterable<String>
 
 	private List<String> data;
 
-	public StringVector()
+	private StringVector()
 	{
 		data = new ArrayList<String>();
 	}
 
-	public StringVector(Collection<String> vals)
-	{
-		Initialize(vals.size());
-
-		for (String s : vals)
-			data.add(s);
-	}
-
-	public StringVector(int size)
+	private StringVector(int size)
 	{
 		Initialize(size);
 	}
 
-	public void Initialize(int size)
+	protected void Initialize(int size)
 	{
 		data = new ArrayList<String>(size);
 	}
@@ -49,11 +41,6 @@ public class StringVector extends DataVector implements Iterable<String>
 		return da;
 	}
 
-	public Object getAsObject(int i)
-	{
-		return data.get(i);
-	}
-
 	public String getAsString(int i)
 	{
 		return data.get(i);
@@ -64,27 +51,12 @@ public class StringVector extends DataVector implements Iterable<String>
 		return Double.valueOf(get(i));
 	}
 
-	public byte getAsByte(int i)
-	{
-		return Byte.valueOf(get(i));
-	}
-
-	public int getAsInteger(int i)
-	{
-		return Integer.valueOf(get(i));
-	}
-
-	public float getAsFloat(int i)
-	{
-		return Float.valueOf(get(i));
-	}
-
 	protected Object getDataAsObject()
 	{
 		return data;
 	}
 
-	public String get(int i)
+	protected String get(int i)
 	{
 		return (data.get(i));
 	}
@@ -116,7 +88,7 @@ public class StringVector extends DataVector implements Iterable<String>
 		data.set(i, val);
 	}
 
-	public synchronized void add(String toAdd)
+	protected synchronized void add(String toAdd)
 	{
 		data.add(toAdd);
 	}
@@ -171,7 +143,7 @@ public class StringVector extends DataVector implements Iterable<String>
 		return mysample;
 	}
 
-	public StringVector subVector(int i1, int size)
+	protected StringVector subVector(int i1, int size)
 	{
 		StringVector out = new StringVector(size);
 
@@ -187,8 +159,10 @@ public class StringVector extends DataVector implements Iterable<String>
 	{
 		StringVector copy = new StringVector();
 
-		if (this.hasListName()) copy.listname = this.listname;
-		if (this.hasElementNames()) copy.setElementNames(new ArrayList<String>(this.getElementNames()));
+		if (this.hasListName())
+			copy.listname = this.listname;
+		if (this.hasElementNames())
+			copy.setElementNames(new ArrayList<String>(this.getElementNames()));
 
 		int size = data.size();
 
@@ -224,7 +198,8 @@ public class StringVector extends DataVector implements Iterable<String>
 		else
 		{
 			out = new StringVector(this.size());
-			if (this.hasListName()) out.setListName(this.listname);
+			if (this.hasListName())
+				out.setListName(this.listname);
 
 			IntVector sorti = this.sort_I();
 			List<String> rownames = new ArrayList<String>(this.size());
@@ -239,7 +214,7 @@ public class StringVector extends DataVector implements Iterable<String>
 		return out;
 	}
 
-	public IntVector sort_I()
+	protected IntVector sort_I()
 	{
 		return Sorter.Sort_I(this.clone());
 	}
@@ -260,7 +235,8 @@ public class StringVector extends DataVector implements Iterable<String>
 		StringVector out = new StringVector(bv.sum());
 
 		for (int i = 0; i < bv.size(); i++)
-			if (bv.get(i)) out.add(this.get(i));
+			if (bv.get(i))
+				out.add(this.get(i));
 
 		return out;
 	}

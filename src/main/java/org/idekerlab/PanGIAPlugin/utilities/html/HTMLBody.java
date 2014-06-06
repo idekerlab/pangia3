@@ -8,7 +8,8 @@ public class HTMLBody extends HTMLHyperBlock
 	protected void write(BufferedWriter bw, int depth)
 	{
 		String tabs = "";
-		for (int i = 0; i < depth; i++) tabs += "\t";
+		for (int i = 0; i < depth; i++)
+			tabs += "\t";
 
 		try
 		{

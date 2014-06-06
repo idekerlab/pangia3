@@ -46,8 +46,8 @@ public class SearchTask extends AbstractTask
 
 	private TaskMonitor taskMonitor = null;
 
-	private SearchParameters parameters;
-	private SearchPropertyPanel searchPropertyPanel;
+	private final SearchParameters parameters;
+	private final SearchPropertyPanel searchPropertyPanel;
 
 
 	public SearchTask(final SearchParameters parameters, SearchPropertyPanel searchPropertyPanel)
@@ -55,8 +55,6 @@ public class SearchTask extends AbstractTask
 		this.parameters = parameters;
 		this.searchPropertyPanel = searchPropertyPanel;
 	}
-
-	private long startTime;
 
 	private void setPercentCompleted(int percent)
 	{
@@ -95,7 +93,8 @@ public class SearchTask extends AbstractTask
 				continue;
 			}
 
-			if (cancelled) return;
+			if (cancelled)
+				return;
 
 			// Find number of edges and sum of edge values in the hyperedge
 			int numGeneticLinks = 0;
@@ -120,7 +119,8 @@ public class SearchTask extends AbstractTask
 
 				for (int i = 0; i < numberOfSamples; i++)
 				{
-					if (cancelled) return;
+					if (cancelled)
+						return;
 					double permVal = allEdgeValues.sample(numGeneticLinks, false).sum();
 					dist[i] = permVal;
 				}
@@ -155,7 +155,8 @@ public class SearchTask extends AbstractTask
 	private SFNetwork convertCyNetworkToSFNetwork(final CyNetwork inputNetwork, String nodeAttrName, final String numericAttrName, final ScalingMethod scalingMethod)
 			throws IllegalArgumentException, ClassCastException
 	{
-		CyTable nodeAttr = inputNetwork.getDefaultNodeTable();
+		if (inputNetwork == null)
+			throw new IllegalArgumentException("input parameter inputNetwork must not be null!");
 
 		List<CyEdge> startingEdges = inputNetwork.getEdgeList();
 
@@ -172,8 +173,7 @@ public class SearchTask extends AbstractTask
 
 		final FloatHashNetwork outputNetwork = new FloatHashNetwork(/* selfOk = */false, /* directed = */false, /* startsize = */1);
 
-		if (inputNetwork == null)
-			throw new IllegalArgumentException("input parameter inputNetwork must not be null!");
+
 
 		if (numericAttrName == null || numericAttrName.length() == 0)
 		{
@@ -197,7 +197,7 @@ public class SearchTask extends AbstractTask
 			Class<?> edgeAttribType = edgeAttributes.getColumn(numericAttrName).getType();
 
 			if (edgeAttribType != Double.class && edgeAttribType != Integer.class)
-				throw new IllegalArgumentException("\"" + numericAttrName
+				throw new IllegalArgumentException('"' + numericAttrName
 						+ "\" is not the name of a known numeric edge attribute!");
 
 			List<CyEdge> edges = new ArrayList<CyEdge>(netEdges.size());
@@ -213,11 +213,11 @@ public class SearchTask extends AbstractTask
 			for (final CyEdge e : edges)
 			{
 				CyRow edgeRow = inputNetwork.getRow(e);
-				final String edgeID = edgeRow.get("name", String.class);
 				if (edgeAttribType == Double.class)
 				{
 					final Double attrValue = edgeRow.get(numericAttrName, Double.class);
-					if (attrValue != null) edgeAttribValues[edgeIndex] = (float) (double) attrValue;
+					if (attrValue != null)
+						edgeAttribValues[edgeIndex] = (float) (double) attrValue;
 
 				}
 				else
@@ -238,7 +238,7 @@ public class SearchTask extends AbstractTask
 			for (final CyEdge edge : edges)
 			{
 				CyRow edgeRow = inputNetwork.getRow(edge);
-				Double doubleAttr = null;
+				Double doubleAttr;
 				try
 				{
 					doubleAttr = edgeRow.get(numericAttrName, Double.class);
@@ -247,7 +247,7 @@ public class SearchTask extends AbstractTask
 				{
 					doubleAttr = null;
 				}
-				Integer integerAttr = null;
+				Integer integerAttr;
 				try
 				{
 					integerAttr = edgeRow.get(numericAttrName, Integer.class);
@@ -271,7 +271,7 @@ public class SearchTask extends AbstractTask
 		return outputNetwork;
 	}
 
-	private float[] scaleEdgeAttribValues(final float[] edgeAttribValues, final ScalingMethod scalingMethod, final StringBuilder errorMessage)
+	private static float[] scaleEdgeAttribValues(final float[] edgeAttribValues, final ScalingMethod scalingMethod, final StringBuilder errorMessage)
 	{
 		if (scalingMethod == ScalingMethod.NONE)
 			return edgeAttribValues;
@@ -329,16 +329,17 @@ public class SearchTask extends AbstractTask
 		b.add(networkName);
 		b.add("");
 		b.add("Physical network:");
-		CyNetwork physicalNetwork = parameters.getPhysicalNetwork();
-		String physicalNetworkName = physicalNetwork.getRow(physicalNetwork).get("name", String.class);
 		boolean isBinary = parameters.getPhysicalEdgeAttrName() == null || parameters.getPhysicalEdgeAttrName().length() == 0;
-		if (isBinary) b.add(parameters.getPhysicalEdgeAttrName() + "  (binary)");
+		if (isBinary)
+			b.add(parameters.getPhysicalEdgeAttrName() + "  (binary)");
 		else
-			b.add("Edge score: " + parameters.getPhysicalEdgeAttrName() + "  (numeric, scaling=" + parameters.getPhysicalScalingMethod() + ")");
-		b.add("Nodes: " + pnetNodes1 + ", Edges: " + pnetEdges1 + "");
+			b.add("Edge score: " + parameters.getPhysicalEdgeAttrName() + "  (numeric, scaling=" + parameters.getPhysicalScalingMethod() + ')');
+		b.add("Nodes: " + pnetNodes1 + ", Edges: " + pnetEdges1);
 		int nfd = parameters.getPhysicalNetworkFilterDegree();
-		if (nfd == -1) b.add("Network filter degree: None");
-		else b.add("Network filter degree: " + nfd + "   (Nodes: " + pnetNodes2 + ", Edges: " + pnetEdges2 + ")");
+		if (nfd == -1)
+			b.add("Network filter degree: None");
+		else
+			b.add("Network filter degree: " + nfd + "   (Nodes: " + pnetNodes2 + ", Edges: " + pnetEdges2 + ')');
 		b.add("");
 
 		b.add("Genetic network:");
@@ -346,10 +347,11 @@ public class SearchTask extends AbstractTask
 		String geneticNetworkName = geneticNetwork.getRow(geneticNetwork).get("name", String.class);
 		b.add(geneticNetworkName);
 		isBinary = parameters.getGeneticEdgeAttrName() == null || parameters.getGeneticEdgeAttrName().length() == 0;
-		if (isBinary) b.add(parameters.getGeneticEdgeAttrName() + "  (binary)");
+		if (isBinary)
+			b.add(parameters.getGeneticEdgeAttrName() + "  (binary)");
 		else
-			b.add("Edge score: " + parameters.getGeneticEdgeAttrName() + "  (numeric, scaling=" + parameters.getGeneticScalingMethod() + ")");
-		b.add("Nodes: " + gnetNodes + ", Edges: " + gnetEdges + "");
+			b.add("Edge score: " + parameters.getGeneticEdgeAttrName() + "  (numeric, scaling=" + parameters.getGeneticScalingMethod() + ')');
+		b.add("Nodes: " + gnetNodes + ", Edges: " + gnetEdges);
 		b.add("");
 
 		if (parameters.getComplexTrainingPhysical() || parameters.getComplexTrainingGenetic() || parameters.getComplexAnnotation())
@@ -377,7 +379,7 @@ public class SearchTask extends AbstractTask
 				xmin -= .02 * deltax;
 				xmax += .02 * deltax;
 
-				b.add("<IMG src=\"http://chart.apis.google.com/chart?cht=lxy&chs=500x300&chd=t:" + ListOps.collectionToString(x, ",") + "|" + ListOps.collectionToString(y, ",") + "&chxr=0," + xmin + "," + xmax + "&chxt=x,x,y,y&chxl=1:|Interaction_Score|2:|10^-2|10^-1|10^0|10^1|10^2|10^3|3:|Enrichment&chxp=1,60|3,50&chco=0000FF&chxs=0,000000,12,0,lt|1,000000,12,1,lt|2,000000,12,2,lt|3,000000,12,3,lt&chg=0,100,3,3,0,40\">");
+				b.add("<IMG src=\"http://chart.apis.google.com/chart?cht=lxy&chs=500x300&chd=t:" + ListOps.collectionToString(x, ",") + '|' + ListOps.collectionToString(y, ",") + "&chxr=0," + xmin + ',' + xmax + "&chxt=x,x,y,y&chxl=1:|Interaction_Score|2:|10^-2|10^-1|10^0|10^1|10^2|10^3|3:|Enrichment&chxp=1,60|3,50&chco=0000FF&chxs=0,000000,12,0,lt|1,000000,12,1,lt|2,000000,12,2,lt|3,000000,12,3,lt&chg=0,100,3,3,0,40\">");
 				b.add("");
 				b.add("Assumed null score = 0, trained on absolute value");
 				b.add("Background = " + geneticRegress.background);
@@ -405,7 +407,7 @@ public class SearchTask extends AbstractTask
 				xmin -= .02 * deltax;
 				xmax += .02 * deltax;
 
-				b.add("<IMG src=\"http://chart.apis.google.com/chart?cht=lxy&chs=500x300&chd=t:" + ListOps.collectionToString(x, ",") + "|" + ListOps.collectionToString(y, ",") + "&chxr=0," + xmin + "," + xmax + "&chxt=x,x,y,y&chxl=1:|Interaction_Score|2:|10^-2|10^-1|10^0|10^1|10^2|10^3|3:|Enrichment&chxp=1,60|3,50&chco=0000FF&chxs=0,000000,12,0,lt|1,000000,12,1,lt|2,000000,12,2,lt|3,000000,12,3,lt&chg=0,100,3,3,0,40\">");
+				b.add("<IMG src=\"http://chart.apis.google.com/chart?cht=lxy&chs=500x300&chd=t:" + ListOps.collectionToString(x, ",") + '|' + ListOps.collectionToString(y, ",") + "&chxr=0," + xmin + ',' + xmax + "&chxt=x,x,y,y&chxl=1:|Interaction_Score|2:|10^-2|10^-1|10^0|10^1|10^2|10^3|3:|Enrichment&chxp=1,60|3,50&chco=0000FF&chxs=0,000000,12,0,lt|1,000000,12,1,lt|2,000000,12,2,lt|3,000000,12,3,lt&chg=0,100,3,3,0,40\">");
 				b.add("");
 				b.add("Assumed null score = 0, trained on absolute value");
 				b.add("Background = " + geneticRegress.background);
@@ -428,7 +430,7 @@ public class SearchTask extends AbstractTask
 		b.add("Search parameters: alpha=" + parameters.getAlpha() + ",  alphaMultiplier=" + parameters.getAlphaMultiplier());
 		b.add("Edge filtering: pval=" + parameters.getPValueThreshold() + ",  samples=" + parameters.getNumberOfSamples());
 		b.add("");
-		b.add("PanGIA overview network: (Nodes: " + results.numNodes() + ", Edges: " + results.numEdges() + ")");
+		b.add("PanGIA overview network: (Nodes: " + results.numNodes() + ", Edges: " + results.numEdges() + ')');
 
 		double sum = 0;
 		for (TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> edge : results.edgeIterator())
@@ -469,7 +471,8 @@ public class SearchTask extends AbstractTask
 		for (SNodeModule m : annots)
 			for (String g1 : m)
 				for (String g2 : m)
-					if (!g1.equals(g2)) net.add(new UndirectedSEdge(g1, g2));
+					if (!g1.equals(g2))
+						net.add(new UndirectedSEdge(g1, g2));
 
 		return net.size() / (double) possible;
 	}
@@ -525,11 +528,12 @@ public class SearchTask extends AbstractTask
 		this.taskMonitor = taskMonitor;
 		this.taskMonitor.setStatusMessage("Executing PanGIA task...");
 
-		startTime = System.nanoTime();
+		long startTime = System.nanoTime();
 		taskMonitor.setProgress(0.01);
 		taskMonitor.setStatusMessage("Searching for modules...");
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		final CyNetwork physicalInputNetwork = parameters.getPhysicalNetwork();
 		SFNetwork physicalNetwork = convertCyNetworkToSFNetwork(physicalInputNetwork, parameters.getNodeAttrName(), parameters.getPhysicalEdgeAttrName(), parameters.getPhysicalScalingMethod());
@@ -551,7 +555,8 @@ public class SearchTask extends AbstractTask
 
 		System.out.println("Signed: " + isGNetSigned);
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 
 		//Load trainingComplexes
@@ -560,18 +565,32 @@ public class SearchTask extends AbstractTask
 		{
 			Map<String, Set<String>> annotationNode = new HashMap<String, Set<String>>(1000);
 
-			for (CyNode node : geneticInputNetwork.getNodeList())
+			for( int i = 0; i < geneticInputNetwork.getNodeList().size(); i++ )
 			{
+				CyNode node = geneticInputNetwork.getNodeList().get(i);
 				CyRow row = geneticInputNetwork.getRow(node);
-				List annotationNameList = row.get(parameters.getAnnotationAttrName(), List.class);
-				int x = 5 + 1;
-				for (Object o : annotationNameList)
+				CyColumn c = geneticInputNetwork.getDefaultNodeTable().getColumn(parameters.getAnnotationAttrName());
+				Object annotationAttribute = row.get(parameters.getAnnotationAttrName(), c.getType());
+				List annotationNameList = null;
+				if( c.getType() == List.class )
 				{
-					String annotationName = null;
-					if (o instanceof String)
-						annotationName = (String) o;
-					else
+					annotationNameList = (List) annotationAttribute;
+				}
+				else
+				{
+					annotationNameList = new ArrayList<String>(1);
+					annotationNameList.add(annotationAttribute);
+				}
+				if( annotationNameList == null )
+					continue;
+				for( int j = 0; j < annotationNameList.size(); j++ )
+				{
+					Object o = annotationNameList.get(j);
+					if( !(o instanceof String) )
 						break;
+					String annotationName = (String) o;
+					if( annotationName.isEmpty() )
+						continue;
 					String nodeNameList = row.get(parameters.getNodeAttrName(), String.class);
 					HashMapUtil.updateMapSet(annotationNode, annotationName, String.valueOf(nodeNameList));
 				}
@@ -582,7 +601,8 @@ public class SearchTask extends AbstractTask
 				trainingComplexes.add(new SNodeModule(annotation, annotationNode.get(annotation)));
 		}
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Perform training
 		ComplexRegressionResult physicalRegress = null;
@@ -596,7 +616,14 @@ public class SearchTask extends AbstractTask
 			}
 			catch (AssertionError e)
 			{
-				JOptionPane.showMessageDialog(null, "A problem occured during the training step. Make sure the physical network partially overlaps with the training set and has the same node naming convention.");
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						JOptionPane.showMessageDialog(null, "A problem occurred during the training step. Make sure the physical network partially overlaps with the training set and has the same node naming convention.");
+					}
+				});
 				cancel();
 				return;
 			}
@@ -611,7 +638,14 @@ public class SearchTask extends AbstractTask
 			}
 			catch (AssertionError e)
 			{
-				JOptionPane.showMessageDialog(null, "A problem occured during the training step. Make sure the genetic network partially overlaps with the training set and has the same node naming convention.");
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						JOptionPane.showMessageDialog(null, "A problem occurred during the training step. Make sure the genetic network partially overlaps with the training set and has the same node naming convention.");
+					}
+				});
 				cancel();
 				return;
 			}
@@ -619,7 +653,8 @@ public class SearchTask extends AbstractTask
 		}
 
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Apply the degree filter
 		int pnetNodes1 = physicalNetwork.numNodes();
@@ -638,38 +673,56 @@ public class SearchTask extends AbstractTask
 		int pnetNodes2 = physicalNetwork.numNodes();
 		int pnetEdges2 = physicalNetwork.numEdges();
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Check for problems
 		if (physicalNetwork.numEdges() == 0)
 		{
-			JOptionPane.showMessageDialog(null, "No edges were found in the physical network. Please verify that the network has edges, that the edge attribute is appropriate, and that the Network filter degree is not too low.");
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					JOptionPane.showMessageDialog(null, "No edges were found in the physical network. Please verify that the network has edges, that the edge attribute is appropriate, and that the Network filter degree is not too low.");
+				}
+			});
 			throw new IllegalArgumentException();
 		}
 		else if (geneticNetwork.numEdges() == 0)
 		{
-			JOptionPane.showMessageDialog(null, "No edges were found in the genetic network. Please verify that the network has edges and that the edge attribute is appropriate.");
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					JOptionPane.showMessageDialog(null, "No edges were found in the genetic network. Please verify that the network has edges and that the edge attribute is appropriate.");
+				}
+			});
 			throw new IllegalArgumentException();
 		}
 
 		System.out.println("Number of edges: " + physicalNetwork.numEdges() + ", " + geneticNetwork.numEdges());
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 
 		//Initialize the scoring function
 		final HCScoringFunction hcScoringFunction =
-				new SouravScore(physicalNetwork, geneticNetwork,
+				new SouravScore(
 						(float) parameters.getAlpha(),
 						(float) parameters.getAlphaMultiplier());
 		hcScoringFunction.Initialize(physicalNetwork, geneticNetwork);
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Run the clustering algorithm
 		final TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> results = HCSearch2.search(physicalNetwork, geneticNetwork, hcScoringFunction, taskMonitor, SEARCH_PERCENTAGE, this);
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Compute significance and filter edges
 		final double pValueThreshold;
@@ -696,11 +749,13 @@ public class SearchTask extends AbstractTask
 				continue;
 			}
 
-			if (edge.value().link() < 0) deleteSet.add(edge);
+			if (edge.value().link() < 0)
+				deleteSet.add(edge);
 		}
 		results.removeAllEdgesWNodeUpdate(deleteSet);
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Check for problems
 		boolean groupedOnce = false;
@@ -720,22 +775,47 @@ public class SearchTask extends AbstractTask
 
 		if (goodNodes.size() == 0)
 		{
-			JOptionPane.showMessageDialog(null, "PanGIA was not able to identify any modules. Either all of the nodes were grouped into a single module, or no edge passed the filter. Please verify that:\n1. Edge scores are appropriate.\n2. Edge reporting is not set too low.\n3. Module size is not too high.");
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					JOptionPane.showMessageDialog(null, "PanGIA was not able to identify any modules. Either all of the nodes were grouped into a single module, or no edge passed the filter. Please verify that:\n1. Edge scores are appropriate.\n2. Edge reporting is not set too low.\n3. Module size is not too high.");
+				}
+			});
 			this.cancel();
 		}
 		else if (!groupedOnce)
 		{
-			JOptionPane.showMessageDialog(null, "PanGIA was not able to merge nodes into modules. Please verify that:\n1. Edge scores are appropriate.\n2. Module size is not too low.");
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					JOptionPane.showMessageDialog(null, "PanGIA was not able to merge nodes into modules. Please verify that:\n1. Edge scores are appropriate.\n2. Module size is not too low.");
+				}
+			});
 			this.cancel();
 		}
 		else if (goodNodes.size() >= 500)
 		{
-			Object[] options = {"Yes", "No"};
-			int a = JOptionPane.showOptionDialog(null, "PanGIA found " + goodNodes.size() + " modules. This may take considerable resources to render. Do you wish to continue?", "PanGIA results", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-			if (a == 1) this.cancel();
+			final int finalGoodNodesSize = goodNodes.size();
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Object[] options = {"Yes", "No"};
+					int a = JOptionPane.showOptionDialog(null, "PanGIA found " + finalGoodNodesSize + " modules. This may take considerable resources to render. Do you wish to continue?", "PanGIA results", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+					if (a == 1)
+						SearchTask.this.cancel();
+				}
+			});
+
 		}
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		//Annotate complexes
 		Map<TypedLinkNodeModule<String, BFEdge>, String> module_name = null;
@@ -769,7 +849,8 @@ public class SearchTask extends AbstractTask
 			System.out.println("Number of module annotation matches: " + annotMatches);
 		}
 
-		if (cancelled) return;
+		if (cancelled)
+			return;
 
 		final TypedLinkNetwork<String, Float> pNet = physicalNetwork.asTypedLinkNetwork();
 		final TypedLinkNetwork<String, Float> gNet = geneticNetwork.asTypedLinkNetwork();
@@ -778,8 +859,8 @@ public class SearchTask extends AbstractTask
 		final NestedNetworkCreator nnCreator = new NestedNetworkCreator(results, physicalInputNetwork, geneticInputNetwork, pNet, gNet, 100.0f - COMPUTE_SIG_PERCENTAGE, module_name, networkName, isGNetSigned, parameters.getGeneticEdgeAttrName(), parameters);
 
 
-		nnCreator.run(taskMonitor);
-		if (!parameters.getReportPath().equals(""))
+		nnCreator.createNetworks(taskMonitor);
+		if (!parameters.getReportPath().isEmpty())
 			generateReport(parameters.getReportPath(), networkName, pnetNodes1, pnetNodes2, pnetEdges1, pnetEdges2, geneticNetwork.numNodes(), geneticNetwork.numEdges(), trainingComplexes, physicalRegress, geneticRegress, annotMatches, results);
 		setPercentCompleted(100);
 		//Now that the task is complete, report the results in a popup window and on the console.
@@ -794,15 +875,22 @@ public class SearchTask extends AbstractTask
 			@Override
 			public void run()
 			{
-				Window parent = ServicesUtil.cySwingApplicationServiceRef.getJFrame();
-				JOptionPane.showMessageDialog(parent, finalStatus, "PanGIA", JOptionPane.INFORMATION_MESSAGE);
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Window parent = ServicesUtil.cySwingApplicationServiceRef.getJFrame();
+						JOptionPane.showMessageDialog(parent, finalStatus, "PanGIA", JOptionPane.INFORMATION_MESSAGE);
+					}
+				});
 
 			}
 		});
 		System.out.println(status);
 		CyNetwork overviewNetwork = nnCreator.getOverviewNetwork();
 		String overviewNetworkName = overviewNetwork.getRow(overviewNetwork).get("name", String.class);
-		PanGIAPlugin.output.put(overviewNetworkName, new PanGIAOutput(nnCreator.getOverviewNetwork(), physicalInputNetwork, geneticInputNetwork, parameters.getNodeAttrName(), parameters.getPhysicalEdgeAttrName(), parameters.getGeneticEdgeAttrName(), isGNetSigned));
+		PanGIAPlugin.output.put(overviewNetworkName, new PanGIAOutput(physicalInputNetwork, geneticInputNetwork, parameters.getNodeAttrName(), parameters.getPhysicalEdgeAttrName(), parameters.getGeneticEdgeAttrName()));
 		searchPropertyPanel.setSearchRunning(false);
 	}
 

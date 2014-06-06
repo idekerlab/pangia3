@@ -11,7 +11,7 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 	private double score;
 	private final Set<TypedLinkNode<NT, ET>> nodeSet;
 
-	public TypedLinkNodeModule(Set<TypedLinkNode<NT, ET>> nodes)
+	private TypedLinkNodeModule(Set<TypedLinkNode<NT, ET>> nodes)
 	{
 		this.nodeSet = new HashSet<TypedLinkNode<NT, ET>>(nodes);
 		hc = nodeSet.hashCode();
@@ -36,7 +36,7 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 		return out;
 	}
 
-	public TypedLinkNodeModule(int size)
+	private TypedLinkNodeModule(int size)
 	{
 		this.nodeSet = new HashSet<TypedLinkNode<NT, ET>>(size);
 		hc = nodeSet.hashCode();
@@ -57,29 +57,11 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 		return this.nodeSet.iterator();
 	}
 
-	public boolean contains(NT node)
-	{
-		return nodeSet.contains(node);
-	}
-
 	public int size()
 	{
 		return nodeSet.size();
 	}
 
-
-	/**
-	 * Gets the total number of connections between this module and another node.
-	 */
-	public int getConnectedness(TypedLinkNode<NT, ?> node)
-	{
-		int connectedness = 0;
-
-		for (TypedLinkNode<NT, ?> n : this)
-			if (n.isConnected(node)) connectedness++;
-
-		return connectedness;
-	}
 
 	/**
 	 * Gets a set of the nodes as their actual values in the network.
@@ -109,22 +91,11 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 			}
 			else
 			{
-				out += "," + n.toString();
+				out += ',' + n.toString();
 			}
 		}
 
-		return out + "}";
-	}
-
-	/**
-	 * Intersects the nodes in two modules.
-	 */
-	public static <NT, ET> TypedLinkNodeModule<NT, ET> intersect(TypedLinkNodeModule<NT, ET> m1, TypedLinkNodeModule<NT, ET> m2)
-	{
-		Set<TypedLinkNode<NT, ET>> outSet = new HashSet<TypedLinkNode<NT, ET>>(m1.members());
-		outSet.retainAll(m2.members());
-
-		return new TypedLinkNodeModule<NT, ET>(outSet);
+		return out + '}';
 	}
 
 	/**
@@ -140,13 +111,15 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 
 	public boolean equals(Object mod)
 	{
-		if (mod == null) return false;
+		if (mod == null)
+			return false;
 		if (mod instanceof TypedLinkNodeModule)
 		{
 			TypedLinkNodeModule<?, ?> other = (TypedLinkNodeModule<?, ?>) mod;
 			return other.nodeSet.equals(this.nodeSet);
 		}
-		else return false;
+		else
+			return false;
 	}
 
 	public int hashCode()
@@ -169,7 +142,7 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 		return this.nodeSet;
 	}
 
-	public TypedLinkNodeModule<NT, ET> neighbors()
+	protected TypedLinkNodeModule<NT, ET> neighbors()
 	{
 		Set<TypedLinkNode<NT, ET>> outSet = new HashSet<TypedLinkNode<NT, ET>>(this.members());
 
@@ -184,9 +157,11 @@ public class TypedLinkNodeModule<NT, ET> implements Iterable<TypedLinkNode<NT, E
 		if (degree < 0)
 			throw new IllegalArgumentException("Error TypedLinkNodeModule.neighbors(int): Degree must be >= 0. Degree = " + degree);
 
-		if (degree == 0) return new TypedLinkNodeModule<NT, ET>(0);
+		if (degree == 0)
+			return new TypedLinkNodeModule<NT, ET>(0);
 
-		if (degree == 1) return this.neighbors();
+		if (degree == 1)
+			return this.neighbors();
 
 		TypedLinkNodeModule<NT, ET> out = this.neighbors(degree - 1);
 		Set<TypedLinkNode<NT, ET>> outSet = new HashSet<TypedLinkNode<NT, ET>>(out.nodeSet);

@@ -6,20 +6,16 @@ import java.util.List;
 public abstract class DataMatrix
 {
 
-	protected List<String> rownames;
-	protected List<String> colnames;
+	private List<String> rownames;
+	private List<String> colnames;
 
-	public abstract void Initialize(int numrows, int numcols);
+	protected abstract int dim(int dimension);
 
-	public abstract int dim(int dimension);
+	protected abstract int numRows();
 
-	public abstract int numRows();
+	protected abstract int numCols();
 
-	public abstract int numCols();
-
-	public abstract String getAsString(int row, int col);
-
-	public abstract double getAsDouble(int row, int col);
+	protected abstract double getAsDouble(int row, int col);
 
 
 	/**
@@ -28,7 +24,7 @@ public abstract class DataMatrix
 	 *
 	 * @param rownames
 	 */
-	public void setRowNames(List<String> rownames)
+	protected void setRowNames(List<String> rownames)
 	{
 		if (rownames.size() != this.dim(0))
 		{
@@ -47,7 +43,7 @@ public abstract class DataMatrix
 	 *
 	 * @param colnames
 	 */
-	public void setColNames(List<String> colnames)
+	protected void setColNames(List<String> colnames)
 	{
 		if (colnames.size() != this.dim(1))
 		{
@@ -62,7 +58,7 @@ public abstract class DataMatrix
 	/**
 	 * Gets a copy of the rownames list.
 	 */
-	public ArrayList<String> getRowNames()
+	protected ArrayList<String> getRowNames()
 	{
 		return (new ArrayList<String>(rownames));
 	}
@@ -70,7 +66,7 @@ public abstract class DataMatrix
 	/**
 	 * Gets a copy of the colnames list.
 	 */
-	public ArrayList<String> getColNames()
+	protected ArrayList<String> getColNames()
 	{
 		return (new ArrayList<String>(colnames));
 	}
@@ -78,7 +74,7 @@ public abstract class DataMatrix
 	/**
 	 * Returns whether this DataTable has column names.
 	 */
-	public boolean hasColNames()
+	protected boolean hasColNames()
 	{
 		return colnames != null;
 	}
@@ -86,7 +82,7 @@ public abstract class DataMatrix
 	/**
 	 * Returns whether this DataTable has row names.
 	 */
-	public boolean hasRowNames()
+	protected boolean hasRowNames()
 	{
 		return rownames != null;
 	}

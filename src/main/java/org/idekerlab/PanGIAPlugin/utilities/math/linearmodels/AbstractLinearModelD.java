@@ -9,7 +9,7 @@ public abstract class AbstractLinearModelD extends AbstractLinearModel
 {
 	protected final double[][] x; //individuals x markers
 
-	public AbstractLinearModelD(List<LMTerm> terms, double[][] x)
+	protected AbstractLinearModelD(List<LMTerm> terms, double[][] x)
 	{
 		super(terms);
 		this.x = x;
@@ -19,7 +19,7 @@ public abstract class AbstractLinearModelD extends AbstractLinearModel
 	/**
 	 * Compute the term evaluation matrix X.
 	 */
-	public double[][] evaluateX()
+	protected double[][] evaluateX()
 	{
 		double[][] X = new double[this.x.length][terms.size()];
 

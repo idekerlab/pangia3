@@ -13,7 +13,6 @@ import org.idekerlab.PanGIAPlugin.ui.SearchPropertyPanel;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 
 /**
@@ -31,7 +30,7 @@ public class PanGIAPlugin extends AbstractCyAction implements NetworkViewAddedLi
 	public static final Map<String, PanGIAOutput> output = new HashMap<String, PanGIAOutput>();
 	private final CytoPanel cytoPanelWest;
 
-	private SearchPropertyPanel searchPanel;
+	private final SearchPropertyPanel searchPanel;
 
 	public PanGIAPlugin(SearchPropertyPanel searchPanel)
 	{
@@ -39,11 +38,6 @@ public class PanGIAPlugin extends AbstractCyAction implements NetworkViewAddedLi
 		this.setPreferredMenu("Apps");
 		this.searchPanel = searchPanel;
 		cytoPanelWest = ServicesUtil.cySwingApplicationServiceRef.getCytoPanel(CytoPanelName.WEST);
-
-		// Node right-click menu
-		Properties ndict = new Properties();
-		ndict.setProperty("preferredTaskManager", "menu");
-		ndict.setProperty("title", "PanGIA");
 	}
 
 	@Override

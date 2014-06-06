@@ -18,7 +18,7 @@ public class BFEdge implements Finalish
 	private float global; //The global score change
 
 	//Set of interaction types (ie. physical, genetic, etc.)
-	private Set<InteractionType> types = new HashSet<InteractionType>(3, 1);
+	private final Set<InteractionType> types = new HashSet<InteractionType>(3, 1);
 
 	public enum InteractionType
 	{
@@ -109,14 +109,16 @@ public class BFEdge implements Finalish
 
 	public String toString()
 	{
-		if (this.types.size() == 0) return "";
+		if (this.types.size() == 0)
+			return "";
 
 		String out = "";
 
 		Iterator<InteractionType> iti = types.iterator();
 		out += iti.next().toString();
 
-		while (iti.hasNext()) out += "," + iti.next().toString();
+		while (iti.hasNext())
+			out += ',' + iti.next().toString();
 
 
 		return out;

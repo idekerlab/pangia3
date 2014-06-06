@@ -3,7 +3,6 @@ package org.idekerlab.PanGIAPlugin;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.application.swing.CytoPanelComponent;
-import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
@@ -42,14 +41,13 @@ public class CyActivator extends AbstractCyActivator
 		CyNetworkViewManager cyNetworkViewManagerServiceRef = getService(bc, CyNetworkViewManager.class);
 		CyNetworkManager cyNetworkManagerServiceRef = getService(bc, CyNetworkManager.class);
 		CyServiceRegistrar cyServiceRegistrarServiceRef = getService(bc, CyServiceRegistrar.class);
-		CyEventHelper cyEventHelperServiceRef = getService(bc, CyEventHelper.class);
 		TaskManager taskManagerServiceRef = getService(bc, TaskManager.class);
 
 		CyProperty<Properties> cytoscapePropertiesServiceRef = getService(bc, CyProperty.class, "(cyPropertyName=cytoscape3.props)");
 		VisualMappingManager visualMappingManagerRef = getService(bc, VisualMappingManager.class);
 		CyNetworkFactory cyNetworkFactoryServiceRef = getService(bc, CyNetworkFactory.class);
+		CyRootNetworkManager cyNetworkRootManagerServiceRef = getService(bc, CyRootNetworkManager.class);
 
-		CyRootNetworkManager cyRootNetworkFactory = getService(bc, CyRootNetworkManager.class);
 		CyNetworkViewFactory cyNetworkViewFactoryServiceRef = getService(bc, CyNetworkViewFactory.class);
 		CyLayoutAlgorithmManager cyLayoutsServiceRef = getService(bc, CyLayoutAlgorithmManager.class);
 
@@ -64,12 +62,11 @@ public class CyActivator extends AbstractCyActivator
 		ServicesUtil.cyNetworkViewManagerServiceRef = cyNetworkViewManagerServiceRef;
 		ServicesUtil.cyNetworkManagerServiceRef = cyNetworkManagerServiceRef;
 		ServicesUtil.cyServiceRegistrarServiceRef = cyServiceRegistrarServiceRef;
-		ServicesUtil.cyEventHelperServiceRef = cyEventHelperServiceRef;
 		ServicesUtil.taskManagerServiceRef = taskManagerServiceRef;
 		ServicesUtil.cytoscapePropertiesServiceRef = cytoscapePropertiesServiceRef;
 		ServicesUtil.visualMappingManagerRef = visualMappingManagerRef;
 		ServicesUtil.cyNetworkFactoryServiceRef = cyNetworkFactoryServiceRef;
-		ServicesUtil.cyRootNetworkFactory = cyRootNetworkFactory;
+		ServicesUtil.cyNetworkRootManagerServiceRef = cyNetworkRootManagerServiceRef;
 		ServicesUtil.cyNetworkViewFactoryServiceRef = cyNetworkViewFactoryServiceRef;
 		ServicesUtil.cyLayoutsServiceRef = cyLayoutsServiceRef;
 		//DW: Added, April 4, 2014

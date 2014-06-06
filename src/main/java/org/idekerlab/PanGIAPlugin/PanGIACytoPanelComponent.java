@@ -10,7 +10,7 @@ import java.awt.*;
 public class PanGIACytoPanelComponent implements CytoPanelComponent
 {
 
-	SearchPropertyPanel panel;
+	private final SearchPropertyPanel panel;
 
 	public PanGIACytoPanelComponent(SearchPropertyPanel panel)
 	{

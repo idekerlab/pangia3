@@ -3,7 +3,7 @@ package org.idekerlab.PanGIAPlugin.utilities.math.linearmodels.lmterms;
 
 public final class LMTSingle extends LMTerm
 {
-	final int varIndex;
+	private final int varIndex;
 
 	public LMTSingle(int varIndex)
 	{
@@ -27,10 +27,8 @@ public final class LMTSingle extends LMTerm
 
 	public boolean equals(Object other)
 	{
-		if (other instanceof LMTSingle)
-			return ((LMTSingle) other).varIndex == varIndex;
+		return other instanceof LMTSingle && ((LMTSingle) other).varIndex == varIndex;
 
-		return false;
 	}
 
 }

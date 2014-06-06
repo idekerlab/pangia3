@@ -6,10 +6,8 @@ public enum ScalingMethod
 	NONE("none (prescaled)"),
 	LINEAR_LOWER("lower"),
 	LINEAR_UPPER("upper");
-	//RANK_LOWER("rank/lower"),
-	//RANK_UPPER("rank/upper");
 
-	private String displayString;
+	private final String displayString;
 
 	ScalingMethod(final String displayString)
 	{
@@ -25,7 +23,7 @@ public enum ScalingMethod
 	{
 		for (final ScalingMethod method : ScalingMethod.values())
 		{
-			if (method.getDisplayString().equals(displayString))
+			if (method.displayString.equals(displayString))
 				return method;
 		}
 

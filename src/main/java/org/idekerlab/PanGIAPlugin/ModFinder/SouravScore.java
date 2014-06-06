@@ -14,9 +14,9 @@ public class SouravScore extends HCScoringFunction
 	private float alpha = 1.6f;
 	private float alpham = 1.0f; //Multiplier coefficient for the alpha term
 
-	public SouravScore(SFNetwork pnet, SFNetwork gnet, float alpha, float alpham)
+	public SouravScore(float alpha, float alpham)
 	{
-		super(pnet, gnet);
+		super();
 		this.alpha = alpha;
 		this.alpham = alpham;
 	}
@@ -33,8 +33,10 @@ public class SouravScore extends HCScoringFunction
 		float s1 = getWithinScore(mod, this.pscores);
 		float s2 = getWithinScore(mod, this.gscores);
 
-		if (!Float.isNaN(s1)) score += s1;
-		if (!Float.isNaN(s2)) score += s2;
+		if (!Float.isNaN(s1))
+			score += s1;
+		if (!Float.isNaN(s2))
+			score += s2;
 
 		score += complexReward(mod.size());
 
@@ -44,7 +46,7 @@ public class SouravScore extends HCScoringFunction
 	/**
 	 * Retrieves the within score for a module, for a given network. (physical/genetic)
 	 */
-	private float getWithinScore(TypedLinkNodeModule<String, BFEdge> mod, SFNetwork scores)
+	private static float getWithinScore(TypedLinkNodeModule<String, BFEdge> mod, SFNetwork scores)
 	{
 		float score = 0;
 
@@ -56,7 +58,8 @@ public class SouravScore extends HCScoringFunction
 
 			for (TypedLinkNode<String, BFEdge> other : members)
 			{
-				if (other.equals(member)) continue;
+				if (other.equals(member))
+					continue;
 				final float val = scores.edgeValue(member.value(), other.value());
 				if (!Float.isNaN(val))
 					score += val;
@@ -77,8 +80,10 @@ public class SouravScore extends HCScoringFunction
 		float s1 = -getBetweenScore(mod1, mod2, this.pscores);
 		float s2 = getBetweenScore(mod1, mod2, this.gscores);
 
-		if (!Float.isNaN(s1)) score += s1;
-		if (!Float.isNaN(s2)) score += s2;
+		if (!Float.isNaN(s1))
+			score += s1;
+		if (!Float.isNaN(s2))
+			score += s2;
 
 		return score;
 	}
@@ -86,7 +91,7 @@ public class SouravScore extends HCScoringFunction
 	/**
 	 * Retrieves the between score for two modules, for a given network. (physical/genetic)
 	 */
-	private float getBetweenScore(TypedLinkNodeModule<String, BFEdge> mod1, TypedLinkNodeModule<String, BFEdge> mod2, SFNetwork scores)
+	private static float getBetweenScore(TypedLinkNodeModule<String, BFEdge> mod1, TypedLinkNodeModule<String, BFEdge> mod2, SFNetwork scores)
 	{
 		float score = 0;
 

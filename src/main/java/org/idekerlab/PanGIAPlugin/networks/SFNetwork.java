@@ -7,7 +7,7 @@ import java.util.Set;
 
 public abstract class SFNetwork extends SNetwork
 {
-	public SFNetwork(boolean selfOk, boolean directed)
+	protected SFNetwork(boolean selfOk, boolean directed)
 	{
 		super(selfOk, directed);
 	}
@@ -23,8 +23,6 @@ public abstract class SFNetwork extends SNetwork
 	public abstract IIterator<String> nodeIterator();
 
 	public abstract Set<String> getNodes();
-
-	public abstract boolean contains(String n1, String n2);
 
 	public abstract TypedLinkNetwork<String, Float> asTypedLinkNetwork();
 }

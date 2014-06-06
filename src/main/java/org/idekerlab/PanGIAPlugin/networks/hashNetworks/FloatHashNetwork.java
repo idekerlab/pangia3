@@ -9,8 +9,8 @@ import java.util.*;
 
 public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge>
 {
-	private Map<String, Set<SEdge>> nodeMap;
-	private Map<SEdge, SFEdge> edgeMap;
+	private final Map<String, Set<SEdge>> nodeMap;
+	private final Map<SEdge, SFEdge> edgeMap;
 
 	public FloatHashNetwork(boolean selfOk, boolean directed, int startsize)
 	{
@@ -55,16 +55,6 @@ public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge>
 			iset.add(i);
 	}
 
-	public boolean isDirected()
-	{
-		return directed;
-	}
-
-	public boolean contains(SEdge e)
-	{
-		return this.contains(e.getI1(), e.getI2());
-	}
-
 	public Iterator<SFEdge> iterator()
 	{
 		return edgeMap.values().iterator();
@@ -75,7 +65,7 @@ public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge>
 		return new HashSet<String>(nodeMap.keySet());
 	}
 
-	public void add(SFEdge i)
+	protected void add(SFEdge i)
 	{
 		this.edgeMap.put(i, i);
 		this.updateNodeMap(i);
@@ -104,18 +94,13 @@ public class FloatHashNetwork extends SFNetwork implements Iterable<SFEdge>
 		return edgeValue(new UndirectedSEdge(n1, n2));
 	}
 
-	public float edgeValue(SEdge i)
+	protected float edgeValue(SEdge i)
 	{
 		SFEdge f = edgeMap.get(i);
 		if (f == null)
 			return Float.NaN;
 		else
 			return f.value();
-	}
-
-	public boolean contains(String n1, String n2)
-	{
-		return edgeMap.containsKey(new UndirectedSEdge(n1, n2));
 	}
 
 	public TypedLinkNetwork<String, Float> asTypedLinkNetwork()

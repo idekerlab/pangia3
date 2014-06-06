@@ -26,7 +26,7 @@ public class PanGIAContextMenuFactory
 {
 
 
-	protected CyMenuItem createMenuItemHelper(CyNetworkView netView, View<CyNode> nodeView)
+	protected static CyMenuItem createMenuItemHelper(CyNetworkView netView, View<CyNode> nodeView)
 	{
 		boolean selectedHasNested = false;
 		CyNetwork network = netView.getModel();
@@ -150,7 +150,7 @@ public class PanGIAContextMenuFactory
 	}
 
 
-	protected static void saveNodesToMatrix(final CyNetworkView view, File file, String eattr, List<CyNode> selectedNodes, CyNetwork originNetwork)
+	private static void saveNodesToMatrix(final CyNetworkView view, File file, String eattr, List<CyNode> selectedNodes, CyNetwork originNetwork)
 	{
 		CyNetwork network = view.getModel();
 		String netID = network.getRow(network).get("name", String.class);
@@ -230,7 +230,7 @@ public class PanGIAContextMenuFactory
 			bw.write("Gene");
 
 			for (String id : ids)
-				bw.write("\t" + id);
+				bw.write('\t' + id);
 
 			bw.write("\n");
 
@@ -258,7 +258,7 @@ public class PanGIAContextMenuFactory
 		}
 	}
 
-	protected static void saveModules(CyNetworkView view)
+	private static void saveModules(CyNetworkView view)
 	{
 		JFileChooser jfc = new JFileChooser();
 		jfc.setCurrentDirectory(new File("."));
@@ -282,7 +282,7 @@ public class PanGIAContextMenuFactory
 			pw = new PrintWriter(new BufferedWriter(new FileWriter(jfc.getSelectedFile())));
 			String line = "NodeA\tNodeB\t";
 			for (int i = 0; i < remainingColumns.length - 1; i++)
-				line += remainingColumns[i] + "\t";
+				line += remainingColumns[i] + '\t';
 			line += remainingColumns[remainingColumns.length - 1];
 			pw.println(line);
 
@@ -297,7 +297,7 @@ public class PanGIAContextMenuFactory
 				{
 					String col = remainingColumns[i];
 					Object value = overviewNetwork.getRow(edge).get(col, Object.class);
-					line += value.toString() + "\t";
+					line += value.toString() + '\t';
 				}
 				String lastCol = remainingColumns[remainingColumns.length - 1];
 				Object lastValue = overviewNetwork.getRow(edge).get(lastCol, Object.class);
@@ -319,7 +319,7 @@ public class PanGIAContextMenuFactory
 		}
 	}
 
-	protected static void saveOverviewNetwork(CyNetworkView view)
+	private static void saveOverviewNetwork(CyNetworkView view)
 	{
 		JFileChooser jfc = new JFileChooser();
 		jfc.setCurrentDirectory(new File("."));
@@ -335,7 +335,7 @@ public class PanGIAContextMenuFactory
 			CyNetwork overviewNetwork = view.getModel();
 			for (CyNode node : overviewNetwork.getNodeList())
 			{
-				String line = overviewNetwork.getRow(node).get(CyNetwork.NAME, String.class) + "\t";
+				String line = overviewNetwork.getRow(node).get(CyNetwork.NAME, String.class) + '\t';
 				CyNetwork nestedNetwork = node.getNetworkPointer();
 				if (nestedNetwork != null)
 				{
@@ -343,7 +343,7 @@ public class PanGIAContextMenuFactory
 					for (int i = 0; i < nestedNodes.size() - 1; i++)
 					{
 						CyNode nestedNode = nestedNodes.get(i);
-						line += nestedNetwork.getRow(nestedNode).get(CyNetwork.NAME, String.class) + "|";
+						line += nestedNetwork.getRow(nestedNode).get(CyNetwork.NAME, String.class) + '|';
 					}
 					CyNode lastNode = nestedNodes.get(nestedNodes.size() - 1);
 					line += nestedNetwork.getRow(lastNode).get(CyNetwork.NAME, String.class);

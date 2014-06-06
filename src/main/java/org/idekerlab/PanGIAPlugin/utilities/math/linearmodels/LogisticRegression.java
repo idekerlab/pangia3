@@ -11,7 +11,7 @@ import org.idekerlab.PanGIAPlugin.data.DoubleVector;
  */
 public class LogisticRegression
 {
-	public static double[] variance(double[] mu)
+	private static double[] variance(double[] mu)
 	{
 		double[] out = new double[mu.length];
 
@@ -21,7 +21,7 @@ public class LogisticRegression
 		return out;
 	}
 
-	public static double[] linkfun(double[] mu)
+	private static double[] linkfun(double[] mu)
 	{
 		double[] out = new double[mu.length];
 
@@ -31,7 +31,7 @@ public class LogisticRegression
 		return out;
 	}
 
-	public static double[] linkinv(double[] eta)
+	private static double[] linkinv(double[] eta)
 	{
 		double[] out = new double[eta.length];
 
@@ -44,7 +44,7 @@ public class LogisticRegression
 		return out;
 	}
 
-	public static double[] mu_eta(double[] eta)
+	private static double[] mu_eta(double[] eta)
 	{
 		double[] out = new double[eta.length];
 
@@ -58,14 +58,16 @@ public class LogisticRegression
 		return out;
 	}
 
-	public static double y_log_y(double y, double mu)
+	private static double y_log_y(double y, double mu)
 	{
 		//y_log_y is:  return (y) ? (y * log(y/mu)) : 0;
-		if (y == 1) return Math.log(y / mu);
-		else return 0;
+		if (y == 1)
+			return Math.log(y / mu);
+		else
+			return 0;
 	}
 
-	public static double[] dev_resids(double[] y, double[] mu, double[] wt)
+	private static double[] dev_resids(double[] y, double[] mu, double[] wt)
 	{
 		int n = y.length;
 		int lmu = mu.length;
@@ -74,8 +76,10 @@ public class LogisticRegression
 		double[] ans = y.clone(); //All (but this?) added to convert to reals, may not be necessary
 
 
-		if (lmu != n && lmu != 1) System.out.println("error: argument mu must be a numeric vector or length of 1 or n");
-		if (lwt != n && lwt != 1) System.out.println("error: argument wt must be a numeric vector or length of 1 or n");
+		if (lmu != n && lmu != 1)
+			System.out.println("error: argument mu must be a numeric vector or length of 1 or n");
+		if (lwt != n && lwt != 1)
+			System.out.println("error: argument wt must be a numeric vector or length of 1 or n");
 
 		for (int i = 0; i < n; i++)
 		{
@@ -87,7 +91,7 @@ public class LogisticRegression
 		return ans;
 	}
 
-	public static boolean validmu(double[] mu)
+	private static boolean validmu(double[] mu)
 	{
 		return DoubleVector.allGreaterThan(mu, 0) && DoubleVector.allLessThan(mu, 1);
 	}
@@ -145,12 +149,14 @@ public class LogisticRegression
 
 			if (DoubleVector.isAnyNaN(varmu))
 			{
-				if (!silent) System.err.println("NaNs in V(mu)");
+				if (!silent)
+					System.err.println("NaNs in V(mu)");
 				return null;
 			}
 			if (DoubleVector.anyEqualTo(varmu, 0))
 			{
-				if (!silent) System.err.println("0s in V(mu)");
+				if (!silent)
+					System.err.println("0s in V(mu)");
 				return null;
 			}
 
@@ -175,7 +181,8 @@ public class LogisticRegression
 			if (coefficients == null)
 			{
 				conv = false;
-				if (!silent) System.out.println("Warning: Regression failed at iteration " + iter);
+				if (!silent)
+					System.out.println("Warning: Regression failed at iteration " + iter);
 				break;
 			}
 
@@ -189,7 +196,8 @@ public class LogisticRegression
 			if (new DoubleVector(coefficients).isReal().anyEqualTo(false))
 			{
 				conv = false;
-				if (!silent) System.out.println("Warning: non-finite coefficients at iteration " + iter);
+				if (!silent)
+					System.out.println("Warning: non-finite coefficients at iteration " + iter);
 				break;
 			}
 
@@ -216,7 +224,8 @@ public class LogisticRegression
 					System.exit(0);
 				}
 
-				if (!silent) System.out.println("Warning: step size truncated due to divergence");
+				if (!silent)
+					System.out.println("Warning: step size truncated due to divergence");
 				int ii = 1;
 
 				while (Double.isInfinite(dev) || Double.isNaN(dev))
@@ -246,14 +255,16 @@ public class LogisticRegression
 					System.exit(0);
 				}
 
-				if (!silent) System.out.println("Warning: step size truncated: out of bounds");
+				if (!silent)
+					System.out.println("Warning: step size truncated: out of bounds");
 
 				int ii = 1;
 				while (!validmu(mu))
 				{
 					if (ii > maxit)
 					{
-						if (!silent) System.err.println("inner loop 2; cannot correct step size");
+						if (!silent)
+							System.err.println("inner loop 2; cannot correct step size");
 						return null;
 					}
 
@@ -290,11 +301,13 @@ public class LogisticRegression
 			//System.out.println("Warning: algorithm did not converge");
 			return null;
 		}
-		if (boundary && !silent) System.out.println("Warning: algorithm stopped at boundary value");
+		if (boundary && !silent)
+			System.out.println("Warning: algorithm stopped at boundary value");
 
 		if (DoubleVector.anyGreaterThan(mu, 1 - 2.220446e-15) || DoubleVector.anyLessThan(mu, 2.220446e-15))
 		{
-			if (!silent) System.out.println("Warning: fitted probabilities numerically 0 or 1 occurred");
+			if (!silent)
+				System.out.println("Warning: fitted probabilities numerically 0 or 1 occurred");
 			return null;
 		}
 		return coef;

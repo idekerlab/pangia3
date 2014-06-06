@@ -13,13 +13,6 @@ public abstract class HCScoringFunction
 	protected FloatMatrixNetwork pscores;
 	protected FloatMatrixNetwork gscores;
 
-	//The largest node indexes 
-	protected int gmaxnodei;
-	protected int pmaxnodei;
-
-	//Genetic scores assigned directly from the network
-	protected FloatMatrixNetwork raw_genetic;
-
 	/**
 	 * Perform initial calculations. (build lookup matricies etc.)
 	 */
@@ -32,10 +25,8 @@ public abstract class HCScoringFunction
 	/**
 	 * Retrieves the raw interaction data from a network and puts it into a lookup matrix.
 	 */
-	public HCScoringFunction(SFNetwork pnet, SFNetwork gnet)
+	protected HCScoringFunction()
 	{
-		gmaxnodei = gnet.numNodes() - 1;
-		pmaxnodei = pnet.numNodes() - 1;
 	}
 
 	protected void buildScoreTables(SFNetwork pnet, SFNetwork gnet)
@@ -47,11 +38,13 @@ public abstract class HCScoringFunction
 
 		for (int i = 0; i < nodes.size() - 1; i++)
 		{
-			if (i % 1000 == 0) System.out.println((float) i / nodes.size() * 100 + "%");
+			if (i % 1000 == 0)
+				System.out.println((float) i / nodes.size() * 100 + "%");
 			for (int j = i + 1; j < nodes.size(); j++)
 			{
 				float score = pnet.edgeValue(nodes.get(i), nodes.get(j));
-				if (!Float.isNaN(score)) pscores.set(i, j, score);
+				if (!Float.isNaN(score))
+					pscores.set(i, j, score);
 			}
 		}
 
@@ -62,11 +55,13 @@ public abstract class HCScoringFunction
 
 		for (int i = 0; i < nodes.size() - 1; i++)
 		{
-			if (i % 1000 == 0) System.out.println((float) i / nodes.size() * 100 + "%");
+			if (i % 1000 == 0)
+				System.out.println((float) i / nodes.size() * 100 + "%");
 			for (int j = i + 1; j < nodes.size(); j++)
 			{
 				float score = gnet.edgeValue(nodes.get(i), nodes.get(j));
-				if (!Float.isNaN(score)) gscores.set(i, j, score);
+				if (!Float.isNaN(score))
+					gscores.set(i, j, score);
 			}
 		}
 	}

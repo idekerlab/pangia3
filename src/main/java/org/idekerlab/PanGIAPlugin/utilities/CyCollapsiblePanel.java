@@ -58,23 +58,24 @@ public class CyCollapsiblePanel extends JPanel
 {
 	private static final long serialVersionUID = 2010434345567315524L;
 	//Border
-	CollapsableTitledBorder border; // includes upper left component and line type
-	Border collapsedBorderLine = BorderFactory.createEmptyBorder(2, 2, 2, 2); // no border
-	Border expandedBorderLine = null; // because this is null, default is used, etched lowered border on MAC
+	private CollapsableTitledBorder border; // includes upper left component and line type
+	private final Border collapsedBorderLine = BorderFactory.createEmptyBorder(2, 2, 2, 2); // no border
+	private final Border expandedBorderLine = null; // because this is null, default is used, etched lowered border on MAC
 
 	//Title
-	AbstractButton titleComponent; // displayed in the titled border
+	private final AbstractButton titleComponent; // displayed in the titled border
 
 	//Expand/Collapse button
-	final static int COLLAPSED = 0, EXPANDED = 1; // image States
-	ImageIcon[] iconArrow = createExpandAndCollapseIcon();
-	JButton arrow = createArrowButton();
+	private final static int COLLAPSED = 0;
+	private final static int EXPANDED = 1; // image States
+	private final ImageIcon[] iconArrow = createExpandAndCollapseIcon();
+	private final JButton arrow = createArrowButton();
 
 	//Content Pane
-	JPanel panel;
+	private JPanel panel;
 
 	//Container State
-	boolean collapsed; // stores curent state of the collapsable panel
+	private boolean collapsed; // stores curent state of the collapsable panel
 
 	/**
 	 * Constructor for a label/button controlled collapsable panel. Displays a clickable title that resembles a
@@ -137,7 +138,7 @@ public class CyCollapsiblePanel extends JPanel
 	 *
 	 * @param collapse When set to true, the panel is collapsed, else it is expanded
 	 */
-	public void setCollapsed(boolean collapse)
+	protected void setCollapsed(boolean collapse)
 	{
 		if (collapse)
 		{
@@ -163,7 +164,7 @@ public class CyCollapsiblePanel extends JPanel
 	 *
 	 * @return collapsed Returns true if the panel is collapsed and false if it is expanded
 	 */
-	public boolean isCollapsed()
+	protected boolean isCollapsed()
 	{
 		return collapsed;
 	}
@@ -246,7 +247,7 @@ public class CyCollapsiblePanel extends JPanel
 	private class CollapsableTitledBorder extends TitledBorder
 	{
 		private static final long serialVersionUID = 2010434345567315526L;
-		JComponent component;
+		final JComponent component;
 		//Border border;
 
 		public CollapsableTitledBorder(Border border, JComponent component)

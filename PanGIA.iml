@@ -28,17 +28,13 @@
     <orderEntry type="library" name="Maven: org.cytoscape:model-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:event-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:layout-api:3.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.cytoscape:presentation-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:viewmodel-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:core-task-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:work-api:3.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.cytoscape:session-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:vizmap-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:property-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:swing-application-api:3.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.cytoscape:work-swing-api:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.cytoscape:application-api:3.0.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.ops4j.pax.logging:pax-logging-api:1.5.2" level="project" />
   </component>
 </module>
 

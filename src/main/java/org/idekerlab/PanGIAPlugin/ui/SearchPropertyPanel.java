@@ -1,5 +1,6 @@
 package org.idekerlab.PanGIAPlugin.ui;
 
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.CyTableUtil;
@@ -17,7 +18,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -38,8 +38,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	private static final String DEFAULT_ATTRIBUTE = "none";
 
 	private SearchParameters parameters;
-	private JPanel scrollablePanel;
-	private JScrollPane scrollPane;
+	private final JPanel scrollablePanel;
 
 
 	/**
@@ -54,7 +53,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		scrollablePanel = new JPanel();
 		scrollablePanel.setLayout(new GridBagLayout());
 		scrollablePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
-		scrollPane = new JScrollPane(scrollablePanel);
+		JScrollPane scrollPane = new JScrollPane(scrollablePanel);
 
 		initComponents(); // the main panel
 		initComponents2(); // parameter panel
@@ -132,20 +131,20 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	{
 		java.awt.GridBagConstraints gridBagConstraints;
 
-		topPane = new javax.swing.JPanel();
-		physicalEdgeLabel = new javax.swing.JLabel();
+		JPanel topPane = new JPanel();
+		JLabel physicalEdgeLabel = new JLabel();
 		physicalEdgeAttribComboBox = new javax.swing.JComboBox();
-		lbPhysicalNetwork = new javax.swing.JLabel();
+		JLabel lbPhysicalNetwork = new JLabel();
 		lbPhysicalScale = new javax.swing.JLabel();
 		phyScalingMethodComboBox = new javax.swing.JComboBox();
-		edgeAttributePanel = new javax.swing.JPanel();
-		geneticEdgeLabel = new javax.swing.JLabel();
+		JPanel edgeAttributePanel = new JPanel();
+		JLabel geneticEdgeLabel = new JLabel();
 		geneticEdgeAttribComboBox = new javax.swing.JComboBox();
-		lbGeneticNetwork = new javax.swing.JLabel();
+		JLabel lbGeneticNetwork = new JLabel();
 		lbGeneticScale = new javax.swing.JLabel();
 		genScalingMethodComboBox = new javax.swing.JComboBox();
 		parameterPanel = new javax.swing.JPanel();
-		buttonPanel = new javax.swing.JPanel();
+		JPanel buttonPanel = new JPanel();
 		//helpButton = new javax.swing.JButton();
 		aboutButton = new javax.swing.JButton();
 		closeButton = new javax.swing.JButton();
@@ -379,9 +378,9 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		java.awt.GridBagConstraints gridBagConstraints;
 
 		pnlParameter = new javax.swing.JPanel();
-		nodeAttrPanel = new javax.swing.JPanel();
-		scorePanel = new javax.swing.JPanel();
-        
+		JPanel nodeAttrPanel = new JPanel();
+		JPanel scorePanel = new JPanel();
+
         /*
         alphaLabel = new javax.swing.JLabel();
         alphaMultiplierLabel = new javax.swing.JLabel();
@@ -389,26 +388,26 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
         alphaMultiplierTextField = new javax.swing.JTextField();
         */
 
-		degreeLabel = new javax.swing.JLabel();
+		JLabel degreeLabel = new JLabel();
 		degreeTextField = new javax.swing.JTextField();
 
-		nodeAttrLabel = new JLabel();
+		JLabel nodeAttrLabel = new JLabel();
 		nodeAttrComboBox = new JComboBox();
 
-		complexRewardLabel = new JLabel();
+		JLabel complexRewardLabel = new JLabel();
 		complexRewardSlider = new JSlider();
-		complexRewardSliderLabels = new JLabel();
+		JLabel complexRewardSliderLabels = new JLabel();
 		complexRewardTextField = new JTextField();
 
-		lbPlaceHolder1 = new javax.swing.JLabel();
+		JLabel lbPlaceHolder1 = new JLabel();
 
-		edgeFilteringPanel = new javax.swing.JPanel();
+		JPanel edgeFilteringPanel = new JPanel();
 		pValueThresholdLabel = new javax.swing.JLabel();
 		edgeFilterTextField = new javax.swing.JTextField();
 		edgeFilterSlider = new JSlider();
 		edgeFilterSliderLabels = new JLabel();
-		lbPlaceHolder2 = new javax.swing.JLabel();
-		lbPlaceHolder3 = new javax.swing.JLabel();
+		JLabel lbPlaceHolder2 = new JLabel();
+		JLabel lbPlaceHolder3 = new JLabel();
 		trainingCheckBox = new JCheckBox();
 		//trainingCheckBoxPhysical = new JCheckBox();
 		//trainingCheckBoxGenetic = new JCheckBox();
@@ -417,17 +416,17 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		//trainingLabelGenetic = new JLabel();
 		annotationCheckBox = new JCheckBox();
 		annotationLabel = new JLabel();
-		lbComplexFile = new javax.swing.JLabel();
+		JLabel lbComplexFile = new JLabel();
 		annotationAttribComboBox = new javax.swing.JComboBox();
 		annotationThresholdLabel = new JLabel();
 		annotationThresholdTextField = new JTextField();
-		reportPathLabel = new javax.swing.JLabel();
+		JLabel reportPathLabel = new JLabel();
 		reportPathTextField = new javax.swing.JTextField();
 		reportPathButton = new JButton();
 		seedTextField = new JTextField();
 
-		trainingPanel = new javax.swing.JPanel();
-		reportPanel = new javax.swing.JPanel();
+		JPanel trainingPanel = new JPanel();
+		JPanel reportPanel = new JPanel();
 
 		pnlParameter.setLayout(new java.awt.GridBagLayout());
 
@@ -1010,7 +1009,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	}
 
 
-	private void closeButtonActionPerformed()
+	private static void closeButtonActionPerformed()
 	{
 
 		System.out.println("Entering SearchPropertyPanel.closeButtonActionPerformed()....");
@@ -1019,7 +1018,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 //		cytoPanel.remove(this.getParent().getParent());
 	}
 
-	private void aboutButtonActionPerformed()
+	private static void aboutButtonActionPerformed()
 	{
 
 		JFrame aboutFrame = new JFrame();
@@ -1223,39 +1222,21 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
     private javax.swing.JTextField alphaTextField;
     */
 
-	private JLabel nodeAttrLabel;
 	private JComboBox nodeAttrComboBox;
 
-	private JLabel complexRewardLabel;
 	private boolean complexRewardSliderEventLock = false;
 	private JSlider complexRewardSlider;
-	private JLabel complexRewardSliderLabels;
 	private JTextField complexRewardTextField;
 
-	private javax.swing.JPanel buttonPanel;
 	private javax.swing.JButton closeButton;
-	private javax.swing.JLabel degreeLabel;
 	private javax.swing.JTextField degreeTextField;
-	private javax.swing.JPanel edgeAttributePanel;
-	private javax.swing.JPanel edgeFilteringPanel;
 	private javax.swing.JComboBox geneticEdgeAttribComboBox;
-	private javax.swing.JLabel geneticEdgeLabel;
-	private javax.swing.JLabel lbPlaceHolder1;
-	private javax.swing.JLabel lbPlaceHolder2;
-	private javax.swing.JLabel lbPlaceHolder3;
 	private javax.swing.JLabel pValueThresholdLabel;
 	private javax.swing.JTextField edgeFilterTextField;
 	private javax.swing.JComboBox physicalEdgeAttribComboBox;
-	private javax.swing.JLabel physicalEdgeLabel;
-	private javax.swing.JPanel scorePanel;
 	private javax.swing.JButton searchButton;
-	private javax.swing.JPanel topPane;
 	private javax.swing.JPanel pnlParameter;
-	private javax.swing.JPanel nodeAttrPanel;
 	private javax.swing.JPanel parameterPanel;
-	private javax.swing.JLabel lbGeneticNetwork;
-	private javax.swing.JLabel lbPhysicalNetwork;
-	private javax.swing.JPanel trainingPanel;
 	private JCheckBox trainingCheckBox;
 	//private JCheckBox trainingCheckBoxPhysical;
 	//private JCheckBox trainingCheckBoxGenetic;
@@ -1264,7 +1245,6 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	//private JLabel trainingLabelGenetic;
 	private JCheckBox annotationCheckBox;
 	private JLabel annotationLabel;
-	private javax.swing.JLabel lbComplexFile;
 	private javax.swing.JComboBox annotationAttribComboBox;
 	private JLabel annotationThresholdLabel;
 	private JTextField annotationThresholdTextField;
@@ -1274,8 +1254,6 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	private javax.swing.JLabel lbGeneticScale;
 	private javax.swing.JLabel lbPhysicalScale;
 
-	private JPanel reportPanel;
-	private JLabel reportPathLabel;
 	private JTextField reportPathTextField;
 	private JButton reportPathButton;
 	private String reportPath = "";
@@ -1289,10 +1267,10 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 	// End of variables declaration
 
 
-	private NetworkSelectorPanel physicalNetworkPanel = new NetworkSelectorPanel(ServicesUtil.cyApplicationManagerServiceRef, ServicesUtil.cyNetworkManagerServiceRef);
-	private NetworkSelectorPanel geneticNetworkPanel = new NetworkSelectorPanel(ServicesUtil.cyApplicationManagerServiceRef, ServicesUtil.cyNetworkManagerServiceRef);
+	private final NetworkSelectorPanel physicalNetworkPanel = new NetworkSelectorPanel(ServicesUtil.cyApplicationManagerServiceRef, ServicesUtil.cyNetworkManagerServiceRef);
+	private final NetworkSelectorPanel geneticNetworkPanel = new NetworkSelectorPanel(ServicesUtil.cyApplicationManagerServiceRef, ServicesUtil.cyNetworkManagerServiceRef);
 
-	public void updateAttributeLists()
+	protected void updateAttributeLists()
 	{
 		// Save current selection
 		final Object nodeSelected = nodeAttrComboBox.getSelectedItem();
@@ -1332,10 +1310,8 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		if (nodeAttrNames_phy != null)
 		{
 			nodeAttrNames = new TreeSet<String>();
-			Iterator<String> it = nodeAttrNames_phy.iterator();
-			while (it.hasNext())
+			for (String name : nodeAttrNames_phy)
 			{
-				String name = it.next();
 				if (nodeAttrNames_gen != null && nodeAttrNames_gen.contains(name))
 				{
 					nodeAttrNames.add(name);
@@ -1364,11 +1340,13 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 				if (attribType_phy == Double.class || attribType_phy == Float.class || attribType_phy == Integer.class)
 				{
 					nodeAttrComboBox.addItem(name);
-					if (name.equals(nodeSelected)) isNodeSelectedExist = true;
+					if (name.equals(nodeSelected))
+						isNodeSelectedExist = true;
 				}
 			}
 
-			if (isNodeSelectedExist) nodeAttrComboBox.setSelectedItem(nodeSelected);
+			if (isNodeSelectedExist)
+				nodeAttrComboBox.setSelectedItem(nodeSelected);
 		}
 
 		//Populate the edge box -- physical
@@ -1391,10 +1369,12 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 						|| edgeAttr_phy.getColumn(name).getType() == Integer.class)
 				{
 					physicalEdgeAttribComboBox.addItem(name);
-					if (name.equals(physicalEdgeSelected)) isPhysicalEdgeSelectedExist = true;
+					if (name.equals(physicalEdgeSelected))
+						isPhysicalEdgeSelectedExist = true;
 				}
 			}
-			if (isPhysicalEdgeSelectedExist) physicalEdgeAttribComboBox.setSelectedItem(physicalEdgeSelected);
+			if (isPhysicalEdgeSelectedExist)
+				physicalEdgeAttribComboBox.setSelectedItem(physicalEdgeSelected);
 		}
 
 		//Populate the edge box -- genetic		
@@ -1419,10 +1399,12 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 						|| edgeAttr_gen.getColumn(name).getType() == Integer.class)
 				{
 					geneticEdgeAttribComboBox.addItem(name);
-					if (name.equals(geneticEdgeSelected)) isGeneticEdgeSelectedExist = true;
+					if (name.equals(geneticEdgeSelected))
+						isGeneticEdgeSelectedExist = true;
 				}
 			}
-			if (isGeneticEdgeSelectedExist) geneticEdgeAttribComboBox.setSelectedItem(geneticEdgeSelected);
+			if (isGeneticEdgeSelectedExist)
+				geneticEdgeAttribComboBox.setSelectedItem(geneticEdgeSelected);
 		}
 
 
@@ -1432,14 +1414,16 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		{
 			for (String name : nodeAttrNames)
 			{
-				// Use only string attributes
-				Class<?> attribType = nodeAttr_phy.getColumn(name).getType();
-				if ((attribType == String.class || attribType == java.util.List.class))
+				// Use only string attributes or lists of string attributes.
+				CyColumn c = nodeAttr_phy.getColumn(name);
+				Class<?> attribType = c.getType();
+				if(c.getType() == String.class || c.getType() == java.util.List.class && c.getListElementType() == String.class)
 				{
 					if (name.equals("canonicalName") || name.equals("shared name") || name.equals("name"))
 						continue;
 					annotationAttribComboBox.addItem(name);
-					if (name.equals(geneticEdgeSelected)) isAnnotSelectedExist = true;
+					if (name.equals(geneticEdgeSelected))
+						isAnnotSelectedExist = true;
 				}
 			}
 
@@ -1495,11 +1479,13 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 
 		if (phyScalingMethodComboBox.isEnabled())
 			parameters.setPhysicalScalingMethod((String) phyScalingMethodComboBox.getSelectedItem());
-		else parameters.setPhysicalScalingMethod(ScalingMethod.NONE.getDisplayString());
+		else
+			parameters.setPhysicalScalingMethod(ScalingMethod.NONE.getDisplayString());
 
 		if (genScalingMethodComboBox.isEnabled())
 			parameters.setGeneticScalingMethod((String) genScalingMethodComboBox.getSelectedItem());
-		else parameters.setGeneticScalingMethod(ScalingMethod.NONE.getDisplayString());
+		else
+			parameters.setGeneticScalingMethod(ScalingMethod.NONE.getDisplayString());
 
 		//parameters.setAlpha(Double.parseDouble(alphaTextField.getText()));
 		//parameters.setAlphaMultiplier(Double.parseDouble(alphaMultiplierTextField.getText()));
@@ -1507,15 +1493,18 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		parameters.setAlphaMultiplier(Double.parseDouble(complexRewardTextField.getText()));
 
 		final String degree = degreeTextField.getText();
-		if (degree.length() > 0) parameters.setPhysicalNetworkFilterDegree(Integer.parseInt(degree));
-		else parameters.setPhysicalNetworkFilterDegree(-1);
+		if (degree.length() > 0)
+			parameters.setPhysicalNetworkFilterDegree(Integer.parseInt(degree));
+		else
+			parameters.setPhysicalNetworkFilterDegree(-1);
 
 		if (edgeFilterTextField.isEnabled())
 		{
 			final double pValueThreshold = Double.parseDouble(edgeFilterTextField.getText());
 			parameters.setPValueThreshold(pValueThreshold);
 		}
-		else parameters.setPValueThreshold(Double.NaN);
+		else
+			parameters.setPValueThreshold(Double.NaN);
 
 		//final int numberOfSamples = Integer.parseInt(numberOfSamplesTextField.getText());
 		//parameters.setNumberOfSamples(numberOfSamples);
@@ -1526,13 +1515,15 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 		parameters.setComplexTrainingPhysical(trainingCheckBox.isSelected());
 		parameters.setComplexTrainingGenetic(trainingCheckBox.isSelected());
 
-		if (annotationAttribComboBox.getSelectedItem() == null) parameters.setAnnotationAttrName("");
-		else parameters.setAnnotationAttrName(annotationAttribComboBox.getSelectedItem().toString());
+		if (annotationAttribComboBox.getSelectedItem() == null)
+			parameters.setAnnotationAttrName("");
+		else
+			parameters.setAnnotationAttrName(annotationAttribComboBox.getSelectedItem().toString());
 
 		parameters.setReportPath(reportPath);
 	}
 
-	public void updateFilteringOptions()
+	protected void updateFilteringOptions()
 	{
 		final String physicalAttrName = (String) physicalEdgeAttribComboBox.getSelectedItem();
 		final String geneticAttrName = (String) geneticEdgeAttribComboBox.getSelectedItem();
@@ -1783,7 +1774,7 @@ public class SearchPropertyPanel extends JPanel implements ColumnCreatedListener
 			}
 		}
 
-		if (!reportPath.equals("") && new File(reportPath).exists() && new File(reportPath).isDirectory())
+		if (!reportPath.isEmpty() && new File(reportPath).exists() && new File(reportPath).isDirectory())
 		{
 			searchButton.setEnabled(false);
 			parameterErrorTextArea.setText("Please choose a valid report path.");

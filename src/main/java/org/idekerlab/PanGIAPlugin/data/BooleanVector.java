@@ -20,19 +20,10 @@ public class BooleanVector extends DataVector
 		Initialize(size);
 	}
 
-	public void Initialize(int size)
+	protected void Initialize(int size)
 	{
 		data = new boolean[size];
 		this.size = 0;
-	}
-
-	public void Initialize(int count, boolean val)
-	{
-		data = new boolean[count];
-		size = count;
-
-		for (int i = 0; i < count; i++)
-			data[i] = val;
 	}
 
 	protected Object getDataAsObject()
@@ -40,13 +31,15 @@ public class BooleanVector extends DataVector
 		return data;
 	}
 
-	public boolean[] getData()
+	protected boolean[] getData()
 	{
-		if (size == data.length) return data;
-		else return BooleanVector.resize(data, this.size);
+		if (size == data.length)
+			return data;
+		else
+			return BooleanVector.resize(data, this.size);
 	}
 
-	public static boolean[] resize(boolean[] vec, int size)
+	private static boolean[] resize(boolean[] vec, int size)
 	{
 		boolean[] out = new boolean[size];
 
@@ -58,21 +51,13 @@ public class BooleanVector extends DataVector
 
 	public void add(boolean val)
 	{
-		if (data.length == 0) data = new boolean[10];
-		else if (this.size == data.length) data = BooleanVector.resize(data, data.length * 2);
+		if (data.length == 0)
+			data = new boolean[10];
+		else if (this.size == data.length)
+			data = BooleanVector.resize(data, data.length * 2);
 
 		data[size] = val;
 		size++;
-	}
-
-	public void add(String val)
-	{
-		this.add(Boolean.valueOf(val));
-	}
-
-	public Object getAsObject(int i)
-	{
-		return data[i];
 	}
 
 	public String getAsString(int i)
@@ -82,26 +67,10 @@ public class BooleanVector extends DataVector
 
 	public double getAsDouble(int i)
 	{
-		if (get(i)) return 1;
-		else return 0;
-	}
-
-	public byte getAsByte(int i)
-	{
-		if (get(i)) return 1;
-		else return 0;
-	}
-
-	public float getAsFloat(int i)
-	{
-		if (get(i)) return 1;
-		else return 0;
-	}
-
-	public int getAsInteger(int i)
-	{
-		if (get(i)) return 1;
-		else return 0;
+		if (get(i))
+			return 1;
+		else
+			return 0;
 	}
 
 	public Boolean get(int i)
@@ -109,7 +78,7 @@ public class BooleanVector extends DataVector
 		return data[i];
 	}
 
-	public void set(int i, Boolean val)
+	protected void set(int i, Boolean val)
 	{
 		data[i] = val;
 	}
@@ -118,13 +87,15 @@ public class BooleanVector extends DataVector
 	{
 		BooleanVector copy = new BooleanVector(BooleanVector.copy(this.data));
 
-		if (this.hasListName()) copy.setListName(this.getListName());
-		if (this.hasElementNames()) copy.setElementNames(new ArrayList<String>(this.getElementNames()));
+		if (this.hasListName())
+			copy.setListName(this.getListName());
+		if (this.hasElementNames())
+			copy.setElementNames(new ArrayList<String>(this.getElementNames()));
 
 		return copy;
 	}
 
-	public static boolean[] copy(boolean[] data)
+	private static boolean[] copy(boolean[] data)
 	{
 		boolean[] out = new boolean[data.length];
 		System.arraycopy(data, 0, out, 0, data.length);
@@ -152,18 +123,18 @@ public class BooleanVector extends DataVector
 		return BooleanVector.sum(getData());
 	}
 
-	public static int sum(boolean[] data)
+	private static int sum(boolean[] data)
 	{
 		int mysum = 0;
 
-		for (int i = 0; i < data.length; i++)
-			if (data[i])
+		for (boolean item : data)
+			if (item)
 				mysum++;
 
 		return mysum;
 	}
 
-	public static int[] asIndexes(boolean[] data)
+	private static int[] asIndexes(boolean[] data)
 	{
 		int[] out = new int[BooleanVector.sum(data)];
 
@@ -187,7 +158,8 @@ public class BooleanVector extends DataVector
 	public boolean anyEqualTo(boolean val)
 	{
 		for (int i = 0; i < size(); i++)
-			if (get(i) == val) return true;
+			if (get(i) == val)
+				return true;
 
 		return false;
 	}

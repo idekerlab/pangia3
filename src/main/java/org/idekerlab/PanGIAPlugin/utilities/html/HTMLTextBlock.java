@@ -9,12 +9,12 @@ public class HTMLTextBlock extends HTMLBlock
 {
 	protected List<String> text;
 
-	public HTMLTextBlock()
+	protected HTMLTextBlock()
 	{
 		text = new ArrayList<String>();
 	}
 
-	public HTMLTextBlock(int numLines)
+	protected HTMLTextBlock(int numLines)
 	{
 		text = new ArrayList<String>(numLines);
 	}
@@ -27,12 +27,13 @@ public class HTMLTextBlock extends HTMLBlock
 	protected void write(BufferedWriter bw, int depth)
 	{
 		String tabs = "";
-		for (int i = 0; i < depth; i++) tabs += "\t";
+		for (int i = 0; i < depth; i++)
+			tabs += "\t";
 
 		try
 		{
 			for (String line : text)
-				bw.write(tabs + line + "\n");
+				bw.write(tabs + line + '\n');
 		}
 		catch (IOException e)
 		{

@@ -1,7 +1,5 @@
 package org.idekerlab.PanGIAPlugin.data;
 
-import org.idekerlab.PanGIAPlugin.util.RandomFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,29 +10,29 @@ public class ByteVector extends DataVector
 	private byte[] data;
 	private int size;
 
-	public ByteVector()
+	private ByteVector()
 	{
 		Initialize(0);
 	}
 
-	public ByteVector(byte[] data)
+	private ByteVector(byte[] data)
 	{
 		this.data = data;
 		this.size = data.length;
 	}
 
-	public ByteVector(int size)
+	private ByteVector(int size)
 	{
 		Initialize(size);
 	}
 
-	public void Initialize(int size)
+	protected void Initialize(int size)
 	{
 		data = new byte[size];
 		this.size = 0;
 	}
 
-	public void Initialize(int count, byte val)
+	protected void Initialize(int count, byte val)
 	{
 		data = new byte[count];
 		size = count;
@@ -48,7 +46,7 @@ public class ByteVector extends DataVector
 		Initialize(count, (byte) val);
 	}
 
-	public static byte[] resize(byte[] vec, int size)
+	private static byte[] resize(byte[] vec, int size)
 	{
 		byte[] out = new byte[size];
 
@@ -58,7 +56,7 @@ public class ByteVector extends DataVector
 		return out;
 	}
 
-	public void add(byte val)
+	protected void add(byte val)
 	{
 		if (data.length == 0)
 			data = new byte[10];
@@ -106,7 +104,7 @@ public class ByteVector extends DataVector
 			this.add(vals.get(i));
 	}
 
-	public void add(byte Byte, String name)
+	protected void add(byte Byte, String name)
 	{
 		this.add(Byte);
 		addElementName(name);
@@ -115,11 +113,6 @@ public class ByteVector extends DataVector
 	protected Object getDataAsObject()
 	{
 		return data;
-	}
-
-	public Object getAsObject(int i)
-	{
-		return data[i];
 	}
 
 	public String getAsString(int i)
@@ -132,22 +125,7 @@ public class ByteVector extends DataVector
 		return get(i);
 	}
 
-	public byte getAsByte(int i)
-	{
-		return data[i];
-	}
-
-	public float getAsFloat(int i)
-	{
-		return data[i];
-	}
-
-	public int getAsInteger(int i)
-	{
-		return data[i];
-	}
-
-	public byte get(int i)
+	protected byte get(int i)
 	{
 		return data[i];
 	}
@@ -157,12 +135,12 @@ public class ByteVector extends DataVector
 		return data[getElementNames().indexOf(element)];
 	}
 
-	public void set(int i, byte val)
+	protected void set(int i, byte val)
 	{
 		data[i] = val;
 	}
 
-	public void set(int i, int val)
+	protected void set(int i, int val)
 	{
 		data[i] = (byte) val;
 	}
@@ -190,7 +168,7 @@ public class ByteVector extends DataVector
 		return copy;
 	}
 
-	public static byte[] copy(byte[] data)
+	private static byte[] copy(byte[] data)
 	{
 		byte[] out = new byte[data.length];
 		System.arraycopy(data, 0, out, 0, data.length);
@@ -200,8 +178,10 @@ public class ByteVector extends DataVector
 
 	public byte[] getData()
 	{
-		if (size == data.length) return data;
-		else return ByteVector.resize(data, this.size);
+		if (size == data.length)
+			return data;
+		else
+			return ByteVector.resize(data, this.size);
 	}
 
 	public int size()
@@ -238,9 +218,9 @@ public class ByteVector extends DataVector
 			return -1;
 
 		int min = data[0];
-		for (int i = 0; i < data.length; i++)
-			if (data[i] < min)
-				min = data[i];
+		for (byte item : data)
+			if (item < min)
+				min = item;
 		return min;
 	}
 
@@ -325,8 +305,8 @@ public class ByteVector extends DataVector
 	{
 		ByteVector sub = new ByteVector(indexes.size());
 
-		for (int i = 0; i < indexes.size(); i++)
-			sub.add(data[(((Double) (indexes.get(i))).intValue())]);
+		for (Object indexe : indexes)
+			sub.add(data[(((Double) indexe).intValue())]);
 
 		return sub;
 	}
@@ -335,8 +315,8 @@ public class ByteVector extends DataVector
 	{
 		ByteVector sub = new ByteVector(indexes.length);
 
-		for (int i = 0; i < indexes.length; i++)
-			sub.add(data[indexes[i]]);
+		for (int index : indexes)
+			sub.add(data[index]);
 
 		return sub;
 	}
@@ -392,48 +372,6 @@ public class ByteVector extends DataVector
 		return sub;
 	}
 
-	public double squaredMean()
-	{
-		return this.pow(2.0).mean();
-	}
-
-	public ByteVector diff1()
-	{
-		ByteVector out = this.clone();
-
-		out.set(0, get(1) - get(0));
-
-		for (int i = 1; i < size() - 1; i++)
-			out.set(i, (get(i + 1) - get(i - 1)) / 2);
-
-		out.set(out.size() - 1, get(out.size() - 1) - get(out.size() - 2));
-
-		return out;
-	}
-
-	public BooleanVector isReal()
-	{
-		BooleanVector out = new BooleanVector(size());
-
-		for (int i = 0; i < size(); i++)
-			out.add(!(Double.isNaN(get(i)) || Double.isInfinite(get(i))));
-
-		return out;
-	}
-
-	public ByteVector sort()
-	{
-		ByteVector out = this.clone();
-		Sorter.Sort_I(out);
-
-		return out;
-	}
-
-	public IntVector sort_I()
-	{
-		return Sorter.Sort_I(this.clone());
-	}
-
 	public void set(BooleanVector bv, int val)
 	{
 		for (int i = 0; i < size(); i++)
@@ -441,75 +379,6 @@ public class ByteVector extends DataVector
 				set(i, val);
 	}
 
-
-	public void replace(int oldval, int newval)
-	{
-		if (Double.isNaN(oldval))
-		{
-			for (int i = 0; i < size(); i++)
-				if (Double.isNaN(get(i)))
-					set(i, newval);
-		}
-		else
-		{
-			for (int i = 0; i < size(); i++)
-				if (get(i) == oldval)
-					set(i, newval);
-		}
-	}
-
-	public ByteVector permutation()
-	{
-		ByteVector perm = this.clone();
-
-		java.util.Random r = RandomFactory.make();
-
-		for (int i = 0; i < perm.size(); i++)
-		{
-			int other = r.nextInt(perm.size());
-
-			int temp = perm.get(i);
-			perm.set(i, perm.get(other));
-			perm.set(other, temp);
-		}
-
-		return perm;
-	}
-
-
-	public ByteVector cumSum()
-	{
-		if (this.size() == 0)
-			return new ByteVector(0);
-
-		ByteVector out = new ByteVector(this.size());
-
-		out.add(this.get(0));
-
-		for (int i = 1; i < this.size(); i++)
-			out.add((byte) (this.get(i) + out.get(i - 1)));
-
-		return out;
-	}
-
-
-	public BooleanVector isEqual(int val)
-	{
-		BooleanVector out = new BooleanVector(size());
-
-		for (int i = 0; i < size(); i++)
-			out.add(get(i) == val);
-
-		return out;
-	}
-
-	public int indexOf(byte val)
-	{
-		for (int i = 0; i < data.length; i++)
-			if (data[i] == val)
-				return i;
-		return -1;
-	}
 
 	public ByteVector reverse()
 	{

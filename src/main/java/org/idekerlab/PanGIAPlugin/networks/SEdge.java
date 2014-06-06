@@ -8,24 +8,12 @@ public abstract class SEdge extends AbstractEdge
 
 	public abstract boolean equals(Object o);
 
-	public SEdge(SEdge inter)
-	{
-		i1 = inter.i1;
-		i2 = inter.i2;
-	}
-
-	public SEdge(String s1, String s2)
+	protected SEdge(String s1, String s2)
 	{
 		i1 = s1;
 		i2 = s2;
 	}
 
-
-	public SEdge(String[] s)
-	{
-		i1 = s[0];
-		i2 = s[1];
-	}
 
 	public String getI1()
 	{
@@ -46,7 +34,7 @@ public abstract class SEdge extends AbstractEdge
 	@Override
 	public String toString()
 	{
-		return (i1 + "\t" + i2);
+		return (i1 + '\t' + i2);
 	}
 
 

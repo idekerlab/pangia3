@@ -2,6 +2,7 @@ package org.idekerlab.PanGIAPlugin;
 
 
 import org.cytoscape.model.*;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.vizmap.VisualStyle;
@@ -46,11 +47,6 @@ class NetworkAndScore implements Comparable<NetworkAndScore>
 	Set<String> getGenes()
 	{
 		return genes;
-	}
-
-	double getScore()
-	{
-		return score;
 	}
 
 	public boolean equals(final Object o)
@@ -99,7 +95,7 @@ public class NestedNetworkCreator
 	// Number of nodes in a module
 	private static final String GENE_COUNT = MODULE_FINDER_PREFIX + "module size";
 	// And its SQRT value for visual mapping
-	public static final String GENE_COUNT_SQRT = MODULE_FINDER_PREFIX + "SQRT of module size";
+	private static final String GENE_COUNT_SQRT = MODULE_FINDER_PREFIX + "SQRT of module size";
 
 	private static final String MEMBERS = MODULE_FINDER_PREFIX + "members";
 
@@ -121,17 +117,17 @@ public class NestedNetworkCreator
 	private int maxSize = 0;
 	private final PriorityQueue<NetworkAndScore> networksOrderedByScores = new PriorityQueue(100);
 
-	private CyNetwork origPhysNetwork;
-	private CyNetwork origGenNetwork;
-	private TypedLinkNetwork<String, Float> physicalNetwork;
-	private TypedLinkNetwork<String, Float> geneticNetwork;
-	private float remainingPercentage;
+	private final CyNetwork origPhysNetwork;
+	private final CyNetwork origGenNetwork;
+	private final TypedLinkNetwork<String, Float> physicalNetwork;
+	private final TypedLinkNetwork<String, Float> geneticNetwork;
+	private final float remainingPercentage;
 
-	private boolean isGNetSigned;
-	private String geneticEdgeAttrName;
-	private TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> networkOfModules;
-	private Map<TypedLinkNodeModule<String, BFEdge>, String> module_name;
-	private String networkName;
+	private final boolean isGNetSigned;
+	private final String geneticEdgeAttrName;
+	private final TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> networkOfModules;
+	private final Map<TypedLinkNodeModule<String, BFEdge>, String> module_name;
+	private final String networkName;
 
 	private SearchParameters searchParameters = null;
 
@@ -152,7 +148,8 @@ public class NestedNetworkCreator
 	/**
 	 * Instantiates an overview network of complexes (modules) and one nested
 	 * network for each node in the overview network.
-	 *  @param networkOfModules    a representation of the "overview" network
+	 *
+	 * @param networkOfModules    a representation of the "overview" network
 	 * @param origPhysNetwork     the network that the overview network was generated from
 	 * @param remainingPercentage 100 - this is where to start with the percent-completed
 	 */
@@ -191,7 +188,7 @@ public class NestedNetworkCreator
 		{
 			Iterator<String> genes = module.getMemberValues().iterator();
 			String geneName = genes.next();
-			String newName = "[" + geneName;
+			String newName = '[' + geneName;
 
 			while (genes.hasNext())
 			{
@@ -233,7 +230,7 @@ public class NestedNetworkCreator
 		CyRow row = overviewNetwork.getRow(newNode);
 
 		final Set<String> genes = module.getMemberValues();
-		final Integer geneCount = Integer.valueOf(genes.size());
+		final Integer geneCount = genes.size();
 
 		CyTable nodeTable = overviewNetwork.getDefaultNodeTable();
 		if (nodeTable.getColumn(GENE_COUNT) == null)
@@ -247,13 +244,13 @@ public class NestedNetworkCreator
 		if (genes.size() > maxSize)
 			maxSize = genes.size();
 
-		final double score = Double.valueOf(module.score());
+		final double score = module.score();
 
 		StringBuilder members = new StringBuilder();
 		for (String gene : genes)
 		{
 			if (members.length() != 0)
-				members.append("|");
+				members.append('|');
 			members.append(gene);
 		}
 
@@ -277,35 +274,173 @@ public class NestedNetworkCreator
 		return newNode;
 	}
 
+	private List<CyColumn> addColumns(CyTable originTable, CyTable nestedTable)
+	{
+		List<CyColumn> result = new ArrayList<CyColumn>();
+		for( CyColumn c : originTable.getColumns() )
+		{
+			String columnName = c.getName();
+			if( nestedTable.getColumn(columnName) == null )
+			{
+				if( c.getType().equals(java.util.List.class) )
+				{
+					nestedTable.createListColumn(columnName, c.getListElementType(), c.isImmutable());
+					result.add(c);
+				}
+				else
+				{
+					nestedTable.createColumn(columnName, c.getType(), c.isImmutable());
+					result.add(c);
+				}
+			}
+		}
+		return result;
+	}
+
+	public void copyNetwork(CyNetwork source)
+	{
+		CyNetwork target = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
+		target.getRow(target).set(CyNetwork.NAME, "FooNetwork");
+		CyTable targetNodeTable = target.getDefaultNodeTable();
+
+		CyTable sourceNodeTable = source.getDefaultNodeTable();
+
+		//Maybe store the type here with the name???
+		List<CyColumn> addedColumns = new ArrayList<CyColumn>();
+		for( CyColumn sourceColumn : sourceNodeTable.getColumns() )
+		{
+			if( targetNodeTable.getColumn(sourceColumn.getName()) == null )
+			{
+				targetNodeTable.createColumn(sourceColumn.getName(), sourceColumn.getType(), sourceColumn.isImmutable() );
+				addedColumns.add(sourceColumn);
+			}
+			else if( sourceColumn.getName().equals( CyNetwork.NAME) )
+			{
+				addedColumns.add(sourceColumn);
+			}
+		}
+
+		//Need some bookkeeping for when we add edges....
+		HashMap<CyNode, CyNode> targetMap = new HashMap<CyNode, CyNode>();
+
+		for( CyNode sourceNode : source.getNodeList() )
+		{
+			CyNode targetNode = target.addNode();
+			for( CyColumn sourceColumn : addedColumns )
+			{
+				//Need the type!!!
+				Object sourceData = source.getRow(sourceNode).get(sourceColumn.getName(), sourceColumn.getType());
+				target.getRow(targetNode).set(sourceColumn.getName(), sourceData);
+			}
+			String targetNodeName = target.getRow(targetNode).get(CyNetwork.NAME, String.class);
+			targetMap.put(sourceNode, targetNode);
+		}
+
+		//Start copying edges:
+
+		for( CyEdge sourceEdge : source.getEdgeList() )
+		{
+			CyNode oldS = sourceEdge.getSource();
+			CyNode oldT = sourceEdge.getTarget();
+
+			CyNode s = targetMap.get(oldS);
+			CyNode t = targetMap.get(oldT);
+
+			CyEdge newEdge = target.addEdge(s, t, sourceEdge.isDirected() );
+
+			//From here copy columns, just like you did for nodes above...
+
+		}
+
+	}
+
+
+	private HashMap<String,CyNode> createNodeNameMap(CyNetwork originNetwork)
+	{
+		HashMap<String, CyNode> result = new HashMap<String, CyNode>();
+		for (CyNode node : originNetwork.getNodeList())
+		{
+			String name = originNetwork.getRow(node).get(CyNetwork.NAME, String.class);
+			result.put(name, node);
+		}
+		return result;
+	}
+
 	private CyNetwork generateNestedNetwork(final String networkName,
-											final Set<String> nodeNames, final CyNetwork origPhysNetwork,
-											final CyNetwork origGenNetwork, final boolean createNetworkView,
-											boolean isGNetSigned, String geneticEdgeAttrName, TaskMonitor taskMonitor)
+											final Set<String> nodeNames, final boolean createNetworkView,
+											TaskMonitor taskMonitor)
 	{
 		if (nodeNames.isEmpty())
 			return null;
 
-		HashMap<String, CyNode> physicalNodeNameMap = new HashMap<String, CyNode>();
-		for (CyNode node : origPhysNetwork.getNodeList())
-		{
-			String name = origPhysNetwork.getRow(node).get(CyNetwork.NAME, String.class);
-			physicalNodeNameMap.put(name, node);
-		}
+		HashMap<String, CyNode> physicalNodeNameMap = createNodeNameMap(origPhysNetwork);
+		HashMap<String, CyNode> geneticNodeNameMap = createNodeNameMap(origGenNetwork);
 
 		List<CyNode> nodes = new ArrayList<CyNode>();
 		for (String name : nodeNames)
 		{
-			CyNode node = physicalNodeNameMap.get(name);
-			nodes.add(node);
+			if( physicalNodeNameMap.containsKey(name) )
+			{
+				nodes.add(physicalNodeNameMap.get(name));
+			}
+			if( geneticNodeNameMap.containsKey(name))
+			{
+				nodes.add(geneticNodeNameMap.get(name));
+			}
 		}
 
-		CyNetwork nestedNetwork = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
+		//CyNetwork nestedNetwork = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
+		CyNetwork nestedNetwork = root.addSubNetwork();
+
+		//Physical and Genetic Node Tables
+		CyTable physicalNodeTable = origPhysNetwork.getDefaultNodeTable();
+		CyTable geneticNodeTable = origGenNetwork.getDefaultNodeTable();
+		//Nested Node Table
+		CyTable nestedNodeTable = nestedNetwork.getDefaultNodeTable();
+		List<CyColumn> addedPhysicalNodeColumns = addColumns(physicalNodeTable, nestedNodeTable);
+		List<CyColumn> addedGeneticNodeColumns = addColumns(geneticNodeTable, nestedNodeTable);
+		List<CyColumn> addedNodeColumns = new ArrayList<CyColumn>();
+		addedNodeColumns.addAll(addedPhysicalNodeColumns);
+		addedNodeColumns.addAll(addedGeneticNodeColumns);
 
 		HashMap<String, CyNode> nestedNodeNameMap = new HashMap<String, CyNode>();
 		for (String nodeName : nodeNames)
 		{
 			CyNode node = nestedNetwork.addNode();
-			nestedNetwork.getRow(node).set(CyNetwork.NAME, nodeName);
+			CyRow row = nestedNetwork.getRow(node);
+			row.set(CyNetwork.NAME, nodeName);
+			if( geneticNodeNameMap.containsKey(nodeName) )
+			{
+				CyNode geneticNode = geneticNodeNameMap.get(nodeName);
+				CyRow gRow = origGenNetwork.getRow(geneticNode);
+				for (CyColumn c : addedNodeColumns)
+				{
+					Object gValue = gRow.get(c.getName(), c.getType());
+					if( gValue == null )
+						continue;
+					boolean isEmptyString = false;
+					if( c.getType() == String.class )
+						isEmptyString = gValue.toString().isEmpty();
+					if( !isEmptyString )
+						row.set(c.getName(), gValue);
+				}
+			}
+			if( physicalNodeNameMap.containsKey(nodeName) )
+			{
+				CyNode physicalNode = physicalNodeNameMap.get(nodeName);
+				CyRow pRow = origPhysNetwork.getRow(physicalNode);
+				for (CyColumn c : addedNodeColumns)
+				{
+					Object pValue = pRow.get(c.getName(), c.getType());
+					if( pValue == null )
+						continue;
+					boolean isEmptyString = false;
+					if( c.getType() == String.class )
+						isEmptyString = pValue.toString().isEmpty();
+					if( !isEmptyString )
+						row.set(c.getName(), pValue);
+				}
+			}
 			nestedNodeNameMap.put(nodeName, node);
 		}
 
@@ -325,22 +460,16 @@ public class NestedNetworkCreator
 				edgeTable.createColumn(gScoreColumnName, Double.class, false);
 		}
 
-
-		for (CyEdge edge : origPhysNetwork.getEdgeList())
-		{
-			CyNode source = edge.getSource();
-			CyNode target = edge.getTarget();
-			if (!nodes.contains(source) || !nodes.contains(target))
-				continue;
-			String sourceName = origPhysNetwork.getRow(source).get(CyNetwork.NAME, String.class);
-			String targetName = origPhysNetwork.getRow(target).get(CyNetwork.NAME, String.class);
-			CyNode s = nestedNodeNameMap.get(sourceName);
-			CyNode t = nestedNodeNameMap.get(targetName);
-			CyEdge newEdge = nestedNetwork.addEdge(s, t, edge.isDirected());
-			nestedNetwork.getRow(newEdge).set(PanGIA.INTERACTION_TYPE, "Physical");
-			Double pScore = origPhysNetwork.getRow(edge).get(pScoreColumnName, Double.class);
-			nestedNetwork.getRow(newEdge).set(pScoreColumnName, pScore);
-		}
+		//Physical and Genetic Edge Tables
+		CyTable physicalEdgeTable = origPhysNetwork.getDefaultEdgeTable();
+		CyTable geneticEdgeTable = origGenNetwork.getDefaultEdgeTable();
+		//Nested Edge Table
+		CyTable nestedEdgeTable = nestedNetwork.getDefaultEdgeTable();
+		List<CyColumn> addedPhysicalEdgeColumns = addColumns(physicalEdgeTable, nestedEdgeTable);
+		List<CyColumn> addedGeneticEdgeColumns = addColumns(geneticEdgeTable, nestedEdgeTable);
+		List<CyColumn> addedEdgeColumns = new ArrayList<CyColumn>();
+		addedEdgeColumns.addAll(addedPhysicalEdgeColumns);
+		addedEdgeColumns.addAll(addedGeneticEdgeColumns);
 
 		for (CyEdge edge : origGenNetwork.getEdgeList())
 		{
@@ -353,13 +482,11 @@ public class NestedNetworkCreator
 			CyNode s = nestedNodeNameMap.get(sourceName);
 			CyNode t = nestedNodeNameMap.get(targetName);
 			CyEdge newEdge = nestedNetwork.addEdge(s, t, edge.isDirected());
-			CyRow edgeRow = nestedNetwork.getRow(newEdge);
-			String existing = edgeRow.get(PanGIA.INTERACTION_TYPE, String.class);
-			String interactionType = "";
-			if (existing == null || !existing.equals("Physical"))
-				interactionType = "Genetic";
-			else
-				interactionType = "Physical&Genetic";
+			CyRow row = nestedNetwork.getRow(newEdge);
+			CyRow gRow = origGenNetwork.getRow(edge);
+			row.set(CyNetwork.NAME, gRow.get(CyNetwork.NAME, String.class));
+			row.set(CyEdge.INTERACTION, gRow.get(CyEdge.INTERACTION, String.class));
+			String interactionType = "Genetic";
 			if (isGNetSigned)
 			{
 				Double geneticScore = origGenNetwork.getRow(edge).get(geneticEdgeAttrName, Double.class);
@@ -371,9 +498,57 @@ public class NestedNetworkCreator
 						interactionType += "(positive)";
 				}
 			}
-			edgeRow.set(PanGIA.INTERACTION_TYPE, interactionType);
+			row.set(PanGIA.INTERACTION_TYPE, interactionType);
 			Double gScore = origGenNetwork.getRow(edge).get(gScoreColumnName, Double.class);
 			nestedNetwork.getRow(newEdge).set(gScoreColumnName, gScore);
+
+			for (CyColumn c : addedEdgeColumns)
+			{
+				Object gValue = gRow.get(c.getName(), c.getType());
+				if( gValue == null )
+					continue;
+				boolean isEmptyString = false;
+				if( c.getType() == String.class )
+					isEmptyString = gValue.toString().isEmpty();
+				if( !isEmptyString )
+					row.set(c.getName(), gValue);
+			}
+		}
+
+
+
+
+		for (CyEdge physicalEdge : origPhysNetwork.getEdgeList())
+		{
+			CyNode source = physicalEdge.getSource();
+			CyNode target = physicalEdge.getTarget();
+			if (!nodes.contains(source) || !nodes.contains(target))
+				continue;
+			String sourceName = origPhysNetwork.getRow(source).get(CyNetwork.NAME, String.class);
+			String targetName = origPhysNetwork.getRow(target).get(CyNetwork.NAME, String.class);
+			CyNode s = nestedNodeNameMap.get(sourceName);
+			CyNode t = nestedNodeNameMap.get(targetName);
+			CyEdge newEdge = nestedNetwork.addEdge(s, t, physicalEdge.isDirected());
+			CyRow row = nestedNetwork.getRow(newEdge);
+			CyRow pRow = origPhysNetwork.getRow(physicalEdge);
+			row.set(CyNetwork.NAME, pRow.get(CyNetwork.NAME, String.class));
+			row.set(CyEdge.INTERACTION, pRow.get(CyEdge.INTERACTION, String.class));
+
+			String interactionType = "Physical";
+			row.set(PanGIA.INTERACTION_TYPE, interactionType);
+			Double pScore = origPhysNetwork.getRow(physicalEdge).get(pScoreColumnName, Double.class);
+			row.set(pScoreColumnName, pScore);
+			for (CyColumn c : addedEdgeColumns)
+			{
+				Object pValue = pRow.get(c.getName(), c.getType());
+				if( pValue == null )
+					continue;
+				boolean isEmptyString = false;
+				if( c.getType() == String.class )
+					isEmptyString = pValue.toString().isEmpty();
+				if( !isEmptyString )
+					row.set(c.getName(), pValue);
+			}
 		}
 
 		CyTable nestedNetworkTable = nestedNetwork.getDefaultNetworkTable();
@@ -435,7 +610,7 @@ public class NestedNetworkCreator
 
 		for (int suffix = 1; true; ++suffix)
 		{
-			final String titleCandidate = initialPreference + "-" + suffix;
+			final String titleCandidate = initialPreference + '-' + suffix;
 			network = getNetworkByTitle(titleCandidate);
 			if (network == null)
 				return titleCandidate;
@@ -450,7 +625,7 @@ public class NestedNetworkCreator
 	 * @param initialPreference The node name we'd like to use, if it is available. If not we
 	 *                          use it as a prefix instead.
 	 */
-	private String findNextAvailableNodeName(CyNetwork network, final String initialPreference)
+	private static String findNextAvailableNodeName(CyNetwork network, final String initialPreference)
 	{
 
 		CyTable nodeTable = network.getDefaultNodeTable();
@@ -460,7 +635,7 @@ public class NestedNetworkCreator
 
 		for (int suffix = 1; true; ++suffix)
 		{
-			final String titleCandidate = initialPreference + "-" + suffix;
+			final String titleCandidate = initialPreference + '-' + suffix;
 			if (nodeTable.getMatchingRows("name", titleCandidate).isEmpty())
 				return titleCandidate;
 		}
@@ -470,7 +645,7 @@ public class NestedNetworkCreator
 	 * Returns the first network with title "networkTitle" or null, if there is
 	 * no network w/ this title.
 	 */
-	private CyNetwork getNetworkByTitle(final String networkTitle)
+	private static CyNetwork getNetworkByTitle(final String networkTitle)
 	{
 		Set<CyNetwork> networks = ServicesUtil.cyNetworkManagerServiceRef.getNetworkSet();
 		for (final CyNetwork network : networks)
@@ -482,7 +657,7 @@ public class NestedNetworkCreator
 		return null;
 	}
 
-	private void applyNetworkLayout(final CyNetwork network, TaskMonitor taskMonitor)
+	private static void applyNetworkLayout(final CyNetwork network, TaskMonitor taskMonitor)
 	{
 		final Collection<CyNetworkView> targetViews = ServicesUtil.cyNetworkViewManagerServiceRef.getNetworkViews(network);
 		if (!targetViews.isEmpty())
@@ -515,7 +690,7 @@ public class NestedNetworkCreator
 	private static VisualStyle overviewVS;
 	private static VisualStyle moduleVS;
 
-	private boolean areAllPangiaStylesAlreadyLoaded()
+	private static boolean areAllPangiaStylesAlreadyLoaded()
 	{
 		int numStylesLoaded = 0;
 		Set<VisualStyle> loadedVisualStyles = ServicesUtil.visualMappingManagerRef.getAllVisualStyles();
@@ -527,7 +702,7 @@ public class NestedNetworkCreator
 		return numStylesLoaded == PanGIA.NUM_PANGIA_STYLES;
 	}
 
-	private void isolatePangiaStyles()
+	private static void isolatePangiaStyles()
 	{
 		Set<VisualStyle> loadedVisualStyles = ServicesUtil.visualMappingManagerRef.getAllVisualStyles();
 		for (VisualStyle vs : loadedVisualStyles)
@@ -540,7 +715,7 @@ public class NestedNetworkCreator
 		}
 	}
 
-	public void run(TaskMonitor taskMonitor) throws Exception
+	public void createNetworks(TaskMonitor taskMonitor) throws Exception
 	{
 		int MAX_NETWORK_VIEWS;
 		try
@@ -556,7 +731,7 @@ public class NestedNetworkCreator
 		if (!areAllPangiaStylesAlreadyLoaded())
 		{
 			InputStream urlStream = getClass().getResource("/PangiaVS.xml").openStream();
-			Set<VisualStyle> vsSet = ServicesUtil.loadVizmapFileTaskFactory.loadStyles(urlStream);
+			ServicesUtil.loadVizmapFileTaskFactory.loadStyles(urlStream);
 			urlStream.close();
 		}
 		isolatePangiaStyles();
@@ -654,10 +829,14 @@ public class NestedNetworkCreator
 		final float percentIncrement = remainingPercentage / networksOrderedByScores.size();
 		float percentCompleted = 100.0f - remainingPercentage;
 
+		CyNetwork newNet = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
+		root = ServicesUtil.cyNetworkRootManagerServiceRef.getRootNetwork(newNet);
+		//root = ServicesUtil.cyNetworkFactoryServiceRef.createNetwork();
+		root.getRow(root).set(CyNetwork.NAME, "Modules");
 		while ((network = networksOrderedByScores.poll()) != null)
 		{
 			final boolean createView = networkViewCount++ < MAX_NETWORK_VIEWS;
-			final CyNetwork nestedNetwork = generateNestedNetwork(network.getNodeName(), network.getGenes(), origPhysNetwork, origGenNetwork, createView, isGNetSigned, geneticEdgeAttrName, taskMonitor);
+			final CyNetwork nestedNetwork = generateNestedNetwork(network.getNodeName(), network.getGenes(), createView, taskMonitor);
 
 			for (CyNode node : overviewNetwork.getNodeList())
 			{
@@ -680,5 +859,7 @@ public class NestedNetworkCreator
 
 		applyNetworkLayout(overviewNetwork, taskMonitor);
 	}
+
+	CyRootNetwork root;
 
 }

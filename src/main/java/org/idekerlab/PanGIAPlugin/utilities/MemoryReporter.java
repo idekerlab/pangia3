@@ -24,6 +24,6 @@ public class MemoryReporter
 
 		System.out.println("Memory Usage: " + used / 1048576 + "M/" + committed
 				/ 1048576 + "M/" + mmax / 1048576 + "M, " + (float) used / mmax
-				* 100 + "%");
+				* 100 + '%');
 	}
 }

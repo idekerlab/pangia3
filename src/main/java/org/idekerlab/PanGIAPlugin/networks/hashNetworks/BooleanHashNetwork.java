@@ -10,8 +10,8 @@ import java.util.*;
 
 public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 {
-	private Map<String, Set<SEdge>> nodeMap;
-	private Set<SEdge> edgeSet;
+	private final Map<String, Set<SEdge>> nodeMap;
+	private final Set<SEdge> edgeSet;
 
 	public BooleanHashNetwork(boolean selfOk, boolean directed)
 	{
@@ -36,7 +36,8 @@ public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 			newIset.add(i);
 			nodeMap.put(i.getI1(), newIset);
 		}
-		else iset.add(i);
+		else
+			iset.add(i);
 
 		iset = nodeMap.get(i.getI2());
 		if (iset == null)
@@ -45,21 +46,8 @@ public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 			newIset.add(i);
 			nodeMap.put(i.getI2(), newIset);
 		}
-		else iset.add(i);
-	}
-
-	private void updateNodeMapRemove(SEdge i)
-	{
-		Set<SEdge> iset = nodeMap.get(i.getI1());
-		if (iset != null) iset.remove(i);
-
-		iset = nodeMap.get(i.getI2());
-		if (iset != null) iset.remove(i);
-	}
-
-	public boolean isDirected()
-	{
-		return directed;
+		else
+			iset.add(i);
 	}
 
 	public Iterator<SEdge> iterator()
@@ -67,14 +55,10 @@ public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 		return edgeSet.iterator();
 	}
 
-	public Set<String> getNodes()
-	{
-		return new HashSet<String>(nodeMap.keySet());
-	}
-
 	public void add(SEdge i)
 	{
-		if (!this.selfOk && i.isSelf()) return;
+		if (!this.selfOk && i.isSelf())
+			return;
 		this.edgeSet.add(i);
 		this.updateNodeMapAdd(i);
 	}
@@ -90,19 +74,9 @@ public class BooleanHashNetwork extends SBNetwork implements Iterable<SEdge>
 		return this.edgeSet.size();
 	}
 
-	public int numNodes()
-	{
-		return this.nodeMap.size();
-	}
-
 	public boolean contains(String n1, String n2)
 	{
 		return edgeSet.contains(new UndirectedSEdge(n1, n2));
-	}
-
-	public boolean contains(SEdge e)
-	{
-		return edgeSet.contains(e);
 	}
 
 	public IIterator<SEdge> edgeIterator()

@@ -14,7 +14,7 @@ public class DoubleVector extends DataVector
 	private double[] data;
 	private int size;
 
-	public DoubleVector()
+	private DoubleVector()
 	{
 		Initialize(0);
 	}
@@ -31,7 +31,7 @@ public class DoubleVector extends DataVector
 	}
 
 
-	public void Initialize(int size)
+	protected void Initialize(int size)
 	{
 		data = new double[size];
 		this.size = 0;
@@ -47,11 +47,13 @@ public class DoubleVector extends DataVector
 	 */
 	public double[] getData()
 	{
-		if (size == data.length) return data;
-		else return DoubleVector.resize(data, this.size);
+		if (size == data.length)
+			return data;
+		else
+			return DoubleVector.resize(data, this.size);
 	}
 
-	public static double[] resize(double[] vec, int size)
+	private static double[] resize(double[] vec, int size)
 	{
 		double[] out = new double[size];
 
@@ -63,27 +65,19 @@ public class DoubleVector extends DataVector
 
 	public synchronized void add(double o)
 	{
-		if (data.length == 0) data = new double[10];
-		else if (this.size == data.length) data = DoubleVector.resize(data, data.length * 2);
+		if (data.length == 0)
+			data = new double[10];
+		else if (this.size == data.length)
+			data = DoubleVector.resize(data, data.length * 2);
 
 		data[size] = o;
 		size++;
 	}
 
-	public synchronized void add(String val)
-	{
-		this.add(Double.valueOf(val));
-	}
-
-	public void add(double o, String name)
+	protected void add(double o, String name)
 	{
 		this.add(o);
 		addElementName(name);
-	}
-
-	public Object getAsObject(int i)
-	{
-		return data[i];
 	}
 
 	public String getAsString(int i)
@@ -96,27 +90,12 @@ public class DoubleVector extends DataVector
 		return get(i);
 	}
 
-	public byte getAsByte(int i)
-	{
-		return new Double(get(i)).byteValue();
-	}
-
-	public int getAsInteger(int i)
-	{
-		return (int) get(i);
-	}
-
-	public float getAsFloat(int i)
-	{
-		return (float) get(i);
-	}
-
 	public double get(int i)
 	{
 		return (data[i]);
 	}
 
-	public void set(int i, double val)
+	protected void set(int i, double val)
 	{
 		data[i] = val;
 	}
@@ -137,8 +116,10 @@ public class DoubleVector extends DataVector
 		DoubleVector copy = new DoubleVector(DoubleVector.copy(data));
 		copy.size = this.size;
 
-		if (this.hasListName()) copy.setListName(this.getListName());
-		if (this.hasElementNames()) copy.setElementNames(this.getElementNames());
+		if (this.hasListName())
+			copy.setListName(this.getListName());
+		if (this.hasElementNames())
+			copy.setElementNames(this.getElementNames());
 
 		return (copy);
 	}
@@ -178,33 +159,38 @@ public class DoubleVector extends DataVector
 		return DoubleVector.max(this.getData(), keepNaN);
 	}
 
-	public static double max(double[] data, boolean keepNaN)
+	private static double max(double[] data, boolean keepNaN)
 	{
-		if (data.length == 0) return Double.NaN;
+		if (data.length == 0)
+			return Double.NaN;
 
 		if (keepNaN)
 		{
 			double max = data[0];
-			for (int i = 0; i < data.length; i++)
-				if (data[i] > max) max = data[i];
+			for (double aData : data)
+				if (aData > max)
+					max = aData;
 			return max;
 		}
 		else
 		{
 			double max = data[0];
-			for (int i = 0; i < data.length; i++)
-				if (data[i] > max || Double.isNaN(max)) max = data[i];
+			for (double aData : data)
+				if (aData > max || Double.isNaN(max))
+					max = aData;
 			return max;
 		}
 	}
 
 	public static double max(double[] data)
 	{
-		if (data.length == 0) return Double.NaN;
+		if (data.length == 0)
+			return Double.NaN;
 
 		double max = data[0];
-		for (int i = 0; i < data.length; i++)
-			if (data[i] > max) max = data[i];
+		for (double aData : data)
+			if (aData > max)
+				max = aData;
 		return max;
 
 	}
@@ -214,7 +200,7 @@ public class DoubleVector extends DataVector
 		return DoubleVector.maxI(this.getData());
 	}
 
-	public static int maxI(double[] data)
+	private static int maxI(double[] data)
 	{
 		double max = data[0];
 		int index = 0;
@@ -231,44 +217,64 @@ public class DoubleVector extends DataVector
 		return index;
 	}
 
-	public BooleanVector NaNs()
+	protected BooleanVector NaNs()
 	{
 		BooleanVector out = new BooleanVector(this.size());
 		for (int i = 0; i < size(); i++)
-			if (Double.isNaN(get(i))) out.add(true);
-			else out.add(false);
+			if (Double.isNaN(get(i)))
+				out.add(true);
+			else
+				out.add(false);
 
 		return out;
 	}
 
 	public double min(boolean keepNaN)
 	{
-		if (size() == 0) return Double.NaN;
-
-		if (keepNaN)
+		DoubleVector other = this;
+		while (true)
 		{
-			if (data.length == 0) return Double.NaN;
+			if (other.size() == 0)
+			{
+				return Double.NaN;
+			}
 
-			double min = data[0];
-			for (int i = 1; i < this.size; i++)
-				if (!(data[i] >= min)) min = data[i];
+			if (keepNaN)
+			{
+				if (other.data.length == 0)
+				{
+					return Double.NaN;
+				}
 
-			return min;
-		}
-		else
-		{
-			DoubleVector newvec = this.get(this.NaNs().not());
-			return newvec.min(true);
+				double min = other.data[0];
+				for (int i = 1; i < other.size; i++)
+				{
+					if (!(other.data[i] >= min))
+					{
+						min = other.data[i];
+					}
+				}
+
+				return min;
+			}
+			else
+			{
+				DoubleVector newvec = other.get(other.NaNs().not());
+				keepNaN = true;
+				other = newvec;
+			}
 		}
 	}
 
 	public static double min(double[] data)
 	{
-		if (data.length == 0) return Double.NaN;
+		if (data.length == 0)
+			return Double.NaN;
 
 		double min = data[0];
 		for (int i = 1; i < data.length; i++)
-			if (!(data[i] >= min)) min = data[i];
+			if (!(data[i] >= min))
+				min = data[i];
 
 		return min;
 	}
@@ -363,14 +369,15 @@ public class DoubleVector extends DataVector
 		double sum = 0.0;
 		boolean nans = true;
 
-		for (int i = 0; i < x.length; i++)
-			if (!Double.isNaN(x[i]))
+		for (double aX : x)
+			if (!Double.isNaN(aX))
 			{
-				sum += x[i];
+				sum += aX;
 				nans = false;
 			}
 
-		if (nans) return Double.NaN;
+		if (nans)
+			return Double.NaN;
 
 		return sum;
 	}
@@ -382,7 +389,6 @@ public class DoubleVector extends DataVector
 		DoubleVector cp = this.clone();
 
 		Random randgen = RandomFactory.make();
-		;
 
 		if (!replace)
 		{
@@ -411,7 +417,7 @@ public class DoubleVector extends DataVector
 		return mysample;
 	}
 
-	public DoubleVector subVector(int i1, int size)
+	protected DoubleVector subVector(int i1, int size)
 	{
 		DoubleVector out = new DoubleVector(size);
 
@@ -433,7 +439,7 @@ public class DoubleVector extends DataVector
 		return out;
 	}
 
-	public DoubleVector get(BooleanVector bv)
+	protected DoubleVector get(BooleanVector bv)
 	{
 		if (bv.size() != this.size())
 			throw new IllegalArgumentException("The two vectors must be the same size. " + bv.size() + "!=" + this.size);
@@ -463,7 +469,8 @@ public class DoubleVector extends DataVector
 				}
 		}
 
-		if (!found) sub.removeElementNames();
+		if (!found)
+			sub.removeElementNames();
 
 		return sub;
 	}
@@ -502,7 +509,8 @@ public class DoubleVector extends DataVector
 		else
 		{
 			out = new DoubleVector(this.size());
-			if (this.hasListName()) out.setListName(this.listname);
+			if (this.hasListName())
+				out.setListName(this.listname);
 
 			IntVector sorti = this.sort_I();
 
@@ -518,7 +526,7 @@ public class DoubleVector extends DataVector
 		return out;
 	}
 
-	public IntVector sort_I()
+	protected IntVector sort_I()
 	{
 		return Sorter.Sort_I(this.clone());
 	}
@@ -526,13 +534,15 @@ public class DoubleVector extends DataVector
 	public static void set(double[] v, boolean[] which, double val)
 	{
 		for (int i = 0; i < which.length; i++)
-			if (which[i]) v[i] = val;
+			if (which[i])
+				v[i] = val;
 	}
 
 	public static boolean isAnyNaN(double[] v)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (Double.isNaN(v[i])) return true;
+		for (double aV : v)
+			if (Double.isNaN(aV))
+				return true;
 
 		return false;
 	}
@@ -549,56 +559,63 @@ public class DoubleVector extends DataVector
 
 	public static boolean allLessThan(double[] v, int val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] >= val) return false;
+		for (double aV : v)
+			if (aV >= val)
+				return false;
 
 		return true;
 	}
 
 	public static boolean allGreaterThan(double[] v, int val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] <= val) return false;
+		for (double aV : v)
+			if (aV <= val)
+				return false;
 
 		return true;
 	}
 
 	public static boolean anyLessThan(double[] v, int val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] < val) return true;
+		for (double aV : v)
+			if (aV < val)
+				return true;
 
 		return false;
 	}
 
 	public static boolean anyLessThan(double[] v, double val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] < val) return true;
+		for (double aV : v)
+			if (aV < val)
+				return true;
 
 		return false;
 	}
 
 	public static boolean anyGreaterThan(double[] v, int val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] > val) return true;
+		for (double aV : v)
+			if (aV > val)
+				return true;
 
 		return false;
 	}
 
 	public static boolean anyGreaterThan(double[] v, double val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] > val) return true;
+		for (double aV : v)
+			if (aV > val)
+				return true;
 
 		return false;
 	}
 
 	public static boolean anyEqualTo(double[] v, int val)
 	{
-		for (int i = 0; i < v.length; i++)
-			if (v[i] == val) return true;
+		for (double aV : v)
+			if (aV == val)
+				return true;
 
 		return false;
 	}

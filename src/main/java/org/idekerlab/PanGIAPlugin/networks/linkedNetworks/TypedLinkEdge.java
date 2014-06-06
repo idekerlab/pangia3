@@ -33,7 +33,8 @@ public final class TypedLinkEdge<NT, ET> implements Finalish
 			TypedLinkEdge<?, ?> other = (TypedLinkEdge<?, ?>) o;
 			return (other.value.equals(this.value) && (other.source.equals(this.source) && other.target.equals(this.target) || (!directed && other.source.equals(this.target) && other.target.equals(this.source))));
 		}
-		else return false;
+		else
+			return false;
 	}
 
 	public TypedLinkNode<NT, ET> source()
@@ -62,13 +63,15 @@ public final class TypedLinkEdge<NT, ET> implements Finalish
 
 	public String toString()
 	{
-		return source.toString() + "-" + target.toString();
+		return source.toString() + '-' + target.toString();
 	}
 
 	public TypedLinkNode<NT, ET> opposite(TypedLinkNode<NT, ET> node)
 	{
-		if (this.source.equals(node)) return this.target;
-		if (this.target.equals(node)) return this.source;
+		if (this.source.equals(node))
+			return this.target;
+		if (this.target.equals(node))
+			return this.source;
 		return null;
 	}
 }

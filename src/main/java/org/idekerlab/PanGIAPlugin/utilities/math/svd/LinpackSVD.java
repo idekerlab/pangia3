@@ -21,15 +21,7 @@ import org.idekerlab.PanGIAPlugin.data.IntVector;
 public class LinpackSVD extends SVD
 {
 
-/* ------------------------
-   Constructor
- * ------------------------ */
-
-	/**
-	 * Construct the singular value decomposition
-	 */
-
-	public LinpackSVD(double[][] M, boolean wantv, boolean multiThreaded)
+	public LinpackSVD(double[][] M, boolean wantv)
 	{
 		super(null, null, null);
 
@@ -44,69 +36,22 @@ public class LinpackSVD extends SVD
 		for (int j = 0; j < M[0].length; j++)
 		{
 			boolean zeros = true;
-			for (int i = 0; i < M.length; i++)
-				if (Math.abs(M[i][j]) > tol)
+			for (double[] aM : M)
+				if (Math.abs(aM[j]) > tol)
 				{
 					zeros = false;
 					break;
 				}
 
-			if (!zeros) okcol.add(j);
-		}
-
-		if (okcol.size() < M[0].length) M = DoubleMatrix.getCol(M, okcol.getData());
-
-		if (multiThreaded)
-			System.out.println("Computing SVD");
-
-		if (M.length == 0)
-		{
-			S = new double[0];
-			U = new double[0][0];
-			V = new double[0][0];
-		}
-		else
-		{
-
-			init(M, wantv);
-
-			if (xxt)
-			{
-				for (int i = 0; i < S.length; i++)
-					S[i] = Math.sqrt(S[i]);
-			}
-		}
-
-	}
-
-	public LinpackSVD(double[][] M, boolean wantv)
-	{
-		super(null, null, null);
-
-		//Check for xxT necessity
-		boolean xxt = M[0].length > M.length;
-		if (xxt) M = DoubleMatrix.xxT(M);
-
-		//Remove 0 columns
-		double tol = 1e-100;
-		IntVector okcol = new IntVector(M[0].length);
-		for (int j = 0; j < M[0].length; j++)
-		{
-			boolean zeros = true;
-			for (int i = 0; i < M.length; i++)
-				if (Math.abs(M[i][j]) > tol)
-				{
-					zeros = false;
-					break;
-				}
-
-			if (!zeros) okcol.add(j);
+			if (!zeros)
+				okcol.add(j);
 		}
 
 		if (okcol.size() == 0)
 			okcol = new IntVector(new int[]{0});
 
-		if (okcol.size() < M[0].length) M = DoubleMatrix.getCol(M, okcol.getData());
+		if (okcol.size() < M[0].length)
+			M = DoubleMatrix.getCol(M, okcol.getData());
 
 		if (M.length == 0)
 		{
@@ -147,7 +92,8 @@ public class LinpackSVD extends SVD
 
 				if (S[k] != 0.0)
 				{
-					if (A[k][k] < 0.0) S[k] = -S[k];
+					if (A[k][k] < 0.0)
+						S[k] = -S[k];
 
 					for (int i = k; i < m; i++)
 						A[i][k] /= S[k];
@@ -243,10 +189,13 @@ public class LinpackSVD extends SVD
 
 	private void setupBidiag(double[][] A, int m, int n, int nct, int nrt, double[] e, int p, int nu, boolean wantu, boolean wantv)
 	{
-		if (nct < n) S[nct] = A[nct][nct];
-		if (m < p) S[p - 1] = 0.0;
+		if (nct < n)
+			S[nct] = A[nct][nct];
+		if (m < p)
+			S[p - 1] = 0.0;
 
-		if (nrt + 1 < p) e[nrt] = A[nrt][p - 1];
+		if (nrt + 1 < p)
+			e[nrt] = A[nrt][p - 1];
 
 		e[p - 1] = 0.0;
 
@@ -345,7 +294,8 @@ public class LinpackSVD extends SVD
 
 			for (k = p - 2; k >= -1; k--)
 			{
-				if (k == -1) break;
+				if (k == -1)
+					break;
 
 				if (Math.abs(e[k]) <= tiny + eps * (Math.abs(S[k]) + Math.abs(S[k + 1])))
 				{
@@ -354,13 +304,15 @@ public class LinpackSVD extends SVD
 				}
 			}
 
-			if (k == p - 2) kase = 4;
+			if (k == p - 2)
+				kase = 4;
 			else
 			{
 				int ks;
 				for (ks = p - 1; ks >= k; ks--)
 				{
-					if (ks == k) break;
+					if (ks == k)
+						break;
 
 					double t = (ks != p ? Math.abs(e[ks]) : 0.) + (ks != k + 1 ? Math.abs(e[ks - 1]) : 0.);
 					if (Math.abs(S[ks]) <= tiny + eps * t)
@@ -369,8 +321,10 @@ public class LinpackSVD extends SVD
 						break;
 					}
 				}
-				if (ks == k) kase = 3;
-				else if (ks == p - 1) kase = 1;
+				if (ks == k)
+					kase = 3;
+				else if (ks == p - 1)
+					kase = 1;
 				else
 				{
 					kase = 2;
@@ -455,7 +409,8 @@ public class LinpackSVD extends SVD
 					if ((b != 0.0) | (c != 0.0))
 					{
 						shift = Math.sqrt(b * b + c);
-						if (b < 0.0) shift = -shift;
+						if (b < 0.0)
+							shift = -shift;
 						shift = c / (b + shift);
 					}
 					double f = (sk + sp) * (sk - sp) + shift;
@@ -467,7 +422,8 @@ public class LinpackSVD extends SVD
 						double t = Math.hypot(f, g);
 						double cs = f / t;
 						double sn = g / t;
-						if (j != k) e[j - 1] = t;
+						if (j != k)
+							e[j - 1] = t;
 						f = cs * S[j] + sn * e[j];
 						e[j] = cs * e[j] - sn * S[j];
 						g = sn * S[j + 1];
@@ -524,7 +480,8 @@ public class LinpackSVD extends SVD
 					// Order the singular values.
 					while (k < pp)
 					{
-						if (S[k] >= S[k + 1]) break;
+						if (S[k] >= S[k + 1])
+							break;
 
 						double t = S[k];
 						S[k] = S[k + 1];
@@ -575,7 +532,8 @@ public class LinpackSVD extends SVD
 
 		S = new double[Math.min(m + 1, n)];
 		U = new double[m][nu];
-		if (wantv) V = new double[n][n];
+		if (wantv)
+			V = new double[n][n];
 		double[] e = new double[n];
 		boolean wantu = true;
 

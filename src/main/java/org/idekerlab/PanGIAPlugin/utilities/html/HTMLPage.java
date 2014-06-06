@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class HTMLPage extends HTMLHyperBlock
 {
-	private HTMLHead head;
-	private HTMLBody body;
+	private final HTMLHead head;
+	private final HTMLBody body;
 
 	public HTMLPage()
 	{

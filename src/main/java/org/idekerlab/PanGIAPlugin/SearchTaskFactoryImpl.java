@@ -7,7 +7,7 @@ import org.cytoscape.work.TaskIterator;
 public class SearchTaskFactoryImpl extends AbstractTaskFactory
 { //implements TaskFactory {
 
-	private SearchTask task;
+	private final SearchTask task;
 
 	public SearchTaskFactoryImpl(SearchTask task)
 	{

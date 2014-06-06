@@ -1,10 +1,6 @@
 package org.idekerlab.PanGIAPlugin.data;
 
-import org.idekerlab.PanGIAPlugin.utilities.files.FileIterator;
-
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class DataVector
@@ -13,36 +9,28 @@ public abstract class DataVector
 	protected List<String> elementnames;
 	protected String listname;
 
-	public DataVector()
+	protected DataVector()
 	{
 	}
 
-	public abstract byte getAsByte(int i);
+	protected abstract double getAsDouble(int i);
 
-	public abstract float getAsFloat(int i);
-
-	public abstract int getAsInteger(int i);
-
-	public abstract double getAsDouble(int i);
-
-	public abstract String getAsString(int i);
-
-	public abstract Object getAsObject(int i);
+	protected abstract String getAsString(int i);
 
 	protected abstract Object getDataAsObject();
 
 
-	public void setElementNames(List<String> elementnames)
+	protected void setElementNames(List<String> elementnames)
 	{
 		this.elementnames = new ArrayList<String>(elementnames);
 	}
 
-	public void setListName(String listname)
+	protected void setListName(String listname)
 	{
 		this.listname = listname;
 	}
 
-	public String getListName()
+	protected String getListName()
 	{
 		return (listname);
 	}
@@ -52,7 +40,7 @@ public abstract class DataVector
 		return (new ArrayList<String>(elementnames));
 	}
 
-	public void removeElementNames()
+	protected void removeElementNames()
 	{
 		elementnames = null;
 	}
@@ -62,12 +50,12 @@ public abstract class DataVector
 		return elementnames != null;
 	}
 
-	public boolean hasListName()
+	protected boolean hasListName()
 	{
 		return listname != null;
 	}
 
-	public String getElementName(int i)
+	protected String getElementName(int i)
 	{
 		return (elementnames.get(i));
 	}
@@ -77,198 +65,13 @@ public abstract class DataVector
 		elementnames.set(index, name);
 	}
 
-	public void addElementName(String name)
+	protected void addElementName(String name)
 	{
 		elementnames.add(name);
 	}
 
-	protected abstract void add(String val);
+	protected abstract int size();
 
-	public abstract void Initialize(int size);
-
-	public abstract int size();
-
-	public void LoadLine(String file)
-	{
-		Initialize(0);
-		FileIterator in = new FileIterator(file);
-		for (String line : in)
-			this.add(line);
-	}
-
-	public void LoadColumn(String file, boolean arerownames, boolean islistname, int col)
-	{
-		LoadColumn(file, arerownames, islistname, col, "\t");
-
-	}
-
-	public void LoadColumn(String file, boolean arerownames, boolean islistname, int col, String delimiter)
-	{
-		Initialize(0);
-
-		Iterator<String> fi = new FileIterator(file);
-
-		if (islistname) this.setListName(fi.next().split(delimiter)[col]);
-
-		List<String> newrownames = new ArrayList<String>();
-
-		while (fi.hasNext())
-		{
-			String[] cols = fi.next().split(delimiter);
-
-			if (arerownames)
-			{
-				newrownames.add(cols[0]);
-				this.add(cols[col]);
-			}
-			else this.add(cols[col]);
-		}
-
-
-		if (arerownames) this.setElementNames(newrownames);
-	}
-
-	public void save(String file)
-	{
-		writeOut(file, false, true);
-	}
-
-	private void writeOut(String file, boolean append, boolean vertical)
-	{
-		//Check if file exists... create a new one if necessary
-		File outfile = new File(file);
-		if (!outfile.exists())
-		{
-			append = false;
-
-			try
-			{
-				outfile.createNewFile();
-			}
-			catch (IOException e)
-			{
-				System.out.println("Error DataVector.writeOut(String,boolean,boolean): IOException.");
-				System.out.println(e.getMessage());
-				System.exit(0);
-			}
-		}
-
-		if (size() == 0) return;
-
-		//Initialize the writers
-		FileWriter fw = null;
-		try
-		{
-			fw = new FileWriter(file, append);
-		}
-		catch (FileNotFoundException e)
-		{
-			System.out.println("Error DataVector.writeOut(String,boolean,boolean): File not found.");
-			System.out.println(file);
-			System.out.println(e.getMessage());
-			System.exit(0);
-		}
-		catch (IOException e)
-		{
-			System.out.println("Error DataVector.writeOut(String,boolean,boolean): IOException.");
-			System.out.println(e.getMessage());
-			System.exit(0);
-		}
-
-		BufferedWriter bw = new BufferedWriter(fw);
-
-		try
-		{
-			if (vertical)
-			{
-
-				if (this.hasListName() && !append && this.hasElementNames()) bw.write("\t" + this.getListName() + "\n");
-				if (this.hasListName() && !append && !this.hasElementNames()) bw.write(this.getListName() + "\n");
-
-				for (int i = 0; i < this.size(); i++)
-				{
-					if (this.hasElementNames()) bw.write(this.getElementName(i) + "\t");
-					bw.write(this.getAsString(i) + "\n");
-				}
-			}
-			else
-			{
-				if (this.hasElementNames() && !append)
-				{
-					if (this.hasListName()) bw.write("\t");
-
-					bw.write(elementnames.get(0));
-					for (int i = 1; i < size(); i++)
-						bw.write("\t" + elementnames.get(i));
-
-					bw.write("\n");
-				}
-
-				if (this.hasListName()) bw.write(listname + "\t");
-
-				bw.write(getAsString(0));
-				for (int i = 1; i < size(); i++)
-					bw.write("\t" + getAsString(i));
-
-				bw.write("\n");
-			}
-		}
-		catch (IOException e)
-		{
-			System.out.println(e.getMessage());
-			System.exit(0);
-		}
-
-		//Close writer
-		try
-		{
-			bw.close();
-		}
-		catch (IOException e)
-		{
-			System.out.println(e.getMessage());
-			System.exit(0);
-		}
-	}
-
-	public boolean contains(Object o)
-	{
-		for (int i = 0; i < this.size(); i++)
-			if (this.getAsObject(i).equals(o)) return true;
-
-		return false;
-	}
-
-
-	public byte[] asByteArray()
-	{
-		byte[] da = new byte[size()];
-
-		for (int i = 0; i < this.size(); i++)
-			da[i] = getAsByte(i);
-
-		return da;
-	}
-
-	public int[] asIntArray()
-	{
-		int[] da = new int[size()];
-
-		for (int i = 0; i < this.size(); i++)
-			da[i] = getAsInteger(i);
-
-		return da;
-	}
-
-	public float[] asFloatArray()
-	{
-		float[] da = new float[size()];
-
-		for (int i = 0; i < this.size(); i++)
-			da[i] = getAsFloat(i);
-
-		return da;
-	}
 
 	public double[] asDoubleArray()
 	{
@@ -282,20 +85,26 @@ public abstract class DataVector
 
 	public boolean equals(Object other)
 	{
-		if (other == null) return false;
-		else if (!(other instanceof DataVector)) return false;
+		if (other == null)
+			return false;
+		else if (!(other instanceof DataVector))
+			return false;
 		else
 		{
 			DataVector dv = (DataVector) other;
 
-			if (dv.size() != size()) return false;
-			if (dv.listname != this.listname) return false;
+			if (dv.size() != size())
+				return false;
+			if (dv.listname != this.listname)
+				return false;
 
 			if (this.hasElementNames() && this.elementnames.size() == dv.getElementNames().size())
 				for (int i = 0; i < size(); i++)
-					if (!this.getElementName(i).equals(dv.getElementName(i))) return false;
+					if (!this.getElementName(i).equals(dv.getElementName(i)))
+						return false;
 
-			if (!this.getDataAsObject().equals(dv.getDataAsObject())) return false;
+			if (!this.getDataAsObject().equals(dv.getDataAsObject()))
+				return false;
 		}
 
 		return true;
@@ -308,23 +117,14 @@ public abstract class DataVector
 
 	public String toString()
 	{
-		if (size() == 0) return "[]";
+		if (size() == 0)
+			return "[]";
 
-		String out = "[" + getAsString(0);
+		String out = '[' + getAsString(0);
 		for (int i = 1; i < size(); i++)
-			out += "," + getAsString(i);
+			out += ',' + getAsString(i);
 
-		return out + "]";
-	}
-
-	public List<String> asStringList()
-	{
-		List<String> out = new ArrayList<String>(size());
-
-		for (int i = 0; i < size(); i++)
-			out.add(getAsString(i));
-
-		return out;
+		return out + ']';
 	}
 
 

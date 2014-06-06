@@ -25,7 +25,7 @@ public class IntVector extends DataVector
 			return IntVector.resize(data, this.size);
 	}
 
-	public void Initialize(int size)
+	protected void Initialize(int size)
 	{
 		data = new int[size];
 		this.size = 0;
@@ -47,12 +47,7 @@ public class IntVector extends DataVector
 		size++;
 	}
 
-	public void add(String val)
-	{
-		this.add(Integer.valueOf(val));
-	}
-
-	public static int[] resize(int[] vec, int size)
+	private static int[] resize(int[] vec, int size)
 	{
 		int[] out = new int[size];
 
@@ -60,11 +55,6 @@ public class IntVector extends DataVector
 		System.arraycopy(vec, 0, out, 0, n);
 
 		return out;
-	}
-
-	public Object getAsObject(int i)
-	{
-		return data[i];
 	}
 
 	public String getAsString(int i)
@@ -77,29 +67,9 @@ public class IntVector extends DataVector
 		return get(i);
 	}
 
-	public byte getAsByte(int i)
-	{
-		return (byte) get(i);
-	}
-
-	public int getAsInteger(int i)
-	{
-		return get(i);
-	}
-
-	public float getAsFloat(int i)
-	{
-		return get(i);
-	}
-
 	public int get(int i)
 	{
 		return (data[i]);
-	}
-
-	public void set(int i, int val)
-	{
-		data[i] = val;
 	}
 
 	public IntVector clone()
@@ -115,7 +85,7 @@ public class IntVector extends DataVector
 		return (copy);
 	}
 
-	public static int[] copy(int[] vec)
+	private static int[] copy(int[] vec)
 	{
 		int[] out = new int[vec.length];
 
@@ -129,60 +99,5 @@ public class IntVector extends DataVector
 		return this.size;
 	}
 
-	public IntVector subVector(int i1, int size)
-	{
-		IntVector out = new IntVector(size);
 
-		int i1s = i1 + size;
-
-		for (int i = i1; i < i1s; i++)
-			out.add(this.get(i));
-
-		return out;
-	}
-
-	public IntVector sort()
-	{
-		IntVector out = this.clone();
-		Sorter.Sort_I(out);
-
-		return out;
-	}
-
-	public void set(int[] iarray)
-	{
-		data = IntVector.copy(iarray);
-		this.size = iarray.length;
-	}
-
-
-	public int indexOf(int val)
-	{
-		for (int i = 0; i < this.size; i++)
-			if (data[i] == val)
-				return i;
-
-		return -1;
-	}
-
-	public void removeElement(int value)
-	{
-		for (int i = 0; i < data.length; i++)
-		{
-			if (data[i] == value)
-			{
-				this.removeElementAt(i);
-				break;
-			}
-		}
-	}
-
-	public void removeElementAt(int index)
-	{
-		int[] newdata = new int[data.length - 1];
-
-		System.arraycopy(data, 0, newdata, 0, index);
-
-		System.arraycopy(data, index + 1, newdata, index + 1 - 1, data.length - (index + 1));
-	}
 }

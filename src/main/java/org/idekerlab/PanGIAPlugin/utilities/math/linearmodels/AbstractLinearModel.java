@@ -8,7 +8,7 @@ public abstract class AbstractLinearModel
 {
 	protected final List<LMTerm> terms;
 
-	public AbstractLinearModel(List<LMTerm> terms)
+	protected AbstractLinearModel(List<LMTerm> terms)
 	{
 		this.terms = terms;
 	}

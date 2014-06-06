@@ -10,7 +10,7 @@ import java.util.Set;
 public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>
 {
 
-	private String id;
+	private final String id;
 	private Set<String> members = new HashSet<String>();
 
 	public SNodeModule(String name, Collection<String> members)
@@ -26,13 +26,15 @@ public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>
 
 	public boolean equals(Object c)
 	{
-		if (c == null) return false;
+		if (c == null)
+			return false;
 		if (c instanceof SNodeModule)
 		{
 			SNodeModule other = (SNodeModule) c;
 			return other.id.equals(this.id) && other.members.equals(this.members);
 		}
-		else return false;
+		else
+			return false;
 	}
 
 	public int hashCode()
@@ -60,30 +62,6 @@ public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>
 		return members.iterator();
 	}
 
-	public int size()
-	{
-		return members.size();
-	}
-
-	public boolean contains(SNodeModule complex)
-	{
-		for (String member : complex.members)
-			if (!this.members.contains(member)) return false;
-
-		return true;
-	}
-
-	public void add(String g)
-	{
-		this.members.add(g);
-	}
-
-	public void add(SNodeModule c)
-	{
-		for (String s : c.members)
-			this.add(s);
-	}
-
 	public int compareTo(SNodeModule other)
 	{
 		return this.members.size() - other.members.size();
@@ -102,7 +80,8 @@ public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>
 		for (String s1 : members)
 			for (String s2 : members)
 			{
-				if (s1.equals(s2)) continue;
+				if (s1.equals(s2))
+					continue;
 				net.add(new UndirectedSEdge(s1, s2));
 			}
 
@@ -110,13 +89,4 @@ public class SNodeModule implements Iterable<String>, Comparable<SNodeModule>
 	}
 
 
-	public void remove(String member)
-	{
-		this.members.remove(member);
-	}
-
-	public boolean contains(String member)
-	{
-		return members.contains(member);
-	}
 }

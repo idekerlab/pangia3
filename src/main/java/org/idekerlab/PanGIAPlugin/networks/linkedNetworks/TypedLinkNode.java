@@ -11,7 +11,7 @@ public class TypedLinkNode<NT, ET> implements Finalish
 {
 	private final int hc;
 	private final NT value;
-	private Map<TypedLinkNode<NT, ET>, TypedLinkEdge<NT, ET>> neighbors;
+	private final Map<TypedLinkNode<NT, ET>, TypedLinkEdge<NT, ET>> neighbors;
 
 	public TypedLinkNode(NT value)
 	{
@@ -31,7 +31,8 @@ public class TypedLinkNode<NT, ET> implements Finalish
 		{
 			return this.value.equals(((TypedLinkNode<?, ?>) o).value);
 		}
-		else return false;
+		else
+			return false;
 	}
 
 	public String toString()
@@ -44,22 +45,9 @@ public class TypedLinkNode<NT, ET> implements Finalish
 		return new IIterator<TypedLinkEdge<NT, ET>>(neighbors.values().iterator());
 	}
 
-	public IIterator<TypedLinkNode<NT, ET>> nodeIterator()
-	{
-		return new IIterator<TypedLinkNode<NT, ET>>(neighbors.keySet().iterator());
-	}
-
 	public NT value()
 	{
 		return this.value;
-	}
-
-	public boolean isConnected(TypedLinkNode<NT, ?> node)
-	{
-		for (TypedLinkEdge<NT, ?> edge : this.edgeIterator())
-			if (edge.source().equals(node) || edge.target().equals(node)) return true;
-
-		return false;
 	}
 
 	public TypedLinkEdge<NT, ET> getEdge(NT node)

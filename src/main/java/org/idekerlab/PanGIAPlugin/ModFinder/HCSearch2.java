@@ -40,7 +40,8 @@ public class HCSearch2
 		TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> results = constructBaseNetwork(
 				pnet, gnet);
 
-		if (parentTask.wasCancelled()) return null;
+		if (parentTask.wasCancelled())
+			return null;
 
 		System.gc();
 		MemoryReporter.reportMemoryUsage();
@@ -49,7 +50,8 @@ public class HCSearch2
 		taskMonitor.setStatusMessage("2. Obtaining primary scores.");
 		computePrimaryScores(results, sfunc);
 
-		if (parentTask.wasCancelled()) return null;
+		if (parentTask.wasCancelled())
+			return null;
 
 		System.gc();
 		MemoryReporter.reportMemoryUsage();
@@ -76,7 +78,8 @@ public class HCSearch2
 				MemoryReporter.reportMemoryUsage();
 			}
 
-			if (parentTask.wasCancelled()) return null;
+			if (parentTask.wasCancelled())
+				return null;
 
 			// Identify the best physical edge to merge
 			Iterator<TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge>> edgei = results
@@ -150,7 +153,7 @@ public class HCSearch2
 				}
 				catch (InterruptedException e)
 				{
-					System.out.println(e);
+					e.printStackTrace();
 					exec.shutdownNow();
 				}
 
@@ -172,7 +175,7 @@ public class HCSearch2
 				taskMonitor.setProgress(percentCompleted / 100.0);
 				taskMonitor.setStatusMessage("3. Forming clusters (# of clusters: "
 						+ results.numNodes() + ", largest cluster size: "
-						+ csizes.max(false) + ")");
+						+ csizes.max(false) + ')');
 			}
 
 			iter++;
@@ -193,7 +196,7 @@ public class HCSearch2
 	 * @param pnet Physical network
 	 * @param gnet Genetic network
 	 */
-	public static TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> constructBaseNetwork(
+	private static TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> constructBaseNetwork(
 			SFNetwork pnet, SFNetwork gnet)
 	{
 		// Set each node in the physical network as a module
@@ -234,7 +237,7 @@ public class HCSearch2
 		{
 			counter++;
 			if (counter % 100000 == 0)
-				System.out.println("->->" + counter + "/" + gnet.numEdges());
+				System.out.println("->->" + counter + '/' + gnet.numEdges());
 
 			TypedLinkNode<TypedLinkNodeModule<String, BFEdge>, BFEdge> source = results
 					.getNode(new TypedLinkNodeModule<String, BFEdge>(ge.getI1()));
@@ -260,7 +263,7 @@ public class HCSearch2
 		return results;
 	}
 
-	public static void computePrimaryScores(
+	private static void computePrimaryScores(
 			TypedLinkNetwork<TypedLinkNodeModule<String, BFEdge>, BFEdge> results,
 			HCScoringFunction sfunc)
 	{
@@ -300,7 +303,7 @@ public class HCSearch2
 		}
 		catch (InterruptedException e)
 		{
-			System.out.println(e);
+			e.printStackTrace();
 			exec.shutdownNow();
 		}
 
@@ -310,7 +313,7 @@ public class HCSearch2
 			computeGlobalScore(ed);
 	}
 
-	public static void computeGlobalScore(
+	private static void computeGlobalScore(
 			TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> edge)
 	{
 		// HyperModule<String> m1 =
@@ -419,9 +422,9 @@ public class HCSearch2
 			csizes.add(m.value().size());
 		}
 
-		builder.append("Best cluster score: ").append(NumberFormatter.formatNumber(cscores.max(false), 3)).append("\n");
-		builder.append("Worst cluster score: ").append(NumberFormatter.formatNumber(cscores.min(false), 3)).append("\n");
-		builder.append("Largest cluster size: ").append((int) csizes.max(false)).append("\n");
+		builder.append("Best cluster score: ").append(NumberFormatter.formatNumber(cscores.max(false), 3)).append('\n');
+		builder.append("Worst cluster score: ").append(NumberFormatter.formatNumber(cscores.min(false), 3)).append('\n');
+		builder.append("Largest cluster size: ").append((int) csizes.max(false)).append('\n');
 
 		DoubleVector escores = new DoubleVector(results.numEdges());
 		for (TypedLinkEdge<TypedLinkNodeModule<String, BFEdge>, BFEdge> ed : results
@@ -432,7 +435,7 @@ public class HCSearch2
 				escores.add(score);
 		}
 
-		builder.append("Best edge score: ").append(NumberFormatter.formatNumber(escores.max(false), 3)).append("\n");
+		builder.append("Best edge score: ").append(NumberFormatter.formatNumber(escores.max(false), 3)).append('\n');
 
 		// csizes.plothist(30);
 

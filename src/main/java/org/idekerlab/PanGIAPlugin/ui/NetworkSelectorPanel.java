@@ -24,9 +24,9 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 {
 	private static final long serialVersionUID = 8694272457769377810L;
 
-	protected final JComboBox networkComboBox;
-	private CyNetworkManager cyNetworkManager;
-	private CyApplicationManager cyApplicationManager;
+	private final JComboBox networkComboBox;
+	private final CyNetworkManager cyNetworkManager;
+	private final CyApplicationManager cyApplicationManager;
 
 	public void setSearchRunning(boolean searchRunning)
 	{
@@ -81,6 +81,11 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 
 	private void updateNetworkList()
 	{
+		Object selectedItem = networkComboBox.getSelectedItem();
+		String currentNetworkName = null;
+		if( selectedItem != null )
+			currentNetworkName = selectedItem.toString();
+
 		final Set<CyNetwork> networks = this.cyNetworkManager.getNetworkSet();
 		final SortedSet<String> networkNames = new TreeSet<String>();
 
@@ -98,17 +103,25 @@ public final class NetworkSelectorPanel extends JPanel implements NetworkAddedLi
 
 
 		// Clear the comboBox
-		networkComboBox.setModel(new DefaultComboBoxModel());
+		DefaultComboBoxModel model = new DefaultComboBoxModel();
+		networkComboBox.setModel(model);
 
 		for (String name : networkNames)
 			networkComboBox.addItem(name);
 
-		CyNetwork currNetwork = this.cyApplicationManager.getCurrentNetwork();
-		if (currNetwork != null)
+		if( currentNetworkName != null )
 		{
-			String networkTitle = currNetwork.getRow(currNetwork).get("name", String.class);
-			networkComboBox.setSelectedItem(networkTitle);
+			if( model.getIndexOf(currentNetworkName) != -1 )
+				networkComboBox.setSelectedItem(currentNetworkName);
 		}
+
+
+//		CyNetwork currNetwork = this.cyApplicationManager.getCurrentNetwork();
+//		if (currNetwork != null)
+//		{
+//			String networkTitle = currNetwork.getRow(currNetwork).get("name", String.class);
+//			networkComboBox.setSelectedItem(networkTitle);
+//		}
 
 //		System.out.println("\nLeaving NetworkSelectorPanel.updateNetworkList()...");
 

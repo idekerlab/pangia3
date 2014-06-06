@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class DoubleMatrix extends DataMatrix
 {
 
-	private double[][] data;
+	private final double[][] data;
 
-	public DoubleMatrix(DataMatrix dt)
+	private DoubleMatrix(DataMatrix dt)
 	{
 		this.data = new double[dt.numRows()][dt.numCols()];
 
@@ -18,8 +18,10 @@ public class DoubleMatrix extends DataMatrix
 			for (int j = 0; j < dt.numCols(); j++)
 				data[i][j] = dt.getAsDouble(i, j);
 
-		if (dt.hasColNames()) this.setColNames(new ArrayList<String>(dt.getColNames()));
-		if (dt.hasRowNames()) this.setRowNames(new ArrayList<String>(dt.getRowNames()));
+		if (dt.hasColNames())
+			this.setColNames(new ArrayList<String>(dt.getColNames()));
+		if (dt.hasRowNames())
+			this.setRowNames(new ArrayList<String>(dt.getRowNames()));
 	}
 
 	public static double[][] copy(double[][] m)
@@ -39,16 +41,13 @@ public class DoubleMatrix extends DataMatrix
 
 	public int dim(int dimension)
 	{
-		if (dimension == 0) return data.length;
+		if (dimension == 0)
+			return data.length;
 
-		if (data.length > 0 && dimension == 1) return data[0].length;
+		if (data.length > 0 && dimension == 1)
+			return data[0].length;
 
 		return -1;
-	}
-
-	public double get(int i, int j)
-	{
-		return (data[i][j]);
 	}
 
 	public double getAsDouble(int i, int j)
@@ -56,14 +55,10 @@ public class DoubleMatrix extends DataMatrix
 		return (data[i][j]);
 	}
 
-	public String getAsString(int row, int col)
-	{
-		return Double.toString(get(row, col));
-	}
-
 	public static double[][] getCol(double[][] x, int[] indexes)
 	{
-		if (indexes.length == 0) return new double[0][0];
+		if (indexes.length == 0)
+			return new double[0][0];
 
 		double[][] cols = new double[x.length][indexes.length];
 
@@ -77,36 +72,6 @@ public class DoubleMatrix extends DataMatrix
 		return cols;
 	}
 
-	public void Initialize(int numrows, int numcols)
-	{
-		data = new double[numrows][numcols];
-	}
-
-	public static double min(double[][] m)
-	{
-		boolean found = false;
-
-		double min = Double.MAX_VALUE;
-
-		for (int i = 0; i < m.length; i++)
-			for (int j = 0; j < m[0].length; j++)
-			{
-				if (!Double.isNaN(m[i][j]) && m[i][j] < min)
-				{
-					min = m[i][j];
-					found = true;
-				}
-			}
-
-		if (found) return min;
-		else return Double.NaN;
-	}
-
-	private void set(int i, int j, double val)
-	{
-		data[i][j] = val;
-	}
-
 	public static double[][] xTx(double[][] x)
 	{
 		double[][] out = new double[x[0].length][x[0].length];
@@ -115,8 +80,8 @@ public class DoubleMatrix extends DataMatrix
 			for (int j = 0; j < x[0].length; j++)
 			{
 				double sum = 0;
-				for (int k = 0; k < x.length; k++)
-					sum += x[k][i] * x[k][j];
+				for (double[] aX : x)
+					sum += aX[i] * aX[j];
 
 				out[i][j] = sum;
 			}
@@ -168,7 +133,8 @@ public class DoubleMatrix extends DataMatrix
 
 	public int numCols()
 	{
-		if (data.length == 0) return 0;
+		if (data.length == 0)
+			return 0;
 		return data[0].length;
 	}
 
@@ -182,7 +148,8 @@ public class DoubleMatrix extends DataMatrix
 		SVD svd = new LinpackSVD(x, true);
 
 		//If x is singular
-		if (svd.U()[0].length != x[0].length) return null;
+		if (svd.U()[0].length != x[0].length)
+			return null;
 
 		double[][] u = svd.U();
 		double[] s = svd.S();
@@ -190,16 +157,19 @@ public class DoubleMatrix extends DataMatrix
 
 		double smax = 0;
 
-		for (int i = 0; i < s.length; i++)
-			if (s[i] > smax) smax = s[i];
+		for (double value : s)
+			if (value > smax)
+				smax = value;
 
 		//Based on the machine double precision of 2.220446e-16
 		double tol = 2.220446e-16 * Math.max(x.length, x[0].length) * smax;
 
 		for (int i = 0; i < s.length; i++)
 		{
-			if (s[i] <= tol) s[i] = 0;
-			else s[i] = 1 / s[i];
+			if (s[i] <= tol)
+				s[i] = 0;
+			else
+				s[i] = 1 / s[i];
 		}
 
 		DoubleMatrix.multiplyCols(v, s);
@@ -207,14 +177,14 @@ public class DoubleMatrix extends DataMatrix
 		return DoubleMatrix.timesXYT(v, u);
 	}
 
-	public static void multiplyCols(double[][] x, double[] vec)
+	private static void multiplyCols(double[][] x, double[] vec)
 	{
 		for (int j = 0; j < vec.length; j++)
 			for (int i = 0; i < x.length; i++)
 				x[i][j] *= vec[j];
 	}
 
-	public static double[][] timesXYT(double[][] x, double[][] y)
+	private static double[][] timesXYT(double[][] x, double[][] y)
 	{
 		double[][] out = new double[x.length][y.length];
 
